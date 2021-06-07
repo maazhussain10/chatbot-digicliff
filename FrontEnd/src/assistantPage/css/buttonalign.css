@@ -1,0 +1,12 @@
+/* .wrapper {
+    text-align: center;
+} */
+
+.button {
+    /* position: absolute;
+    top: 30%; */
+    margin: auto;
+    display: block;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
