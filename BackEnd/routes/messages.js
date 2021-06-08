@@ -1,100 +1,98 @@
-const express = require("express");
-const sqlFunctions = require('../files/sqlFunctions');
-
+const sqlFunctions = require("../files/sqlFunctions");
 
 class Messages {
+  constructor(app) {
+    this.addMessage(app);
+    this.getMessages(app);
+    this.deleteMessage(app);
+    this.updateMessage(app);
+  }
 
-    constructor(app) {
-        this.addMessage(app);
-        this.getMessages(app);
-        this.deleteMessage(app);
-        this.updateMessage(app);
-    }
+  getMessages(app) {
+    app.get("/message", async (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-    getMessages(app) {
+      const { intentId } = req.query;
 
-        app.get('/message', async (req, res) => {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      let userMessages = await sqlFunctions.getMessages(intentId, "User");
+      let botReplies = await sqlFunctions.getMessages(intentId, "Bot");
+      let messages = await sqlFunctions.getAllMessages(intentId);
+      res.send({ userMessages, botReplies, messages });
+    });
+  }
 
-            const { intentId } = req.query;
+  addMessage(app) {
+    app.post("/message", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            let userMessages = await sqlFunctions.getMessages(intentId, "User");
-            let botReplies = await sqlFunctions.getMessages(intentId, "Bot");
-            let messages = await sqlFunctions.getAllMessages(intentId);
-            res.send({ userMessages, botReplies, messages });
+      const { userId, assistantId, intentId, messageType, message } = req.query;
 
-        })
-    }
+      sqlFunctions.addMessage(userId, assistantId, intentId, messageType, message);
+      res.send();
+    });
+  }
 
-    addMessage(app) {
-        app.post('/message', (req, res) => {
+  deleteMessage(app) {
+    app.get("/message/delete", (req, res) => {
+      let { messageId } = req.query;
+      console.log("Delete in backend");
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      sqlFunctions.deleteMessage(messageId);
+      res.send();
+    });
+  }
 
-            const {
-                userId,
-                assistantId,
-                intentId,
-                messageType,
-                message
-            } = req.query;
+  updateMessage(app) {
+    app.get("/message/update", (req, res) => {
+      let { messageId, message } = req.query;
 
-            sqlFunctions.addMessage(userId, assistantId, intentId, messageType, message);
-            res.send();
-        })
-    }
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-    deleteMessage(app) {
-        app.get('/message/delete', (req, res) => {
-            let { messageId } = req.query;
-            console.log("Delete in backend");
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      if (message === "") {
+        sqlFunctions.deleteMessage(messageId);
+      } else {
+        sqlFunctions.updateMessage(messageId, message);
+      }
 
+      res.send();
+    });
+  }
 
-            sqlFunctions.deleteMessage(messageId);
-            res.send();
-        })
-    }
+  deleteResponsePhrase(app) {
+    app.get("/response-delete", (req, res) => {
+      let { responseId } = req.query;
+      console.log("Delete in backend");
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-    updateMessage(app) {
-        app.get('/message/update', (req, res) => {
-            let { messageId, message } = req.query;
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-
-            if (message === '') {
-                sqlFunctions.deleteMessage(messageId);
-            } else {
-                sqlFunctions.updateMessage(messageId, message);
-            }
-
-            res.send();
-        });
-    }
-
-
-    deleteResponsePhrase(app) {
-        app.get('/response-delete', (req, res) => {
-            let {
-                responseId
-            } = req.query;
-            console.log("Delete in backend");
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-
-
-            sqlFunctions.deleteResponsePhrase(responseId);
-            res.send();
-        })
-    }
+      sqlFunctions.deleteResponsePhrase(responseId);
+      res.send();
+    });
+  }
 }
 module.exports = Messages;

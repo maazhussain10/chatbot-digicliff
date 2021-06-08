@@ -1,126 +1,141 @@
-const express = require('express');
-const sqlFunctions = require('../files/sqlFunctions');
-const uuid = require('uuid-random');
-
-
+const sqlFunctions = require("../files/sqlFunctions");
+const uuid = require("uuid-random");
 
 class Intent {
+  constructor(app) {
+    this.intent(app);
+    this.followIntent(app);
+    this.multipleReply(app);
+    this.existingIntents(app);
+    this.updateIntent(app);
+    this.deleteIntent(app);
+  }
+  existingIntents(app) {
+    app.get("/intent", async (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-    constructor(app) {
-        this.intent(app);
-        this.followIntent(app);
-        this.multipleReply(app);
-        this.existingIntents(app);
-        this.updateIntent(app);
-        this.deleteIntent(app);
-    }
-    existingIntents(app) {
-        app.get('/intent', async (req, res) => {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      const { assistantId } = req.query;
+      const intentData = await sqlFunctions.getExistingIntents(assistantId);
+      console.log(intentData.existingIntents);
+      res.send(intentData.existingIntents);
+    });
+  }
 
-            const { assistantId } = req.query;
-            const intentData = await sqlFunctions.getExistingIntents(assistantId);
-            console.log(intentData.existingIntents);
-            res.send(intentData.existingIntents);
-        })
-    }
+  intent(app) {
+    app.post("/intent", async (req, res) => {
+      let { assistantId, userId, intentName, intentDesc } = req.query;
 
-    intent(app) {
-        app.post('/intent', async (req, res) => {
-            let { assistantId, userId, intentName, intentDesc } = req.query;
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      let intentId = uuid();
+      let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
 
+      // Create intent if another intent with the given name doesn't exist already
+      if (!doesIntentExist) {
+        sqlFunctions.createIntent(userId, assistantId, intentId, "null", intentName, intentDesc);
+        res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
+      } else {
+        res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
+      }
+    });
+  }
 
+  followIntent(app) {
+    app.post("/follow-intent", async (req, res) => {
+      let { assistantId, userId, intentName, intentDesc, previousIntent } = req.query;
 
-            let intentId = uuid();
-            let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            // Create intent if another intent with the given name doesn't exist already
-            if (!doesIntentExist) {
-                sqlFunctions.createIntent(userId, assistantId, intentId, "null", intentName, intentDesc);
-                res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
-            } else {
-                res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
-            }
-        });
-    }
+      let intentId = uuid();
+      let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
 
-    followIntent(app) {
-        app.post('/follow-intent', async (req, res) => {
-            let { assistantId, userId, intentName, intentDesc, previousIntent } = req.query;
+      // Create intent if another intent with the given name doesn't exist already
+      if (!doesIntentExist) {
+        sqlFunctions.createIntent(
+          userId,
+          assistantId,
+          intentId,
+          previousIntent,
+          intentName,
+          intentDesc
+        );
+        res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
+      } else {
+        res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
+      }
+    });
+  }
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+  multipleReply(app) {
+    app.get("/intent/multiple-reply", (req, res) => {
+      let { intentId, multipleReply } = req.query;
 
-            let intentId = uuid();
-            let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            // Create intent if another intent with the given name doesn't exist already
-            if (!doesIntentExist) {
-                sqlFunctions.createIntent(userId, assistantId, intentId, previousIntent, intentName, intentDesc);
-                res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
-            } else {
-                res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
-            }
-        });
-    }
+      sqlFunctions.handleMultipleReply(intentId, multipleReply);
+      res.send();
+    });
+  }
 
-    multipleReply(app) {
-        app.get("/intent/multiple-reply", (req, res) => {
-            let { intentId, multipleReply } = req.query;
+  updateIntent(app) {
+    app.post("/intent/update", async (req, res) => {
+      let { assistantId, intentName, description, intentId } = req.query;
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-            sqlFunctions.handleMultipleReply(intentId, multipleReply);
-            res.send();
-        })
-    }
+      let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
 
-    updateIntent(app) {
-        app.post('/intent/update', async (req, res) => {
-            let { assistantId, intentName, description, intentId } = req.query;
+      // Update intent if another intent with the given name doesn't exist already
+      if (!doesIntentExist) {
+        console.log("Update: ", intentName, description, intentId);
+        sqlFunctions.updateIntent(intentName, description, intentId);
+        res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
+      } else {
+        res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
+      }
+    });
+  }
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+  deleteIntent(app) {
+    app.get("/intent-delete", (req, res) => {
+      let { intentId } = req.query;
+      console.log("Delete in backend");
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
 
-
-
-            let doesIntentExist = await sqlFunctions.doesIntentExist(assistantId, intentName, intentId);
-
-            // Update intent if another intent with the given name doesn't exist already
-            if (!doesIntentExist) {
-                console.log("Update: ", intentName, description, intentId)
-                sqlFunctions.updateIntent(intentName, description, intentId);
-                res.send({ responseStatus: true, doesIntentExist: doesIntentExist });
-            } else {
-                res.send({ responseStatus: false, doesIntentExist: doesIntentExist });
-            }
-        });
-    }
-
-    deleteIntent(app) {
-        app.get('/intent-delete', (req, res) => {
-            let { intentId } = req.query;
-            console.log("Delete in backend");
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-
-
-            sqlFunctions.deleteIntent(intentId);
-            res.send();
-        })
-    }
+      sqlFunctions.deleteIntent(intentId);
+      res.send();
+    });
+  }
 }
-
 
 module.exports = Intent;
