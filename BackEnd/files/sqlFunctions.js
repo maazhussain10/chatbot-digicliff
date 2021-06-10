@@ -382,8 +382,8 @@ exports.updateIntent = (username, assistantName, intentName, description, previo
 
 exports.deleteIntent = (username, assistantName, intentName) => {
     // Delete the specified intent.
-    let sql = "delete from intent where username=? and assistant=? and intent = ?;";
-    connection.query(sql, [username, assistantName,intentName], (err, results) => {
+    let sql = "delete from intent where username=? and assistant=? and intent = ? or previousIntent = ?;";
+    connection.query(sql, [username, assistantName,intentName, intentName], (err, results) => {
         if (err) return console.log(err.message);
     });
 }
