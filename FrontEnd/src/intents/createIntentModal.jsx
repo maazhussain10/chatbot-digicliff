@@ -19,9 +19,9 @@ class CreateIntentModal extends Component {
     }
     //-----------------------------------------------------------CREATE INTENT AXIOS------------------------------------------------------------
     createIntent = async () => {
-        // Get the necessary details ( userId, assistantId, intentId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get the necessary details ( username, assistantName, intentId )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
 
         let { intentName, intentDesc } = this.state;
 
@@ -52,8 +52,8 @@ class CreateIntentModal extends Component {
                 params: {
                     intentName: intentName,
                     intentDesc: intentDesc,
-                    assistantId: assistantId,
-                    userId: userId
+                    assistantName: assistantName,
+                    username: username
                 },
 
             }).then((response) => {
@@ -67,7 +67,7 @@ class CreateIntentModal extends Component {
                 let { responseStatus, doesIntentExist } = response.data;
                 this.setState({ intentCreationStatus: responseStatus })
                 let { getIntents } = this.props;
-                getIntents(assistantId);
+                getIntents(assistantName);
                 if (responseStatus) {
 
                     document.getElementById("input-intentName").value = "";

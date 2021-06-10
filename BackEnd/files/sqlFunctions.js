@@ -1,4 +1,6 @@
 const connection = require('./connection');
+const DataBaseConnection = require('../files/DBConnection');
+const sqlFunctions2 = require('./sqlFunctions2');
 const uuid = require('uuid-random');
 const {
     response
@@ -25,9 +27,8 @@ function getTime() {
 //------------------------------------------------------------Create User-----------------------------------------------------------------------
 
 exports.createUser = (firstName, lastName, username, email, password) => {
-    let id = uuid();
-    let sql = `Insert into user_auth values(?, ?, ?, ?, ?, ?);`;
-    connection.query(sql, [id, firstName, lastName, email, username, password], (err, results) => {
+    let sql = `Insert into userAuth values(?, ?, ?, ?, ?);`;
+    connection.query(sql, [firstName, lastName, email, username, password], (err, results) => {
         if (err) return console.log(err);
         else {
             console.log("User has been created");
@@ -37,18 +38,17 @@ exports.createUser = (firstName, lastName, username, email, password) => {
 //----------------------------------------------------Check User Exists---------------------------------------------------------------------------
 
 exports.userExists = async (username, email) => {
-    let sql = 'Select * from user_auth where username=? or user_email=?;';
+    let sql = 'Select * from userAuth where username=? or email=?;';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username, email], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 let responseData = {
-                    userId: results[0].user_id,
                     username: results[0].username,
-                    password: results[0].user_pass,
-                    firstName: results[0].user_firstname,
-                    lastName: results[0].user_lastname,
-                    emailId: results[0].user_email
+                    password: results[0].password,
+                    firstName: results[0].firstName,
+                    lastName: results[0].lastName,
+                    emailId: results[0].email
                 }
                 resolve(responseData);
             } else resolve(false)
@@ -57,16 +57,15 @@ exports.userExists = async (username, email) => {
 }
 
 exports.usernameExists = async (username) => {
-    let sql = 'Select * from user_auth where username=?;';
+    let sql = 'Select * from userAuth where username=?;';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 let responseData = {
-                    userId: results[0].user_id,
                     username: results[0].username,
-                    password: results[0].user_pass,
-                    email: results[0].user_email
+                    password: results[0].password,
+                    email: results[0].email
                 }
                 resolve(responseData);
             } else resolve(false);
@@ -75,16 +74,15 @@ exports.usernameExists = async (username) => {
 }
 
 exports.emailExists = async (email) => {
-    let sql = 'Select * from user_auth where user_email=?;';
+    let sql = 'Select * from userAuth where email=?;';
     return new Promise((resolve, reject) => {
         connection.query(sql, [email], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 let responseData = {
-                    userId: results[0].user_id,
                     username: results[0].username,
-                    password: results[0].user_pass,
-                    email: results[0].user_email
+                    password: results[0].password,
+                    email: results[0].email
                 }
                 resolve(responseData);
             } else resolve(false);
@@ -94,109 +92,52 @@ exports.emailExists = async (email) => {
 
 //------------------------------------------------------------Deactivate Account---------------------------------------------------------------------
 
-exports.deactivateAccount = (userId) => {
+exports.deactivateAccount = (username) => {
     // Delete user from table.
-    let sql = "delete FROM user_auth where user_id=?";
-    connection.query(sql, [userId], (err, results) => {
+    let sql = "delete FROM userAuth where username=?";
+    connection.query(sql, [username], (err, results) => {
         if (err) return console.log(err.message);
     });
-    // Delete assistant from table.
-    sql = "delete FROM assistant where user_id=?";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-    // Delete all intents related to the specified assistant.
-    sql = "delete from intent where user_id = ?;";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-    // Delete all training phrases and responses related to the specified assistant.
-    sql = "delete from messages where user_id = ?;";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all rich responses related to the specified assistant.
-    sql = "delete from richresponses where user_id = ?;";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all queries related to the specified assistant.
-    sql = "delete from queries where user_id =?";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Query Table related to the specified assistant.
-    sql = "delete from query_table where user_id =?";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Database Connections related to the specified assistant.
-    sql = "delete from database_connection where user_id =?";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all entities related to the specified assistant.
-    sql = "delete from entity where user_id =?";
-    connection.query(sql, [userId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
 }
+
+
 /* *************************************************************************************************************************************************** */
 /* *************************************************************ASSISTANT DETAILS ************************************************************************************ */
 /* *************************************************************************************************************************************************** */
 
 //------------------------------------------------------------Create Assistant---------------------------------------------------------------------
 
-exports.createAssistant = (userId, assistantName, description) => {
+exports.createAssistant = (username, assistantName, description) => {
 
-    let sql = `Insert into assistant values(?, ?, ?, ?, ?);`;
-    let assistantId = uuid();
+    let sql = `Insert into assistant values(?, ?, ?, ?);`;
+    //Get assistant Id and Time
+
     let time = getTime();
-    connection.query(sql, [assistantId, userId, assistantName + '-' + assistantId.slice(0, 4), description, time], (err) => {
+
+    connection.query(sql, [username, assistantName, description, time], (err) => {
         if (err) console.log(err)
         else {
             console.log("CREATED ", assistantName);
+
             // Create Default settings for Assistant
-            this.createDefaultSettings(userId, assistantId);
+            this.createDefaultSettings(username, assistantName);
         }
 
     });
 };
 
-//------------------------------------------------------------Get Assistant Id-----------------------------------------------------------------------
-
-exports.getAssistantId = (assistantName) => {
-    let sql = `select assistant_id from assistant where assistant = ?;`;
-    return new Promise((resolve, reject) => {
-        connection.query(sql, [assistantName], (err, results) => {
-            if (err) console.log(err)
-            else {
-                resolve(results[0].assistant_id);
-            }
-        })
-    })
-
-}
-
 //------------------------------------------------------------Get Existing Assistants-----------------------------------------------------------------------
 
-exports.getExistingAssistants = (userId) => {
-    let sql = `select * from assistant where user_id =? order by last_modified desc;`;
+exports.getExistingAssistants = (username) => {
+    let sql = `select * from assistant where username =? order by last_modified desc;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [userId], (err, results) => {
+        connection.query(sql, [username], (err, results) => {
             if (err) console.log(err)
             else {
                 let assistantsList = [];
                 for (let i = 0; i < results.length; i++) {
                     let assistant = {
                         assistantName: results[i].assistant,
-                        assistantId: results[i].assistant_id,
                         assistantDesc: results[i].description,
                     }
                     assistantsList.push(assistant);
@@ -215,10 +156,10 @@ exports.getExistingAssistants = (userId) => {
 
 //------------------------------------------------------------Check If Assistant Exists-----------------------------------------------------------------------
 
-exports.doesAssistantExist = (userId, assistantName) => {
-    let sql = 'Select * from assistant where user_id=? and assistant like ?;';
+exports.doesAssistantExist = (username, assistantName) => {
+    let sql = 'Select * from assistant where username=? and assistant like ?;';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [userId, assistantName + "-%"], (err, results) => {
+        connection.query(sql, [username, assistantName + "-%"], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 resolve(true);
@@ -229,11 +170,11 @@ exports.doesAssistantExist = (userId, assistantName) => {
 
 //------------------------------------------------------------Update Assistant-----------------------------------------------------------------------
 
-exports.updateAssistant = (assistantName, description, assistantId) => {
+exports.updateAssistant = (username, assistantName, description, previousAssistantName) => {
     let time = getTime();
-    let sql = 'update assistant set assistant=?, description=?, last_modified=? where assistant_id=?;'
+    let sql = 'update assistant set assistant=?, description=?, last_modified=? where assistant=? and username=?;'
     console.log(assistantName);
-    connection.query(sql, [assistantName, description, time, assistantId], (err) => {
+    connection.query(sql, [assistantName, description, time, previousAssistantName, username], (err) => {
         if (err) console.log(err);
         else console.log("Assistant name has been updated")
     })
@@ -241,59 +182,12 @@ exports.updateAssistant = (assistantName, description, assistantId) => {
 
 //------------------------------------------------------------Delete Assistant-----------------------------------------------------------------------
 
-exports.deleteAssistant = (assistantId) => {
+exports.deleteAssistant = (username, assistantName) => {
     // Delete assistant from table.
-    let sql = "delete FROM assistant where assistant_id=?";
-    connection.query(sql, [assistantId], (err, results) => {
+    let sql = "delete FROM assistant where assistant=? and username=?;";
+    connection.query(sql, [assistantName,username], (err, results) => {
         if (err) return console.log(err.message);
     });
-    // Delete all intents related to the specified assistant.
-    sql = "delete from intent where assistant_id = ?;";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-    // Delete all training phrases and responses related to the specified assistant.
-    sql = "delete from messages where assistant_id = ?;";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all rich responses related to the specified assistant.
-    sql = "delete from richresponses where assistant_id = ?;";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all queries related to the specified assistant.
-    sql = "delete from queries where assistant_id =?";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Query Table related to the specified assistant.
-    sql = "delete from query_table where assistant_id =?";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Database Connections related to the specified assistant.
-    sql = "delete from database_connection where assistant_id =?";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all entities related to the specified assistant.
-    sql = "delete from entity where assistant_id =?";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all entities related to the specified assistant.
-    sql = "delete from settings where assistant_id =?";
-    connection.query(sql, [assistantId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
 }
 
 /* *************************************************************************************************************************************************** */
@@ -302,13 +196,13 @@ exports.deleteAssistant = (assistantId) => {
 
 //------------------------------------------------------------Create Intent-----------------------------------------------------------------------
 
-exports.createIntent = (userId, assistantId, intentId, previousIntent, intentName, intentDescription) => {
-    let sql = `Insert into intent values(?, ?, ?, ?, ?, ?, ?, ?);`;
+exports.createIntent = (username, assistantName, previousIntent, intentName, intentDescription) => {
+    let sql = `Insert into intent values(?, ?, ?, ?, ?, ?, ?);`;
     let time = getTime();
-    connection.query(sql, [userId, assistantId, intentId, previousIntent, intentName, intentDescription, time, "false"], (err) => {
+    connection.query(sql, [username, assistantName,  intentName, intentDescription, previousIntent, time, "false"], (err) => {
         if (err) console.log(err)
         else {
-            console.log("Intent Created: ", intentName);
+            console.log("Intent Created ", intentName);
         }
     });
 };
@@ -317,13 +211,13 @@ exports.createIntent = (userId, assistantId, intentId, previousIntent, intentNam
 
 //------------------------------------------------------------Get Intent Id-----------------------------------------------------------------------
 
-exports.getIntentId = (intentName, assistantId) => {
-    let sql = `select intent_id from intent where intent_name = ? and assistant_id=?;`;
+exports.getIntentName = (intentName, assistantName) => {
+    let sql = `select intent from intent where intent = ? and assistant=?;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentName, assistantId], (err, results) => {
+        connection.query(sql, [intentName, assistantName], (err, results) => {
             if (err) console.log(err)
             else {
-                resolve(results[0].intent_id);
+                resolve(results[0].intent);
             }
         })
     })
@@ -332,18 +226,17 @@ exports.getIntentId = (intentName, assistantId) => {
 
 //------------------------------------------------------------Get Existing Intents-----------------------------------------------------------------------
 
-exports.getExistingIntents = (assistantId) => {
-    let sql = `select * from intent where assistant_id = ? order by last_modified desc;`;
+exports.getExistingIntents = (username, assistantName) => {
+    let sql = `select * from intent where username=? and assistant = ? order by last_modified;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [assistantId], (err, results) => {
+        connection.query(sql, [username, assistantName], (err, results) => {
             if (err) console.log(err)
             else {
                 console.log(results);
                 let intentsList = [];
                 for (let i = 0; i < results.length; i++) {
                     let intent = {
-                        intentName: results[i].intent_name,
-                        intentId: results[i].intent_id,
+                        intentName: results[i].intent,
                         intentDesc: results[i].description
                     }
                     intentsList.push(intent);
@@ -362,10 +255,10 @@ exports.getExistingIntents = (assistantId) => {
 
 //------------------------------------------------------------Check If Intent Exists-----------------------------------------------------------------------
 
-exports.doesIntentExist = (assistantId, intentName, intentId) => {
-    let sql = 'Select * from intent where assistant_id=? and intent_name=? and intent_id!=?;';
+exports.doesIntentExist = (username, assistantName, intentName) => {
+    let sql = 'Select * from intent where username=? and assistant=? and intent=?;';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [assistantId, intentName, intentId], (err, results) => {
+        connection.query(sql, [username,assistantName, intentName], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 resolve(true);
@@ -376,17 +269,16 @@ exports.doesIntentExist = (assistantId, intentName, intentId) => {
 
 //------------------------------------------------------------Get Intents Without Follow-----------------------------------------------------------------------
 
-exports.getIntentsWithoutFollow = (assistantId) => {
-    let sql = `select * from intent where assistant_id = ? and previous_intent="null" order by last_modified desc;`;
+exports.getIntentsWithoutFollow = (username,assistantName) => {
+    let sql = `select * from intent where username=? and assistant = ? and previousIntent="null" order by last_modified desc;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [assistantId], (err, results) => {
+        connection.query(sql, [username, assistantName], (err, results) => {
             if (err) console.log(err)
             else {
                 let intentsList = [];
                 for (let i = 0; i < results.length; i++) {
                     let intent = {
-                        intentName: results[i].intent_name,
-                        intentId: results[i].intent_id,
+                        intentName: results[i].intent,
                         intentDesc: results[i].description,
                     }
                     intentsList.push(intent);
@@ -404,17 +296,16 @@ exports.getIntentsWithoutFollow = (assistantId) => {
 
 //--------------------------------------------------------Get Follow Intents--------------------------------------------------------------
 
-exports.getFollowIntents = (intentId) => {
-    let sql = `select * from intent where previous_intent=? ;`;
+exports.getFollowIntents = (username, assistantName, intentName) => {
+    let sql = `select * from intent where previousIntent=? and username=? and assistant=? ;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [intentName,username,assistantName], (err, results) => {
             if (err) console.log(err)
             else {
                 let intentsList = [];
                 for (let i = 0; i < results.length; i++) {
                     let intent = {
-                        intentName: results[i].intent_name,
-                        intentId: results[i].intent_id,
+                        intentName: results[i].intent,
                         intentDesc: results[i].description
                     }
                     intentsList.push(intent);
@@ -434,10 +325,10 @@ exports.getFollowIntents = (intentId) => {
 
 //-----------------------------------------------------------Check If Follow Up Intent Exists--------------------------------------------
 
-exports.ifFollowUpExists = (intentId) => {
-    let sql = `select * from intent where previous_intent=?;`;
+exports.ifFollowUpExists = (username, assistantName, intentName) => {
+    let sql = `select * from intent where username=? and assistant=? and previousIntent=?;`;
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err)
             else {
                 if (results.length !== 0)
@@ -451,21 +342,21 @@ exports.ifFollowUpExists = (intentId) => {
 
 //------------------------------------------------------------Handle Multiple Reply-----------------------------------------------------------------------
 
-exports.handleMultipleReply = (intentId, multipleReply) => {
-    let sql = 'update intent set multiple_reply=? where intent_id=?;'
-    connection.query(sql, [multipleReply, intentId], (err,) => {
+exports.handleMultipleReply = (username, assistantName, intentName, multipleReply) => {
+    let sql = 'update intent set multipleReply=? where username=? and assistant=? and intent=?;'
+    connection.query(sql, [multipleReply,username, assistantName, intentName], (err,) => {
         if (err) console.log(err);
         else console.log("Multiple Reply has been updated")
     })
 }
 
-exports.checkMultipleReply = (intentId) => {
-    let sql = 'select * from intent where intent_id=?;'
+exports.checkMultipleReply = (username, assistantName, intentName) => {
+    let sql = 'select * from intent where username=? and assistant=? and intent=?;'
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err);
             else if (results.length !== 0) {
-                resolve(results[0].multiple_reply);
+                resolve(results[0].multipleReply);
             }
             else {
                 resolve(false);
@@ -477,10 +368,11 @@ exports.checkMultipleReply = (intentId) => {
 
 //------------------------------------------------------------Update Intent-----------------------------------------------------------------------
 
-exports.updateIntent = (intentName, description, intentId) => {
+exports.updateIntent = (username, assistantName, intentName, description, previousIntentName) => {
     let time = getTime();
-    let sql = 'update intent set intent_name=?, description=?, last_modified=? where intent_id=?;'
-    connection.query(sql, [intentName, description, time, intentId], (err) => {
+    console.log("HELLLOOO", username, assistantName, intentName, description, previousIntentName)
+    let sql = 'update intent set intent=?, description=?, last_modified=? where username=? and assistant=? and intent=?;'
+    connection.query(sql, [intentName, description, time, username, assistantName, previousIntentName], (err) => {
         if (err) console.log(err);
         else console.log("Intent has been updated")
     })
@@ -488,45 +380,13 @@ exports.updateIntent = (intentName, description, intentId) => {
 
 //------------------------------------------------------------Delete Intent-----------------------------------------------------------------------
 
-exports.deleteIntent = (intentId) => {
+exports.deleteIntent = (username, assistantName, intentName) => {
     // Delete the specified intent.
-    let sql = "delete from intent where intent_id = ?;";
-    connection.query(sql, [intentId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete the training phrases and responses related to the specified intent.
-    sql = "delete from messages where intent_id = ?;";
-    connection.query(sql, [intentId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all rich resposes related to the specified intent.
-    sql = "delete from richresponses where intent_id = ?;";
-    connection.query(sql, [intentId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all queries related to the specified intent.
-    sql = "delete from queries where intent_id =?";
-    connection.query(sql, [intentId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Query Table related to the specified intent.
-    sql = "delete from query_table where intent_id =?";
-    connection.query(sql, [intentId], (err, results) => {
-        if (err) return console.log(err.message);
-    });
-
-    // Delete all Entities related to the specified intent.
-    sql = "delete from entity where intent_id =?";
-    connection.query(sql, [intentId], (err, results) => {
+    let sql = "delete from intent where username=? and assistant=? and intent = ?;";
+    connection.query(sql, [username, assistantName,intentName], (err, results) => {
         if (err) return console.log(err.message);
     });
 }
-
-
 
 /* *************************************************************************************************************************************************** */
 /* *************************************************************MESSAGE DETAILS ************************************************************************************ */
@@ -535,30 +395,28 @@ exports.deleteIntent = (intentId) => {
 
 //------------------------------------------------------------Create/Add Messages-----------------------------------------------------------------------
 
-exports.addMessage = (userId, assistantId, intentId, messageType, message) => {
-    let messageId = uuid();
-    let sql = "insert into messages values(?, ?, ?, ?, ?, ?, ?);";
-    connection.query(sql, [userId, assistantId, intentId, messageId, messageType, message, getTime()], (err) => {
+exports.addMessage = (username, assistantName, intentName, messageType, message) => {
+    let sql = "insert into messages values(?, ?, ?, ?, ?, ?);";
+    connection.query(sql, [username, assistantName, intentName, messageType, message, getTime()], (err) => {
         if (err) console.log(err)
-        else console.log("Created Training Phrase: ", message);
+        else console.log("Created Training Phrase ", message);
     });
 }
 
 //------------------------------------------------------------Get User or Assistant Message-----------------------------------------------------------------------
 
-exports.getMessages = (intentId, messageType) => {
-    let sql = "select message_id, message from messages where intent_id=? and message_type=? order by time_created;";
+exports.getMessages = (username, assistantName,intentName, messageType) => {
+    let sql = "select message from messages where username=? and assistant=? and intent=? and messageType=? order by timeCreated;";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId, messageType], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName, messageType], (err, results) => {
             if (err) return console.log(err);
             else {
                 let messages = [];
+                console.log(results);
                 for (let i = 0; i < results.length; i++) {
                     messages.push({
-                        messageId: results[i].message_id,
                         message: results[i].message,
                     });
-                    console.log(results[i].message);
                 }
                 resolve(messages);
             }
@@ -568,18 +426,17 @@ exports.getMessages = (intentId, messageType) => {
 
 //------------------------------------------------------------Get All  Messages-----------------------------------------------------------------------
 
-exports.getAllMessages = (intentId) => {
-    let sql = "select message_id, message, message_type from messages where intent_id=? order by time_created desc;";
+exports.getAllMessages = (username, assistantName,intentName) => {
+    let sql = "select message, messageType from messages where username=? and assistant=? and intent=? order by timeCreated desc;";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) return console.log(err);
             else {
                 let messages = [];
                 for (let i = 0; i < results.length; i++) {
                     messages.push({
-                        messageId: results[i].message_id,
                         message: results[i].message,
-                        messageType: results[i].message_type,
+                        messageType: results[i].messageType,
                     });
                     console.log(results[i].message);
                 }
@@ -591,9 +448,9 @@ exports.getAllMessages = (intentId) => {
 
 //------------------------------------------------------------Update Messages-----------------------------------------------------------------------
 
-exports.updateMessage = (messageId, message) => {
-    let sql = 'update messages set message=? where message_id=?;'
-    connection.query(sql, [message, messageId], (err) => {
+exports.updateMessage = (username, assistantName,intentName, messageType, message,previousMessage) => {
+    let sql = 'update messages set message=? where username=? and assistant=?and intent=? and messageType=? and message=?;'
+    connection.query(sql, [message, username, assistantName,intentName,messageType, previousMessage], (err) => {
         if (err) console.log(err);
         else console.log("Message has been updated")
     })
@@ -602,9 +459,10 @@ exports.updateMessage = (messageId, message) => {
 
 //------------------------------------------------------------Delete Messages-----------------------------------------------------------------------
 
-exports.deleteMessage = (messageId) => {
-    let sql = "delete from messages where message_id = ?;";
-    connection.query(sql, [messageId], (err, results) => {
+exports.deleteMessage = (username, assistantName, intentName, messageType, message) => {
+    console.log(username,message,messageType,assistantName,intentName)
+    let sql = "delete from messages where username=? and assistant=? and intent=? and messageType=? and message = ?;";
+    connection.query(sql, [username, assistantName,intentName, messageType, message], (err, results) => {
         if (err) return console.log(err.message);
     });
 }
@@ -615,7 +473,7 @@ exports.deleteMessage = (messageId) => {
 
 //------------------------------------------------------------Create Card-----------------------------------------------------------------------
 
-exports.insertCreateCard = (userId, assistantId, intentId, richResponseId, useQuery, cardNo, cardName, cardValue) => {
+exports.insertCreateCard = (username, assistantName, intentName, useQuery, cardNo, cardName, cardValue) => {
     for (let i = 0; i < cardName.length; i++) {
         console.log(cardValue)
         let tempCardValue;
@@ -625,8 +483,8 @@ exports.insertCreateCard = (userId, assistantId, intentId, richResponseId, useQu
             tempCardValue = cardValue[i];
         }
 
-        let sql = "insert into richresponses(user_id, assistant_id, intent_id, richresponse_id, use_query, card_no, card_name, card_value) values(?, ?, ?, ?, ?, ?, ?, ?);";
-        connection.query(sql, [userId, assistantId, intentId, richResponseId, useQuery, cardNo, cardName[i], tempCardValue], (err) => {
+        let sql = "insert into richresponses(username, assistant, intent, useQuery, cardNo, CardName, cardValue) values(?, ?, ?, ?, ?, ?, ?);";
+        connection.query(sql, [username, assistantName, intentName, useQuery, cardNo, cardName[i], tempCardValue], (err) => {
             if (err) console.log(err)
             else console.log("Inserted Card ");
         });
@@ -636,16 +494,16 @@ exports.insertCreateCard = (userId, assistantId, intentId, richResponseId, useQu
 
 //------------------------------------------------------------Get Query Cards-----------------------------------------------------------------------
 
-exports.getQueryCards = (intentId) => {
-    let sql = 'select richresponse_id,card_no from richresponses where intent_id=? and card_value!="NULL" and use_query="true" group by richresponse_id;';
+exports.getQueryCards = (username, assistantName,intentName) => {
+    let sql = 'select cardNo from richresponses where username=? and assistant=?  and intent=? and cardValue!="NULL" and useQuery="true" group by CardNo;';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], async (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], async (err, results) => {
             if (err) console.log(err)
             else {
                 console.log(results);
                 let cards = [];
                 for (let i = 0; i < results.length; i++) {
-                    let card = await this.getCardValues(results[i].richresponse_id)
+                    let card = await this.getCardValues(results[i].CardNo)
                     cards.push(card);
                 }
                 resolve(cards);
@@ -656,10 +514,10 @@ exports.getQueryCards = (intentId) => {
 
 //------------------------------------------------------------Get All Query Cards-----------------------------------------------------------------------
 
-exports.getCardValues = async (richResponseId) => {
-    let sql = 'select * from richresponses where richresponse_id=?';
+exports.getCardValues = async (username, assistantName,) => {
+    let sql = 'select * from richresponses';
     return new Promise(resolve => {
-        connection.query(sql, [richResponseId], (err, results) => {
+        connection.query(sql, [username, assistantName,], (err, results) => {
             if (err) console.log(err)
             else {
                 resolve(results);
@@ -670,15 +528,15 @@ exports.getCardValues = async (richResponseId) => {
 
 //------------------------------------------------------------Get Cards Without Queries-----------------------------------------------------------------------
 
-exports.getCards = (intentId) => {
-    let sql = 'select richresponse_id,card_no from richresponses where intent_id=? and card_value!="NULL" and use_query="false" group by richresponse_id;';
+exports.getCards = (intentName) => {
+    let sql = 'select cardNo from richresponses where intent=? and cardValue!="NULL" and useQuery="false";';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], async (err, results) => {
+        connection.query(sql, [intentName], async (err, results) => {
             if (err) console.log(err)
             else {
                 let cards = [];
                 for (let i = 0; i < results.length; i++) {
-                    let card = await this.getCardValues(results[i].richresponse_id)
+                    let card = await this.getCardValues(results[i].cardValue)
                     cards.push(card);
                 }
                 resolve(cards);
@@ -692,7 +550,7 @@ exports.getCards = (intentId) => {
 exports.updateCard = (cardName, cardValue, richResponseId) => {
     console.log(cardName, cardValue, richResponseId);
     for (let i = 0; i < cardName.length; i++) {
-        let sql = 'update richresponses set card_value=? where card_name=? and richresponse_id=?';
+        let sql = 'update richresponses set cardValue=? where CardName=? and richResponseID=?';
         connection.query(sql, [cardValue[i], cardName[i], richResponseId], (err, results) => {
             if (err) return console.log(err.message);
             else console.log("updated Card");
@@ -702,7 +560,7 @@ exports.updateCard = (cardName, cardValue, richResponseId) => {
 //------------------------------------------------------------Delete Card-----------------------------------------------------------------------
 
 exports.deleteCard = (richResponseId) => {
-    let sql = 'delete from richresponses where richresponse_id=?;';
+    let sql = 'delete from richresponses where richResponseID=?;';
     connection.query(sql, [richResponseId], (err, results) => {
         if (err) return console.log(err.message);
         else console.log("Deleted Card");
@@ -715,47 +573,47 @@ exports.deleteCard = (richResponseId) => {
 
 //------------------------------------------------------------Create Default Settings-----------------------------------------------------------------------
 
-exports.createDefaultSettings = (userId, assistantId) => {
+exports.createDefaultSettings = (username, assistantName) => {
     //  let sql = `Insert into intent values(?, ?, "card bg", "cardtxt", "cardbord", "card text font", "chip bg", "chip text", "chip border", "chip shape", "chip text font", "userbg", "user text font",  "usertxtcolor","bot bg", "bot text font ", "bot text color", "box color");`;
     let sql = 'insert into settings values(?, ?, "#a2a399", "#ffffff", "#523c3c", "verdana", "#4bd9de",  "#064a04", "#4249db", "12", "verdana", "#4278db", "verdana", "#ffffff", "#5d2ad4", "verdana", "#000000", "#06badf");';
-    connection.query(sql, [userId, assistantId], (err) => {
+    connection.query(sql, [username, assistantName], (err) => {
         if (err) console.log(err)
         else {
-            console.log("Settings Added : ");
+            console.log("Settings Added");
         }
     });
 };
 
 //------------------------------------------------------------Get Chatbox Settings-----------------------------------------------------------------------
 
-exports.getChatboxSettings = (userId, assistantId) => {
-    let sql = "select * from settings where assistant_id=?;";
+exports.getChatboxSettings = (username, assistantName) => {
+    let sql = "select * from settings where assistant=? and username=?;";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [assistantId], (err, results) => {
+        connection.query(sql, [assistantName,username], (err, results) => {
             if (err) console.log(err)
             else if (results.length != 0) {
                 let chatBoxSettings = {
                     cardTheme: {
-                        cardBgColor: results[0].card_bgcolor,
-                        cardTextColor: results[0].card_text_color,
-                        cardBorder: results[0].card_border,
-                        cardFont: results[0].card_font,
+                        cardBgColor: results[0].cardBgcolor,
+                        cardTextColor: results[0].cardTextColor,
+                        cardBorder: results[0].cardBorder,
+                        cardFont: results[0].cardFont,
                     },
                     chipTheme: {
-                        chipBgColor: results[0].chip_bgcolor,
-                        chipTextColor: results[0].chip_text_color,
-                        chipBorder: results[0].chip_border,
-                        chipShape: results[0].chip_shape,
-                        chipFont: results[0].chip_font,
+                        chipBgColor: results[0].chipBgcolor,
+                        chipTextColor: results[0].chipTextColor,
+                        chipBorder: results[0].chipBorder,
+                        chipShape: results[0].chipShape,
+                        chipFont: results[0].chipFont,
                     },
                     chatBoxTheme: {
-                        userBg: results[0].user_text_bgcolor,
-                        userFont: results[0].user_font,
-                        userColor: results[0].user_text_color,
-                        assistantBg: results[0].assistant_text_bgcolor,
-                        assistantFont: results[0].assistant_font,
-                        assistantColor: results[0].assistant_text_color,
-                        chatBoxColor: results[0].chatbox_color,
+                        userBg: results[0].userTextBgcolor,
+                        userFont: results[0].userFont,
+                        userColor: results[0].userTextColor,
+                        assistantBg: results[0].assistantTextBgcolor,
+                        assistantFont: results[0].assistantFont,
+                        assistantColor: results[0].assistantTextColor,
+                        chatBoxColor: results[0].chatboxColor,
                     }
                 };
                 resolve({ chatBoxSettings });
@@ -766,9 +624,9 @@ exports.getChatboxSettings = (userId, assistantId) => {
     })
 }
 
-exports.setChatboxSettings = (assistantId, settings) => {
+exports.setChatboxSettings = (username,assistantName, settings) => {
 
-    let sql = "update settings set card_bgcolor=?, card_text_color=?, card_border=?, card_font=?, chip_bgcolor=?, chip_text_color=?, chip_border=?, chip_shape=?, chip_font=?, user_text_bgcolor=?, user_font=?, user_text_color=?, assistant_text_bgcolor =?, assistant_font =?, assistant_text_color=?, chatbox_color =? where assistant_id=?; ";
+    let sql = "update settings set cardBgcolor=?, cardTextColor=?, cardBorder=?, cardFont=?, chipBgcolor=?, chipTextColor=?, chipBorder=?, chipShape=?, chipFont=?, userTextBgcolor=?, userFont=?, userTextColor=?, assistantTextBgcolor =?, assistantFont =?, assistantTextColor=?, chatboxColor =? where assistant=? and username=?; ";
     let { chipTheme, chatBoxTheme, cardTheme } = JSON.parse(settings);
     let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont, chatBoxColor } = chatBoxTheme;
     let { cardBgColor, cardTextColor, cardBorder, cardFont, } = cardTheme;
@@ -778,7 +636,7 @@ exports.setChatboxSettings = (assistantId, settings) => {
             [cardBgColor, cardTextColor,
                 cardBorder, cardFont, chipBgColor, chipTextColor, chipBorder, chipShape,
                 chipFont, userBg, userFont, userColor, assistantBg,
-                assistantFont, assistantColor, chatBoxColor, assistantId], (err, results) => {
+                assistantFont, assistantColor, chatBoxColor, assistantName,username], (err, results) => {
                     console.log("Inside query");
                     if (err) console.log(err)
                     else {
@@ -789,9 +647,9 @@ exports.setChatboxSettings = (assistantId, settings) => {
 }
 //------------------------------------------------------------Update Card Theme-----------------------------------------------------------------------
 
-exports.updateCardTheme = (assistantId, cardColor, textColor) => {
-    let sql = 'update settings set card_bgcolor=?, card_text_color=? where assistant_id=?;'
-    connection.query(sql, [cardColor, textColor, assistantId], (err) => {
+exports.updateCardTheme = (assistantName, cardColor, textColor) => {
+    let sql = 'update settings set card_bgcolor=?, card_text_color=? where assistant=?;'
+    connection.query(sql, [cardColor, textColor, assistantName], (err) => {
         if (err) console.log(err);
         else console.log("Card Theme has been updated")
     })
@@ -799,10 +657,10 @@ exports.updateCardTheme = (assistantId, cardColor, textColor) => {
 
 //------------------------------------------------------------Get Card Theme-----------------------------------------------------------------------
 
-exports.getCardTheme = (assitantId) => {
-    let sql = "select card_bgcolor, card_text_color from settings where assistant_id=?;";
+exports.getCardTheme = (assistantName) => {
+    let sql = "select card_bgcolor, card_text_color from settings where assistant=?;";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [assitantId], (err, results) => {
+        connection.query(sql, [assistantName], (err, results) => {
             if (err) console.log(err)
             else {
                 resolve({
@@ -822,9 +680,9 @@ exports.getCardTheme = (assitantId) => {
 
 //------------------------------------------------------------Create Chip-----------------------------------------------------------------------
 
-exports.insertCreateChip = (userId, assistantId, intentId, richResponseId, usingQueries, chipValue) => {
-    let sql = "insert into richresponses(user_id, assistant_id, intent_id, richresponse_id, use_query, chip_value) values(?, ?, ?, ?, ?, ?);";
-    connection.query(sql, [userId, assistantId, intentId, richResponseId, usingQueries, chipValue], (err) => {
+exports.insertCreateChip = (username, assistantName, intentName, usingQueries, chipValue) => {
+    let sql = "insert into richresponses(username, assistant, intent,  useQuery,cardValue, chipValue) values(?, ?, ?, ?, 'null', ?);";
+    connection.query(sql, [username, assistantName, intentName, usingQueries, chipValue], (err) => {
         if (err) console.log(err)
         else console.log("Inserted Chip ");
     });
@@ -832,13 +690,12 @@ exports.insertCreateChip = (userId, assistantId, intentId, richResponseId, using
 
 //------------------------------------------------------------Get All Chips without Query-----------------------------------------------------------------------
 
-exports.getChips = (intentId) => {
-    let sql = 'select richresponse_id, chip_value from richresponses where intent_id = ? and use_query="false" and chip_value!="null"; ';
+exports.getChips = (username, assistantName,intentName) => {
+    let sql = 'select chipValue from richresponses where username=? and assistant=? and intent = ? and useQuery="false" and chipValue!="null"; ';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err)
             else {
-                console.log("Chips are ", results);
                 resolve(results);
             }
         });
@@ -847,13 +704,12 @@ exports.getChips = (intentId) => {
 
 //------------------------------------------------------------Get Query Chips-----------------------------------------------------------------------
 
-exports.getQueryChips = (intentId) => {
-    let sql = 'select * from richresponses where intent_id = ? and use_query="true"; ';
+exports.getQueryChips = (username, assistantName, intentName) => {
+    let sql = 'select * from richresponses where username=? and assistant=? and intent = ? and useQuery="true"; ';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err)
             else {
-                console.log("Chips are ", results);
                 resolve(results);
             }
         });
@@ -862,10 +718,10 @@ exports.getQueryChips = (intentId) => {
 
 //------------------------------------------------------------Get All Chips-----------------------------------------------------------------------
 
-exports.getAllChips = (intentId) => {
-    let sql = 'select * from richresponses where intent_id = ? and chip_value != "null";';
+exports.getAllChips = (username, assistantName, intentName) => {
+    let sql = 'select * from richresponses where username=? and assistant=? and intent = ? and chipValue != "null";';
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err)
             else {
                 console.log("Chips are ", results);
@@ -877,9 +733,9 @@ exports.getAllChips = (intentId) => {
 
 //------------------------------------------------------------Update Chip-----------------------------------------------------------------------
 
-exports.updateChip = (chipResponse, richResponseId) => {
-    let sql = 'update richresponses set chip_value=? where richresponse_id=?;'
-    connection.query(sql, [chipResponse, richResponseId], (err) => {
+exports.updateChip = (username,assistantName,intentName,chipValue,previousChipValue) => {
+    let sql = 'update richresponses set chipValue=? where username=? and assistant=? and intent=? and chipValue=?;'
+    connection.query(sql, [chipValue, username,assistantName,intentName,previousChipValue], (err) => {
         if (err) console.log(err);
         else console.log("response has been updated")
     })
@@ -888,9 +744,9 @@ exports.updateChip = (chipResponse, richResponseId) => {
 
 //------------------------------------------------------------Delete Chip-----------------------------------------------------------------------
 
-exports.deleteChip = (richResponseId) => {
-    let sql = 'delete from richresponses where richresponse_id=?;';
-    connection.query(sql, [richResponseId], (err, results) => {
+exports.deleteChip = (username,assistantName,intentName,chipValue) => {
+    let sql = 'delete from richresponses where username = ? and assistant = ? and intent = ? and chipValue=?;';
+    connection.query(sql, [username,assistantName,intentName,chipValue], (err, results) => {
         if (err) return console.log(err.message);
         else console.log("Deleted Chip");
     });
@@ -904,9 +760,9 @@ exports.deleteChip = (richResponseId) => {
 
 //------------------------------------------------------------Store Database Details-----------------------------------------------------------------------
 
-exports.addDatabaseDetails = (userId, assistantId, username, password, databaseName) => {
-    let sql = 'insert into database_connection values(?, ?, ?, ?, ?);';
-    connection.query(sql, [userId, assistantId, username, password, databaseName], (err) => {
+exports.addDatabaseDetails = (username, assistantName,hostname, dbUsername, password, databaseName) => {
+    let sql = 'insert into databaseConnection values(?, ?, ?, ?, ?, ?);';
+    connection.query(sql, [username, assistantName,hostname, dbUsername, password, databaseName], (err) => {
         if (err) return console.log(err);
         else {
             console.log("Database Details have been added");
@@ -921,10 +777,13 @@ exports.addDatabaseDetails = (userId, assistantId, username, password, databaseN
 
 //----------------------------------------------------Get Column Names of Users Database-----------------------------------------------------------------------
 
-exports.getColumnNames = (tableName) => {
+exports.getColumnNames = async(username, assistantName, tableName) => {
     let sql = 'select column_name from information_schema.columns where table_name=?;';
+    let databaseDetails = await sqlFunctions2.getDatabaseDetails(username, assistantName);
+    let { hostname, dbUsername, password, databaseName } = databaseDetails;
+    let DBconnection = await DataBaseConnection.DataBaseConnection(hostname, dbUsername, password, databaseName);
     return new Promise(resolve => {
-        connection.query(sql, [tableName], (err, results) => {
+        DBconnection.query(sql, [tableName], (err, results) => {
             if (err) console.log(err);
             else {
                 resolve(results);
@@ -935,8 +794,8 @@ exports.getColumnNames = (tableName) => {
 
 //------------------------------------------------------------Add Query Details-----------------------------------------------------------------------
 
-exports.addQueryDetails = (rows, selectedColumns, distinctColumn, userId, assistantId, intentId, tableName) => {
-    this.deleteExistingQuery(intentId);
+exports.addQueryDetails = (rows, selectedColumns, distinctColumn, username, assistantName, intentName, tableName) => {
+    this.deleteExistingQuery(username,assistantName,intentName);
     let sql;
     if (rows) {
         for (let i = 0; i < rows.length; i++) {
@@ -947,21 +806,21 @@ exports.addQueryDetails = (rows, selectedColumns, distinctColumn, userId, assist
                 logic
             } = JSON.parse(rows[i]);
             console.log(selectedColumn, selectedOperator, compareValue, logic)
-            sql = 'insert into query_table (user_id, assistant_id, intent_id, table_name, column_name, compare_condition, compare_value, logic) values(?, ?, ?, ?, ?, ?, ?, ?)';
-            connection.query(sql, [userId, assistantId, intentId, tableName, selectedColumn, selectedOperator, compareValue, logic], (err) => {
+            sql = 'insert into queryTable (username, assistant, intent, tableName, columnName, compareCondition, compareValue, logic) values(?, ?, ?, ?, ?, ?, ?, ?)';
+            connection.query(sql, [username, assistantName, intentName, tableName, selectedColumn, selectedOperator, compareValue, logic], (err) => {
                 if (err) console.log(err);
             })
         }
     }
     for (let i = 0; i < selectedColumns.length; i++) {
-        sql = 'insert into query_table(user_id, assistant_id, intent_id, table_name, selected_column) values(?, ?, ?, ?, ?);';
-        connection.query(sql, [userId, assistantId, intentId, tableName, selectedColumns[i]], (err) => {
+        sql = 'insert into queryTable(username, assistant, intent, tableName, selectedColumn) values(?, ?, ?, ?, ?);';
+        connection.query(sql, [username, assistantName, intentName, tableName, selectedColumns[i]], (err) => {
             if (err) console.log(err);
         })
     }
     if (distinctColumn) {
-        sql = 'insert into query_table(user_id, assistant_id, intent_id, table_name, distinct_column) values(?, ?, ?, ?, ?);';
-        connection.query(sql, [userId, assistantId, intentId, tableName, distinctColumn], (err) => {
+        sql = 'insert into queryTable(username, assistant, intent, tableName, distinctColumn) values(?, ?, ?, ?, ?);';
+        connection.query(sql, [username, assistantName, intentName, tableName, distinctColumn], (err) => {
             if (err) console.log(err);
         })
     }
@@ -969,10 +828,9 @@ exports.addQueryDetails = (rows, selectedColumns, distinctColumn, userId, assist
 
 //------------------------------------------------------------Create Query-----------------------------------------------------------------------
 
-exports.addQuery = (userId, assistantId, intentId, query) => {
-    let queryId = uuid();
-    let sql = "insert into queries values(?, ?, ?, ?, ?);";
-    connection.query(sql, [userId, assistantId, intentId, queryId, query], (err) => {
+exports.addQuery = (username, assistantName, intentName, query) => {
+    let sql = "insert into queries values(?, ?, ?, ?);";
+    connection.query(sql, [username, assistantName, intentName, query], (err) => {
         if (err) console.log(err);
     })
 }
@@ -980,13 +838,13 @@ exports.addQuery = (userId, assistantId, intentId, query) => {
 
 //------------------------------------------------------------Get Table Name-----------------------------------------------------------------------
 
-exports.getTableName = (intentId) => {
-    let sql = "select table_name from query_table where intent_id=? group by intent_id;";
+exports.getTableName = (username, assistantName,intentName) => {
+    let sql = "select tableName from queryTable where username=? and assistant=? and intent=? group by intent;";
     return new Promise(resolve => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
-                resolve(results[0].table_name);
+                resolve(results[0].tableName);
             } else {
                 resolve(undefined);
             }
@@ -995,13 +853,15 @@ exports.getTableName = (intentId) => {
 }
 
 //------------------------------------------------------------Get Query Rows-----------------------------------------------------------------------
-exports.getQueryRows = (intentId) => {
-    let sql = 'select * from query_table where intent_id=? and column_name != "null";';
+exports.getQueryRows = (username, assistantName, intentName) => {
+    console.log(username, assistantName, intentName);
+    let sql = 'select * from queryTable where username=? and assistant=? and intent=? and selectedColumn is not null;';
     return new Promise(resolve => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username,assistantName,intentName], (err, results) => {
             if (err) console.log(err);
             else {
                 let queryRows = [];
+                console.log("ASESCEVRVWS",results);
                 for (let i = 0; i < results.length; i++) {
                     if (results[i].column_name != null)
                         queryRow = {
@@ -1021,10 +881,10 @@ exports.getQueryRows = (intentId) => {
 
 //------------------------------------------------------------Get Selected Columns-----------------------------------------------------------------------
 
-exports.getSelectedColumns = (intentId) => {
-    let sql = 'select * from query_table where intent_id =? and selected_column != "null";';
+exports.getSelectedColumns = (username, assistantName,intentName) => {
+    let sql = 'select * from queryTable where username=? and assistant=? and intent =? and selectedColumn is not null;';
     return new Promise(resolve => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err);
             else {
                 let selectedColumns = [];
@@ -1039,10 +899,10 @@ exports.getSelectedColumns = (intentId) => {
 
 //------------------------------------------------------------Get Distinct Columns-----------------------------------------------------------------------
 
-exports.getDistinctColumn = (intentId) => {
-    let sql = 'select * from query_table where intent_id =? and distinct_column != "null";';
+exports.getDistinctColumn = (username, assistantName,intentName) => {
+    let sql = 'select * from queryTable where username=? and assistant=? and intent =? and distincColumn is not "null";';
     return new Promise(resolve => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err);
             else if (results.length != 0) {
                 resolve(results[0].distinct_column);
@@ -1055,17 +915,17 @@ exports.getDistinctColumn = (intentId) => {
 
 //------------------------------------------------------------Get Query Details-----------------------------------------------------------------------
 
-exports.getQueryDetails = async (intentId) => {
+exports.getQueryDetails = async (username, assistantName,intentName) => {
 
     return new Promise(async (resolve) => {
         // Table name
-        let tableName = await this.getTableName(intentId);
+        let tableName = await this.getTableName(username, assistantName,intentName);
         // Query Rows ( Condition )
-        let queryRows = await this.getQueryRows(intentId);
+        let queryRows = await this.getQueryRows(username, assistantName,intentName);
         // Selected Columns
-        let selectedColumns = await this.getSelectedColumns(intentId);
+        let selectedColumns = await this.getSelectedColumns(username, assistantName,intentName);
         // Distinct Column
-        let distinctColumn = await this.getDistinctColumn(intentId);
+        let distinctColumn = await this.getDistinctColumn(username, assistantName,intentName);
         resolve({
             tableName,
             queryRows,
@@ -1079,16 +939,16 @@ exports.getQueryDetails = async (intentId) => {
 
 //------------------------------------------------------------Delete Query-----------------------------------------------------------------------
 
-exports.deleteExistingQuery = (intentId) => {
-    let sql = "delete from query_table where intent_id=?;";
-    connection.query(sql, [intentId], (err) => {
+exports.deleteExistingQuery = (username,assistantName, intentName) => {
+    let sql = "delete from queryTable where username=? and assistant=? and intent=?;";
+    connection.query(sql, [username,assistantName,intentName], (err) => {
         if (err) console.log(err);
     })
 
-    sql = "delete from queries where intent_id=?;";
-    connection.query(sql, [intentId], (err) => {
-        if (err) console.log(err);
-    })
+    // sql = "delete from queries where intent=?;";
+    // connection.query(sql, [intentName], (err) => {
+    //     if (err) console.log(err);
+    // })
 }
 
 
@@ -1098,15 +958,15 @@ exports.deleteExistingQuery = (intentId) => {
 
 //------------------------------------------------------------Create Entity-----------------------------------------------------------------------
 
-exports.createEntity = async (userId, assistantId, intentId, selectedColumns, entityNames) => {
+exports.createEntity = async (username, assistantName, intentName, selectedColumns, entityNames) => {
+    let ipAddress = "172.19.12.1";
     for (let i = 0; i < selectedColumns.length; i++) {
-        let entityId = uuid();
         let entityName = JSON.parse(entityNames)[selectedColumns[i]];
-        let sql = "insert into entity(user_id, assistant_id, intent_id, entity_id, entity_name,entity_type) values(?,?,?,?,?,?);";
-        connection.query(sql, [userId, assistantId, intentId, entityId, entityName, selectedColumns[i].toLowerCase()], (err, results) => {
+        let sql = "insert into entity values(?,?,?,?,?,?,'NULL');";
+        connection.query(sql, [username, assistantName, intentName,ipAddress, entityName, selectedColumns[i].toLowerCase()], (err, results) => {
             if (err) console.log(err);
             else {
-                console.log(entityId);
+                console.log("entityId");
             }
         })
     }
@@ -1114,15 +974,17 @@ exports.createEntity = async (userId, assistantId, intentId, selectedColumns, en
 
 //------------------------------------------------------------Add Entity Value(Do in Save Conversation)-----------------------------------------------------------------------
 
-exports.entityValue = (intentId, existingEntities, sendMessage) => {
-    let sql = 'select * from entity where intent_id=?';
+exports.entityValue = (username, assistantName, intentName, existingEntities, sendMessage) => {
+    console.log(username, assistantName, intentName, existingEntities, sendMessage)
+    let sql = 'select * from entity where username=? and assistant=? and intent=?';
     return new Promise(resolve => {
-        connection.query(sql, [intentId], async (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], async (err, results) => {
             if (err) console.log(err)
             else {
+                console.log(results);
                 for (let i = 0; i < results.length; i++) {
-                    if (results[i].entity_type === "name" || results[i].entity_type === "other")
-                        existingEntities.push(results[i].entity_type);
+                    if (results[i].entityType === "name" || results[i].entityType === "other")
+                        existingEntities.push(results[i].entityType);
                 }
                 let value;
                 for (let i = 0; i < existingEntities.length; i++) {
@@ -1137,7 +999,7 @@ exports.entityValue = (intentId, existingEntities, sendMessage) => {
                         value = existingEntities[i].sourceText;
                         entityName = existingEntities[i].entity;
                     }
-                    await this.updateEntityValue(entityName, intentId, value);
+                    await this.updateEntityValue(username,assistantName, entityName, intentName, value);
                 }
                 resolve("true");
             }
@@ -1149,11 +1011,11 @@ exports.entityValue = (intentId, existingEntities, sendMessage) => {
 //------------------------------------------------------------Get Entities-----------------------------------------------------------------------
 
 
-exports.getEntities = (intentId) => {
-    console.log(intentId);
-    let sql = 'select * from entity where intent_id=? ';
+exports.getEntities = (username, assistantName, intentName) => {
+    console.log(intentName);
+    let sql = 'select * from entity where username=? and assistant=? and intent=? ';
     return new Promise(resolve => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err);
             else {
                 resolve(results);
@@ -1164,11 +1026,11 @@ exports.getEntities = (intentId) => {
 
 //------------------------------------------------------------Update Entity-----------------------------------------------------------------------
 
-exports.updateEntityValue = (entityName, intentId, value) => {
-    console.log(intentId, entityName, value);
-    let sql = 'update entity set entity_value=? where intent_id=? and entity_type=?';
+exports.updateEntityValue = (username, assistantName, entityName, intentName, value) => {
+    console.log(intentName, entityName, value);
+    let sql = 'update entity set entityValue=? where username=? and assistant=? and intent=? and entityType=?';
     return new Promise(resolve => {
-        connection.query(sql, [value, intentId, entityName.toLowerCase()], (err2) => {
+        connection.query(sql, [value,username, assistantName, intentName, entityName.toLowerCase()], (err2) => {
             if (err2) console.log(err2);
             else {
                 resolve("Success");
@@ -1180,11 +1042,10 @@ exports.updateEntityValue = (entityName, intentId, value) => {
 
 //------------------------------------------------------------Delete Entity-----------------------------------------------------------------------
 
-exports.deleteEntity = (intentId) => {
-    console.log(intentId)
-    let sql = 'delete from entity where intent_id=? and entity_name=?';
+exports.deleteEntity = (username, assistantName, intentName) => {
+    let sql = 'delete from entity where username=? and assistant=? and intent=? and entityName=?';
     return new Promise(resolve => {
-        connection.query(sql, [intentId, entityName.toLowerCase()], (err2) => {
+        connection.query(sql, [username, assistantName, intentName, entityName.toLowerCase()], (err2) => {
             if (err2) console.log(err2);
             else {
                 resolve("Success");

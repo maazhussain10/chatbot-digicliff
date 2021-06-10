@@ -19,8 +19,10 @@ class MessagesPage extends Component {
     }
 
     getMessages = () => {
-        // Get the necessary details ( intentId )
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get the necessary details ( intentName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
         // Make a get request to the express server( messages.js ) to get the messages in the intent.
         try {
@@ -28,7 +30,9 @@ class MessagesPage extends Component {
                 method: 'get',
                 url: 'http://localhost:5000/message',
                 params: {
-                    intentId: intentId,
+                    username: username,
+                    assistantName:assistantName,
+                    intentName: intentName,
                 },
 
             }).then((response) => {
@@ -44,15 +48,18 @@ class MessagesPage extends Component {
 
     multipleReplyChange = (e) => {
         let multipleReply = document.getElementById('multipleBotReply').checked;
-        console.log(multipleReply);
-        // Get the necessary details ( intentId )
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get the necessary details ( intentName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/intent/multiple-reply',
                 params: {
-                    intentId: intentId,
+                    username: username,
+                    assistantName:assistantName,
+                    intentName: intentName,
                     multipleReply: multipleReply,
                 },
 
@@ -65,7 +72,7 @@ class MessagesPage extends Component {
 
     render() {
         let { botReplies, userMessages } = this.state;
-        let { assistantId, assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         let messages;
         if (userMessages.length > botReplies.length) {
             messages = userMessages;
@@ -121,14 +128,9 @@ class MessagesPage extends Component {
 
                 </div>
                 <ChatBox
-                    assistantId={assistantId}
                     assistantName={assistantName}
                     description={description} />
-
             </React.Fragment >
-
-
-
         );
     }
 }

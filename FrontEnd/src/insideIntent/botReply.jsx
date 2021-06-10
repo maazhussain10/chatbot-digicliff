@@ -4,13 +4,21 @@ import axios from 'axios';
 class BotReply extends Component {
     state = {}
     deleteBotReply = () => {
-        let { messageId } = this.props.botReply;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { message } = this.props.botReply;
+
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/message/delete',
                 params: {
-                    messageId: messageId
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
+                    message: message,
+                    messageType: "bot",
                 },
 
             }).then((response) => {
@@ -25,14 +33,21 @@ class BotReply extends Component {
 
     updateBotReply = (htmlElement) => {
         let botReply = htmlElement.textContent;
-        let { messageId } = this.props.botReply;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { message } = this.props.botReply;
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/message/update',
                 params: {
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     message: botReply,
-                    messageId: messageId
+                    previousMessage:message,
+                    messageType: "bot",
                 },
 
             }).then((response) => {

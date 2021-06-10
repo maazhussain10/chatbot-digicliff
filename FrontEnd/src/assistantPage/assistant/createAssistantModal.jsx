@@ -22,8 +22,8 @@ class CreateAssistantModal extends Component {
     //------------------------------------------------------------------CREATE ASSISTANTS AXIOS----------------------------------------------------------------------
 
     createAssistant = () => {
-        // get userId from sessionStorage.
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
+        // get username from sessionStorage.
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         let { assistantName, assistantDesc } = this.state;
 
 
@@ -55,7 +55,7 @@ class CreateAssistantModal extends Component {
                 params: {
                     assistantName: assistantName,
                     assistantDesc: assistantDesc,
-                    userId: userId
+                    username: username
                 },
 
             }).then((response) => {
@@ -73,7 +73,7 @@ class CreateAssistantModal extends Component {
 
                 // Get getAssistant method from props and call the function.
                 let { getAssistants } = this.props;
-                getAssistants(userId);
+                getAssistants(username);
 
 
                 if (responseStatus) {

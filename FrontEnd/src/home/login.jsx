@@ -4,14 +4,6 @@ import $ from "jquery";
 import axios from 'axios';
 class Login extends Component {
     state = {
-        // usernameEmailValidation: {
-        //     message: "",
-        //     isCorrect: null,
-        // },
-        // passwordValidation: {
-        //     message: "",
-        //     isCorrect: null,
-        // },
         password: "",
         usernameEmail: "",
         modal: "",
@@ -35,15 +27,6 @@ class Login extends Component {
                 $(".field__input").eq(index).focus();
             }
         });
-
-        // $(document).ready(function () {
-        //   $(window).keydown(function (event) {
-        //     if (event.keyCode === 13) {
-        //       event.preventDefault();
-        //       return false;
-        //     }
-        //   });
-        // });
     }
 
     userNameEmailkeyPress = (e) => {
@@ -59,8 +42,6 @@ class Login extends Component {
             this.handlePassword(e.target.value);
     }
     doLogin = async () => {
-        // const { usernameEmail, password } = this.state;
-
         if (!this.state.usernameEmail && !this.state.password) {
             return;
         }
@@ -121,7 +102,6 @@ class Login extends Component {
                                     <form className="containe">
                                         <div className="form-group">
                                             <label htmlFor="exampleInputEmail1">Email address or Username</label>
-                                            {/* <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" /> */}
                                             <div className="input-group mb-3">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text" id="basic-addon1"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-at" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +123,6 @@ class Login extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1">Password</label>
-                                            {/* <input type="password" className="form-control" id="exampleInputPassword1" /> */}
                                             <div className="input-group mb-3">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text" id="basic-addon1">
@@ -163,11 +142,8 @@ class Login extends Component {
                                                 />
                                             </div>
                                         </div>
-
-                                        {/* <button type="submit" className="btn btn-primary">Submit</button> */}
                                     </form>
                                 </div>
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-outline-danger" data-dismiss="modal">Close</button>
@@ -176,7 +152,6 @@ class Login extends Component {
                         </div>
                     </div>
                 </div>
-
             </React.Fragment>
         );
     }

@@ -3,15 +3,21 @@ import axios from 'axios';
 
 class UserMessage extends Component {
     deleteUserMessage = () => {
-        let { messageId } = this.props.userMessage;
+        let { message } = this.props.userMessage;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/message/delete',
                 params: {
-                    messageId: messageId
+                    username: username,
+                    assistantName: assistantName,
+                    intentName:intentName,
+                    message: message,
+                    messageType: "user",
                 },
-
             }).then((response) => {
                 let { getMessages } = this.props;
                 getMessages();
@@ -24,14 +30,21 @@ class UserMessage extends Component {
 
     updateUserMessage = (htmlElement) => {
         let userMessage = htmlElement.textContent;
-        let { messageId } = this.props.userMessage;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { message } = this.props.userMessage;
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/message/update',
                 params: {
+                    username: username,
+                    assistantName: assistantName,
+                    intentName:intentName,
                     message: userMessage,
-                    messageId: messageId
+                    previousMessage:message,
+                    messageType: "user",
                 },
 
             }).then((response) => {

@@ -50,22 +50,23 @@ class Settings extends Component {
 
     getTheme = () => {
 
-        // Get the necessary details ( userId, assistantId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get the necessary details ( username, assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
 
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/settings',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId
+                    username: username,
+                    assistantName: assistantName
                 },
 
             }).then((response) => {
                 const { chatBoxSettings } = response.data;
                 this.setState({ settings: chatBoxSettings });
+                console.log(this.state.settings);
             });
         }
         catch (e) {
@@ -74,17 +75,18 @@ class Settings extends Component {
     }
 
     saveChanges = () => {
-        // Get the necessary details (assistantId )
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get the necessary details (assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         let { settings } = this.state;
-        console.log(settings);
         try {
             axios({
                 method: 'post',
                 url: 'http://localhost:5000/settings',
                 params: {
+                    username:username,
                     settings: settings,
-                    assistantId: assistantId
+                    assistantName: assistantName
                 },
 
             }).then((response) => {

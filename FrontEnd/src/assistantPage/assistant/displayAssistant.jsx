@@ -6,21 +6,20 @@ class DisplayAssistant extends Component {
 
 
     //------------------------------------------------------------------DELETE ASSISTANT AXIOS----------------------------------------------------------------------
-    handleDeleteAssistant = (id) => {
+    handleDeleteAssistant = (assistantName) => {
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/assistant/delete',
                 params: {
-                    assistantId: id
+                    username:username,
+                    assistantName: assistantName
                 },
-
             }).then((response) => {
-                // get userId from sessionStorage.
-                let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
+                // get username from sessionStorage.
                 let { getAssistants } = this.props;
-                getAssistants(userId);
-
+                getAssistants(username);
             });
         }
         catch (e) {
@@ -62,7 +61,7 @@ class DisplayAssistant extends Component {
                                 {/* Delete Assistant Button 
                                     Calls handleDeleteAssitant() function when clicked.
                                 */}
-                                <button type="button" onClick={() => this.handleDeleteAssistant(assistantId)} className="btn btn-sm btn-outline-danger">
+                                <button type="button" onClick={() => this.handleDeleteAssistant(assistantName)} className="btn btn-sm btn-outline-danger">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-person-dash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm5-.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
                                     </svg>

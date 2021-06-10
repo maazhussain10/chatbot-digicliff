@@ -5,10 +5,10 @@ class CreateBotReply extends Component {
 
     addBotReply = () => {
 
-        // Get the necessary details ( userId, assistantId, intentId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get the necessary details ( username, assistantName, intentName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
 
         // Get the html of the input field and value entered.
@@ -24,9 +24,9 @@ class CreateBotReply extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/message',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     messageType: "bot",
                     message: botReply
                 },

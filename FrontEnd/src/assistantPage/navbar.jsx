@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import { Mid } from './midcontent.jsx'
 import { Link } from "react-router-dom";
 class Navbar extends Component {
     state = {}
@@ -30,7 +29,6 @@ class Navbar extends Component {
                                 <button className="btn btn-sm btn-primary my-2 my-sm-0 mr-2" href={`/${username}/profile`}>PROFIILE</button>
                             </Link>
                             <a href="/#" onClick={this.handleLogout} className="btn btn-sm btn-outline-success my-2 my-sm-0 mr-2" type="submit">LOGOUT</a>
-                            {/* <a href="/explore" className="btn btn-sm btn-outline-secondary my-2 my-sm-0 mr-2" type="submit"></a> */}
                         </div>
                     </div>
                 </nav>

@@ -79,16 +79,16 @@ class ChatBox extends Component {
                 time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
             }
             messageStorage.push(userMessage);
-            const { userId, assistantId, assistantName, username } = this.props;
+            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+
+            const { assistantName } = this.props;
 
             axios({
                 method: 'post',
                 url: 'http://localhost:5000/nlp',
                 params: {
                     sendMessage: message,
-                    userId: userId,
                     username: username,
-                    assistantId: assistantId,
                     assistantName: assistantName,
                     hasFollowUp: hasFollowUp,
                     previousIntent: previousIntent,
@@ -135,16 +135,16 @@ class ChatBox extends Component {
     }
 
     getSettings = () => {
-        // Get the necessary details ( userId, assistantId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get the necessary details ( username, assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/settings',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId
+                    username: username,
+                    assistantName: assistantName
                 },
 
             }).then((response) => {

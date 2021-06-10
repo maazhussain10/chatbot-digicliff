@@ -8,7 +8,7 @@ const {
     response
 } = require('express');
 
-exports.saveQuery = async (columnNames, columnName, selectedOption, compareValue, tableName, userId, assistantId, intentId) => {
+exports.saveQuery = async (columnNames, columnName, selectedOption, compareValue, tableName, username, assistantName, intentName) => {
     let queryId = uuid();
 
     let columns = "";
@@ -21,35 +21,35 @@ exports.saveQuery = async (columnNames, columnName, selectedOption, compareValue
 
     let sql = `select ${columns} from ${tableName} where ${columnName} ${selectedOption} "${compareValue}";`;
     // Add User ID and Assistant ID
-    connection.query('insert into queries values(?, ?, ?, ?, ?)', [userId, assistantId, intentId, queryId, sql], (err) => {
+    connection.query('insert into queries values(?, ?, ?, ?, ?)', [username, assistantName, intentName, queryId, sql], (err) => {
         if (err) console.log(err);
     })
 }
 
-exports.getQuery = async (intentId) => {
-    let sql = "select query_id, query from queries where intent_id=?";
+exports.getQuery = async (username, assistantName,intentName) => {
+    let sql = "select query from queries where username=? and assistant=? and intent=?";
     return new Promise((resolve, reject) => {
-        connection.query(sql, [intentId], (err, results) => {
+        connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err);
             else {
-                console.log(results);
                 resolve(results);
             }
         })
     })
 }
 
-exports.getDatabaseDetails = (assistantId) => {
-    let sql = "select * from database_connection where assistant_id=?;";
+exports.getDatabaseDetails = (username, assistantName) => {
+    let sql = "select * from databaseConnection where username=? and assistant=?;";
     return new Promise(resolve => {
-        connection.query(sql, [assistantId], (err, results) => {
+        connection.query(sql, [username, assistantName], (err, results) => {
             if (err) console.log(err);
             else if (results.length !== 0) {
                 resolve(
                     {
-                        username: results[0].username,
-                        password: results[0].password,
-                        databaseName: results[0].database_name
+                        hostname: results[0].hostname,
+                        dbUsername: results[0].dbUsername,
+                        password: results[0].dbPassword,
+                        databaseName: results[0].databaseName
                     }
                 )
             } else {
@@ -60,12 +60,12 @@ exports.getDatabaseDetails = (assistantId) => {
 }
 
 exports.createRichResponses = async (id, sqlQuery, type, values, cardNo) => {
-    const { userId, assistantId, intentId } = id;
-
+    const { username, assistantName, intentName } = id;
+    console.log(assistantName);
     //Soft code knowledge Store, Please <3 ^_^
-    let databaseDetails = await this.getDatabaseDetails(assistantId);
-    let { username, password, databaseName } = databaseDetails;
-    let DBconnection = await DataBaseConnection.DataBaseConnection(username, password, databaseName);
+    let databaseDetails = await this.getDatabaseDetails(username, assistantName);
+    let { hostname,dbUsername, password, databaseName } = databaseDetails;
+    let DBconnection = await DataBaseConnection.DataBaseConnection(hostname,dbUsername, password, databaseName);
     return new Promise((resolve) => {
         DBconnection.query(sqlQuery, (err, results) => {
             if (err) console.log("Run Query:", err);
@@ -79,7 +79,7 @@ exports.createRichResponses = async (id, sqlQuery, type, values, cardNo) => {
                         let chipValue = values.replace(/{.*}/, results[i][values.slice(start, end)]);
 
                         //Insert Chip
-                        sqlFunctions.insertCreateChip(userId, assistantId, intentId, uuid(), "false", chipValue);
+                        sqlFunctions.insertCreateChip(username, assistantName, intentName, "false", chipValue);
                     }
                 }
                 else if (type === "card") {
@@ -96,7 +96,7 @@ exports.createRichResponses = async (id, sqlQuery, type, values, cardNo) => {
                             }
                         }
                         //Insert Card
-                        sqlFunctions.insertCreateCard(userId, assistantId, intentId, uuid(), "false", cardNo, columnNames, cardValues);
+                        sqlFunctions.insertCreateCard(username, assistantName, intentName, uuid(), "false", cardNo, columnNames, cardValues);
 
                     }
                 }

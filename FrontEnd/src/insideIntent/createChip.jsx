@@ -12,10 +12,10 @@ class CreateChip extends Component {
     }
 
     createChip = () => {
-        // Get the necessary details ( userId, assistantId, intentId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get the necessary details ( username, assistantName, intentName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
         let chipValue = document.getElementById('input-chipvalue').value;
         let useQuery = document.getElementById('useQueryChip').checked;
@@ -28,9 +28,9 @@ class CreateChip extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/chip',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     chipResponse: chipValue,
                     usingQueries: useQuery,
                 },

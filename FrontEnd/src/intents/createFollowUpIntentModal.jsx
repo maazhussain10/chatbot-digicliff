@@ -19,18 +19,16 @@ class CreateFollowUpIntentModal extends Component {
 
     //------------------------------------------------------------------Create folllow up intent.----------------------------------------------------------------------
     createFollowUpIntent = async () => {
-        // Get the necessary details ( userId, assistantId, intentId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = this.props.followUpIntentDetails;
+        // Get the necessary details ( username, assistantName, intentId )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = this.props.followUpIntentDetails;
 
         let { followUpIntentName, followUpIntentDesc } = this.state;
-        console.log(assistantId, userId, followUpIntentName, followUpIntentDesc, intentId);
 
         // Check validation of all input fields.
         let { followUpIntentNameValidation, followUpIntentDescValidation } = this.state;
         if (!followUpIntentNameValidation.isCorrect || !followUpIntentDescValidation.isCorrect) {
-            console.log(followUpIntentDesc, followUpIntentName);
             if (followUpIntentName === "") {
                 followUpIntentNameValidation.isCorrect = false;
                 followUpIntentNameValidation.message = "Intent name cannot be empty";
@@ -53,11 +51,11 @@ class CreateFollowUpIntentModal extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/follow-intent',
                 params: {
+                    username:username,
                     intentName: followUpIntentName,
                     intentDesc: followUpIntentDesc,
-                    assistantId: assistantId,
-                    userId: userId,
-                    previousIntent: intentId,
+                    assistantName: assistantName,
+                    previousIntent: intentName,
                 },
             }).then((response) => {
                 /*
@@ -72,7 +70,7 @@ class CreateFollowUpIntentModal extends Component {
 
                 // Update intents after creating a new intent.
                 let { getIntents } = this.props;
-                getIntents(assistantId);
+                getIntents(assistantName);
 
                 // If the follow up intent was created successfully!
                 if (responseStatus) {
@@ -190,7 +188,7 @@ class CreateFollowUpIntentModal extends Component {
     // Called when the create/update modal is closed
     clearState = () => {
         // Clears state related to create and update details whenever the modal is closed.
-        console.log("Clearing state");
+
         this.setState({
             followUpIntentCreationStatus: null,
             followUpIntentNameValidation: {

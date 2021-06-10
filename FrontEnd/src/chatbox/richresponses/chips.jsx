@@ -12,7 +12,7 @@ class Chips extends Component {
     handleClick = () => {
         let { chip } = this.props;
         if (!chip.clickable)
-            this.props.sendMessage(chip.chip_value);
+            this.props.sendMessage(chip.chipValue);
     }
 
 
@@ -54,7 +54,7 @@ class Chips extends Component {
                 }}
                 className={this.getClass(chip.active)}
             >
-                {chip.chip_value}
+                {chip.chipValue}
             </button>
 
         )

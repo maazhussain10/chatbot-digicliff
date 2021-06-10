@@ -38,9 +38,10 @@ class UpdateIntentModal extends Component {
     //------------------------------------------------------------------UPDATE INTENT AXIOS----------------------------------------------------------------------
     updateIntent = () => {
 
-        // Get intentId of current card and assistantId from session storage.
-        let { intentId } = this.props.updateIntentDetails;
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get intentName of current card and assistantName from session storage.
+        let { intentName } = this.props.updateIntentDetails;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
 
 
         // Get the name and description of the updated bot.
@@ -50,7 +51,7 @@ class UpdateIntentModal extends Component {
             updateIntentName,
             updateIntentDesc } = this.state;
 
-        let { intentName, intentDesc } = this.props.updateIntentDetails;
+        let { intentDesc } = this.props.updateIntentDetails;
 
         // Validate the input
         if (!updateIntentNameValidation.isCorrect || !updateIntentDescValidation.isCorrect) {
@@ -85,10 +86,11 @@ class UpdateIntentModal extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/intent/update',
                 params: {
-                    assistantId: assistantId,
+                    username:username,
+                    assistantName: assistantName,
                     intentName: updateIntentName,
                     description: updateIntentDesc,
-                    intentId: intentId,
+                    previousIntentName: intentName,
                 },
 
             }).then((response) => {
@@ -98,7 +100,7 @@ class UpdateIntentModal extends Component {
 
                 // Get getIntent method from props and call the function.
                 let { getIntents } = this.props;
-                getIntents(assistantId);
+                getIntents(assistantName);
 
                 if (responseStatus) {
                     setTimeout(() => { this.clearState() }, 1000)

@@ -41,10 +41,10 @@ class UpdateAssistantModal extends Component {
 
 
     updateAssistant = () => {
-        // get userId from sessionStorage.
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
+        // get username from sessionStorage.
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
 
-        let { assistantId, assistantName, assistantDesc } = this.props.updateAssistantDetails;
+        let { assistantName, assistantDesc } = this.props.updateAssistantDetails;
         let {
             updateAssistantNameValidation,
             updateAssistantDescValidation,
@@ -79,10 +79,10 @@ class UpdateAssistantModal extends Component {
                 method: 'get',
                 url: 'http://localhost:5000/assistant/update',
                 params: {
-                    userId: userId,
+                    username: username,
                     assistantName: updateAssistantName,
                     assistantDesc: updateAssistantDesc,
-                    assistantId: assistantId,
+                    previousAssistantName: assistantName,
 
                 },
 
@@ -99,7 +99,7 @@ class UpdateAssistantModal extends Component {
 
                 // Get getAssistant method from props and call the function.
                 let { getAssistants } = this.props;
-                getAssistants(userId);
+                getAssistants(username);
 
 
                 if (responseStatus) {

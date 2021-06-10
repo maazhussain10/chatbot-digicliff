@@ -33,9 +33,9 @@ class CreateCards extends Component {
 
 
         // Get the necessary details ( userName, assistantName, intentName )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
         let { cardNo, cardName, cardValue } = cardDetails;
         let useQuery = document.getElementById('useQueryCard').checked;
@@ -45,9 +45,9 @@ class CreateCards extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/card',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     useQuery: useQuery,
                     cardNo: cardNo,
                     cardName: cardName,

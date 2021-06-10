@@ -6,12 +6,12 @@ class DatabaseConnection extends Component {
 
     //------------------------------------------------------------KNOWLEDGE STORE AXIOS------------------------------------------------------------
     connectDatabase = () => {
-        // Get the necessary details ( userId, assistantId )
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        // Get the necessary details ( username, assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
 
         // Get the values entered by the user.
-        let username = document.getElementById('dbUsername').value;
+        let dbUsername = document.getElementById('dbUsername').value;
         let password = document.getElementById('dbPassword').value;
         let databaseName = document.getElementById('databaseName').value;
 
@@ -21,9 +21,9 @@ class DatabaseConnection extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/addDatabaseDetails',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
                     username: username,
+                    assistantName: assistantName,
+                    dbUsername: dbUsername,
                     databaseName: databaseName,
                     password: password
                 },

@@ -29,20 +29,23 @@ class Intents extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        // Get the assistantId from session storage.
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        this.getIntents(assistantId);
+        // Get the assistantName from session storage.
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        this.getIntents(assistantName);
     }
 
 
     //---------------------------------------------------------------GET INTENTS AXIOS---------------------------------------------------------------
-    getIntents = (assistantId) => {
+    getIntents = (assistantName) => {
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/intent',
                 params: {
-                    assistantId: assistantId
+                    username:username,
+                    assistantName: assistantName
                 },
 
             }).then((response) => {
@@ -71,7 +74,7 @@ class Intents extends Component {
         this.setState({ followUpIntentDetails: intent });
     }
     render() {
-        let { assistantId, assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         let {
             existingIntents,
             updateIntentDetails,
@@ -110,7 +113,6 @@ class Intents extends Component {
                         getIntents={this.getIntents} />
                 </div>
                 <ChatBox
-                    assistantId={assistantId}
                     assistantName={assistantName}
                     description={description} />
             </React.Fragment>

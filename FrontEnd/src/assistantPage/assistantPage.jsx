@@ -26,20 +26,19 @@ class AssistantPage extends Component {
         this._isMounted = true;
 
         // Get Assistants from backend 
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        this.getAssistants(userId);
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        this.getAssistants(username);
     }
     //------------------------------------------------------------------GET ASSISTANTS AXIOS----------------------------------------------------------------------
 
-    getAssistants = (userId) => {
+    getAssistants = (username) => {
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/assistant',
                 params: {
-                    userId: userId
+                    username: username
                 },
-
             }).then((response) => {
 
                 if (this._isMounted) {

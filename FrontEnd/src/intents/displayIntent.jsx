@@ -15,19 +15,23 @@ class DisplayIntent extends Component {
     }
     //------------------------------------------------------------------DELETE INTENT AXIOS----------------------------------------------------------------------
     handleDeleteIntent = () => {
-        let { intentId } = this.props.intent;
+        let { intentName } = this.props.intent;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/intent-delete',
                 params: {
-                    intentId: intentId
+                    username: username,
+                    assistantName:assistantName,
+                    intentName: intentName
                 },
 
             }).then((response) => {
                 const { getIntents } = this.props;
-                let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-                getIntents(assistantId);
+                getIntents(assistantName);
             })
         }
         catch (e) {
@@ -38,8 +42,8 @@ class DisplayIntent extends Component {
     //------------------------------------------------------------------INTENT DETAILS HANDLING----------------------------------------------------------------------
 
     handleIntent = () => {
-        let { intentName, intentId, intentDesc } = this.props.intent;
-        let intentDetails = { intentName: intentName, intentDesc: intentDesc, intentId: intentId }
+        let { intentName, intentDesc } = this.props.intent;
+        let intentDetails = { intentName: intentName, intentDesc: intentDesc }
         // Add current intent details to Session storage.
         sessionStorage.setItem('intentDetails', JSON.stringify(intentDetails))
         // Update time modified here
@@ -62,7 +66,7 @@ class DisplayIntent extends Component {
     //------------------------------------------------------------------RENDER----------------------------------------------------------------------
     render() {
         let { intent } = this.props;
-        // Get the necessary details ( username, assistantName, intentId )
+        // Get the necessary details ( username, assistantName, intentName )
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         const { intentName, intentDesc } = intent;

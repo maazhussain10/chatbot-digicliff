@@ -12,25 +12,27 @@ class RichResponse {
 
         app.get('/rich-response', (req, res) => {
             let {
-                intentId,
+                username, assistantName, intentName
             } = req.query
 
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             async function getChips() {
-                let existingChips = await sqlFunctions.getChips(intentId);
+                let existingChips = await sqlFunctions.getChips(username, assistantName, intentName);
                 if (existingChips.length != 0) {
                     res.send(existingChips);
                 }
 
             }
             async function getCards() {
-                let existingCards = await sqlFunctions.getCards(intentId);
+                let existingCards = await sqlFunctions.getCards(intentName);
                 if (existingCards.length != 0) {
                     res.send(existingCards);
                 }
             }
+
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             getCards();
             getChips();
         });
@@ -38,9 +40,9 @@ class RichResponse {
         app.post('/chip', (req, res) => {
 
             const {
-                userId,
-                assistantId,
-                intentId,
+                username,
+                assistantName,
+                intentName,
                 chipResponse,
                 usingQueries,
             } = req.query
@@ -49,9 +51,8 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             async function createChip() {
-                let richResponseId = uuid();
-                await sqlFunctions.insertCreateChip(userId, assistantId, intentId, richResponseId, usingQueries, chipResponse);
-                let existingChips = await sqlFunctions.getChips(intentId);
+                await sqlFunctions.insertCreateChip(username, assistantName, intentName, usingQueries, chipResponse);
+                let existingChips = await sqlFunctions.getChips(username, assistantName, intentName);
                 res.send(existingChips);
             }
             createChip();
@@ -62,12 +63,10 @@ class RichResponse {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                intentId
-            } = req.query;
+            const {username, assistantName, intentName} = req.query;
 
             const getChipPhrases = async () => {
-                let responses = await sqlFunctions.getAllChips(intentId);
+                let responses = await sqlFunctions.getAllChips(username, assistantName, intentName);
                 res.send(responses);
             }
             getChipPhrases();
@@ -79,11 +78,11 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             const {
-                richResponseId
+                username,assistantName,intentName,chipValue
             } = req.query;
 
             const deleteChip = async () => {
-                await sqlFunctions.deleteChip(richResponseId);
+                await sqlFunctions.deleteChip(username,assistantName,intentName,chipValue);
                 res.send("Deleted")
             }
             deleteChip();
@@ -95,11 +94,14 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             const {
-                chipResponse,
-                richResponseId
+                username,
+                assistantName,
+                intentName,
+                chipValue,
+                previousChipValue
             } = req.query;
             const updateChip = async () => {
-                await sqlFunctions.updateChip(chipResponse, richResponseId);
+                await sqlFunctions.updateChip(username,assistantName,intentName,chipValue,previousChipValue);
                 res.send("Updated")
             }
             updateChip();
@@ -110,9 +112,9 @@ class RichResponse {
         app.post('/card', (req, res) => {
 
             const {
-                userId,
-                assistantId,
-                intentId,
+                username,
+                assistantName,
+                intentName,
                 useQuery,
                 cardNo,
                 cardName,
@@ -128,10 +130,9 @@ class RichResponse {
 
 
             async function createCard() {
-                let richResponseId = uuid();
                 if (cardName)
-                    await sqlFunctions.insertCreateCard(userId, assistantId, intentId, richResponseId, useQuery, cardNo, cardName, cardValue);
-                let existingCards = await sqlFunctions.getCards(intentId);
+                    await sqlFunctions.insertCreateCard(username, assistantName, intentName, useQuery, cardNo, cardName, cardValue);
+                let existingCards = await sqlFunctions.getCards(intentName);
                 res.send(existingCards);
             }
             createCard();
@@ -143,12 +144,12 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             const {
-                intentId
+                intentName
             } = req.query;
 
             const getCardPhrases = async () => {
-                let cards = await sqlFunctions.getCards(intentId);
-                let queryCards = await sqlFunctions.getQueryCards(intentId);
+                let cards = await sqlFunctions.getCards(intentName);
+                let queryCards = await sqlFunctions.getQueryCards(intentName);
                 let allCards = cards.concat(queryCards);
                 res.send({
                     allCards: allCards
@@ -163,11 +164,11 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             const {
-                richResponseId
+                username,assistantName,intentName
             } = req.query;
 
             const deleteCard = async () => {
-                await sqlFunctions.deleteCard(richResponseId);
+                await sqlFunctions.deleteCard();
                 res.send("Deleted")
             }
             deleteCard();
@@ -181,10 +182,10 @@ class RichResponse {
             const {
                 cardName,
                 cardValue,
-                richResponseId
+                
             } = req.query;
             const updateCard = async () => {
-                await sqlFunctions.updateCard(cardName, cardValue, richResponseId);
+                await sqlFunctions.updateCard(cardName, cardValue, );
                 res.send("Deleted")
             }
             updateCard();

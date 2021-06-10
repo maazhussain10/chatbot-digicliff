@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 
-exports.DataBaseConnection = async (userName, password, databaseName) => {
-
+exports.DataBaseConnection = async (hostname,userName, password, databaseName) => {
+    console.log("GGGG",hostname,userName, password, databaseName)
     const DBconnection = mysql.createConnection({
-        host: "localhost",
+        host: hostname,
         user: userName,
         password: password,
         database: databaseName,

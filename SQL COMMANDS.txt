@@ -17,19 +17,19 @@ CREATE TABLE assistant
     description   varchar(255) NOT NULL,
     last_modified datetime     NOT NULL,
     PRIMARY KEY (username, assistant),
-    FOREIGN KEY (username) REFERENCES userAuth (username)
+    FOREIGN KEY (username) REFERENCES userAuth (username) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE databaseConnection
 (
+    username   varchar(50) NOT NULL,
     assistant    varchar(40)  NOT NULL,
-	hostName     varchar(100) NOT NULL,
+    hostname     varchar(100) NOT NULL,
     dbUsername     varchar(100) NOT NULL,
     dbPassword     varchar(50)  NOT NULL,
     databaseName varchar(20)  NOT NULL,
     PRIMARY KEY (username, assistant, databaseName),
-    FOREIGN KEY (username, assistant) REFERENCES assistant (username, assistant)
-
+    FOREIGN KEY (username, assistant) REFERENCES assistant (username, assistant) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -41,8 +41,9 @@ CREATE TABLE intent
     description    varchar(128) NOT NULL,
     previousIntent varchar(40)  NOT NULL,
     last_modified  datetime     NOT NULL,
+    multipleReply  varchar(20) NOT NULL,
     PRIMARY KEY (username, assistant, intent),
-    FOREIGN KEY (username, assistant) REFERENCES assistant (username, assistant)
+    FOREIGN KEY (username, assistant) REFERENCES assistant (username, assistant) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
@@ -56,7 +57,7 @@ CREATE TABLE messages
     message     varchar(500) NOT NULL,
     timeCreated datetime     NOT NULL,
     PRIMARY KEY (username, assistant, intent, messageType, message),
-    FOREIGN KEY (username, assistant, intent) REFERENCES intent (username, assistant, intent)
+    FOREIGN KEY (username, assistant, intent) REFERENCES intent (username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 )
 ;
 
@@ -67,9 +68,7 @@ CREATE TABLE queries
     intent    varchar(40)  NOT NULL,
     query     varchar(255) NOT NULL,
     PRIMARY KEY (username, assistant, intent, query),
-    FOREIGN KEY (username, assistant, intent) REFERENCES messages (username, assistant, intent)
-
-
+    FOREIGN KEY (username, assistant, intent) REFERENCES queryTable(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 create table queryTable
@@ -77,15 +76,14 @@ create table queryTable
     username         varchar(50) NOT NULL,
     assistant        varchar(40)  NOT NULL,
     intent           varchar(40)  NOT NULL,
-    tableName        varchar(40)  NOT NULL,
-    columnName       varchar(40)  NOT NULL,
-    compareCondition varchar(40)  NOT NULL,
-    compareValue     varchar(40)  NOT NULL,
-    logic            varchar(40)  NOT NULL,
-    selectedColumn   varchar(40)  NOT NULL,
-    distinctColumn   varchar(40)  NOT NULL,
-    PRIMARY KEY (username, assistant, intent),
-    FOREIGN KEY (username, assistant, intent) REFERENCES queries (username, assistant, intent)
+    tableName        varchar(40) ,
+    columnName       varchar(40) ,
+    compareCondition varchar(40) ,
+    compareValue     varchar(40) ,
+    logic            varchar(40) ,
+    selectedColumn   varchar(40) ,
+    distinctColumn   varchar(40) ,
+    FOREIGN KEY (username, assistant, intent) REFERENCES intent (username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE entity
@@ -93,16 +91,15 @@ CREATE TABLE entity
     username    varchar(50) NOT NULL,
     assistant   varchar(40)  NOT NULL,
     intent      varchar(40)  NOT NULL,
+    ipAddress   varchar(30) ,
     entityName  varchar(30)  NOT NULL,
     entityType  varchar(30)  NOT NULL,
-    entityValue varchar(30)  NOT NULL,
+    entityValue varchar(30),
     UNIQUE
         uniqueEntity
         (intent, entityName),
-    PRIMARY KEY (username, assistant, intent),
-    FOREIGN KEY (username, assistant, intent) REFERENCES queryTable (username, assistant, intent)
-
-
+    PRIMARY KEY (username, assistant, intent,entityName, ipAddress),
+    FOREIGN KEY (username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -111,15 +108,13 @@ CREATE TABLE richResponses
     username       varchar(50) NOT NULL,
     assistant      varchar(40)  NOT NULL,
     intent         varchar(40)  NOT NULL,
-    richResponseID varchar(40)  NOT NULL,
     useQuery       varchar(50)  NOT NULL,
-    cardNo         int          NOT NULL,
-    CardName       varchar(50)  NOT NULL,
-    cardValue      varchar(50)  NOT NULL,
-    chipValue      varchar(50)  NOT NULL,
-    PRIMARY KEY (username, assistant, intent),
-    FOREIGN KEY (username, assistant, intent) REFERENCES entity (username, assistant, intent)
-
+    cardNo         int,
+    CardName       varchar(50) ,
+    cardValue      varchar(50) ,
+    chipValue      varchar(50),
+    PRIMARY KEY (username, assistant, intent,chipValue,cardValue),
+    FOREIGN KEY (username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE settings
@@ -143,6 +138,8 @@ CREATE TABLE settings
     assistantTextColor   varchar(15)  NOT NULL,
     chatboxColor         varchar(15)  NOT NULL,
     PRIMARY KEY (username, assistant),
-    FOREIGN KEY (username, assistant) REFERENCES richResponses (username, assistant)
-
+    FOREIGN KEY (username, assistant) REFERENCES assistant(username, assistant) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+

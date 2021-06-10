@@ -22,14 +22,19 @@ class RunQuery extends Component {
     }
 
     getQueryDetails = () => {
-        // Get intentId from SessionStorage
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get intentName from SessionStorage
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/getQueryDetails',
                 params: {
-                    intentId: intentId
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName
                 },
 
             }).then((response) => {
@@ -48,10 +53,10 @@ class RunQuery extends Component {
         try {
             // const { rows } = this.state
             const { selectedColumns, distinctColumn, tableName, rows } = this.state;
-            // Get the necessary details ( userId, assistantId, intentId )
-            let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-            let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-            let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+            // Get the necessary details ( username, assistantName, intentName )
+            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+            let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+            let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
             axios({
                 method: 'post',
@@ -60,9 +65,9 @@ class RunQuery extends Component {
                     rows: rows,
                     selectedColumns: selectedColumns,
                     distinctColumn: distinctColumn,
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     tableName: tableName,
                 },
 
@@ -77,14 +82,14 @@ class RunQuery extends Component {
     deleteQuery = () => {
         try {
             // Get Intent Id from session storage
-            let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+            let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
             // Send request to express server ( query.js ) to delete query from database.
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/deleteQuery',
                 params: {
-                    intentId: intentId,
+                    intentName: intentName,
                 },
 
             }).then((response) => {
@@ -107,11 +112,15 @@ class RunQuery extends Component {
 
     getColumnNames = () => {
         const { selectedColumns, distinctColumn, tableName } = this.state;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/getColumnNames',
                 params: {
+                    username: username,
+                    assistantName:assistantName,
                     tableName: tableName
                 },
 

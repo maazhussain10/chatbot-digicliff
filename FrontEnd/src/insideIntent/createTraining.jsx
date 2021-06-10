@@ -11,10 +11,10 @@ class CreateTrainingPhrase extends Component {
         // Empty the input field after pressing enter.
         userMessageField.textContent = "";
 
-        // Get userId, assistantId and intentId.
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get username, assistantName and intentName.
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
         // Call backend to update table in database.
         try {
@@ -22,12 +22,11 @@ class CreateTrainingPhrase extends Component {
                 method: 'post',
                 url: 'http://localhost:5000/message',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     messageType: 'user',
                     message: userMessage
-
                 },
 
             }).then((response) => {

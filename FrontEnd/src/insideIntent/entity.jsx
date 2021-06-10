@@ -26,18 +26,18 @@ class Entity extends Component {
         }
         console.log(entityName);
 
-        // Get userId, assistantId and intentId.
-        let { userId } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantId } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        // Get username, assistantName and intentName.
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
         try {
             axios({
                 method: 'post',
                 url: 'http://localhost:5000/create-entity',
                 params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                     selectedColumns: selectedColumns,
                     entityName: entityName
                 },
@@ -50,13 +50,17 @@ class Entity extends Component {
     }
 
     getEntity = () => {
-        let { intentId } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/get-entity',
                 params: {
-                    intentId: intentId,
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
                 },
 
             }).then((response) => {
