@@ -900,7 +900,7 @@ exports.getSelectedColumns = (username, assistantName,intentName) => {
 //------------------------------------------------------------Get Distinct Columns-----------------------------------------------------------------------
 
 exports.getDistinctColumn = (username, assistantName,intentName) => {
-    let sql = 'select * from queryTable where username=? and assistant=? and intent =? and distincColumn is not "null";';
+    let sql = 'select * from queryTable where username=? and assistant=? and intent =? and distinctColumn != "null";';
     return new Promise(resolve => {
         connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err);
