@@ -31,8 +31,6 @@ class RichResponse {
                     res.send(existingCards);
                 }
             }
-
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
             getCards();
             getChips();
         });
@@ -132,7 +130,7 @@ class RichResponse {
             async function createCard() {
                 if (cardName)
                     await sqlFunctions.insertCreateCard(username, assistantName, intentName, useQuery, cardNo, cardName, cardValue);
-                let existingCards = await sqlFunctions.getCards(intentName);
+                let existingCards = await sqlFunctions.getCards(username, assistantName, intentName);
                 res.send(existingCards);
             }
             createCard();
@@ -143,17 +141,11 @@ class RichResponse {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                intentName
-            } = req.query;
+            const {username, assistantName,intentName } = req.query;
 
             const getCardPhrases = async () => {
-                let cards = await sqlFunctions.getCards(intentName);
-                let queryCards = await sqlFunctions.getQueryCards(intentName);
-                let allCards = cards.concat(queryCards);
-                res.send({
-                    allCards: allCards
-                });
+                let allCards = await sqlFunctions.getCards(username, assistantName, intentName);
+                res.send(allCards);
             }
             getCardPhrases();
         });
@@ -164,11 +156,11 @@ class RichResponse {
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
             const {
-                username,assistantName,intentName
+                username,assistantName,intentName,cardValue
             } = req.query;
 
             const deleteCard = async () => {
-                await sqlFunctions.deleteCard();
+                await sqlFunctions.deleteCard(username,assistantName,intentName,JSON.stringify(cardValue));
                 res.send("Deleted")
             }
             deleteCard();
@@ -182,7 +174,7 @@ class RichResponse {
             const {
                 cardName,
                 cardValue,
-                
+
             } = req.query;
             const updateCard = async () => {
                 await sqlFunctions.updateCard(cardName, cardValue, );

@@ -112,19 +112,32 @@ UPDATE CASCADE
 );
 
 
-CREATE TABLE richResponses
+CREATE TABLE richResponsesChip
+(
+    username varchar(50) NOT NULL,
+    assistant varchar(40) NOT NULL,
+    intent varchar(40) NOT NULL,
+    useQuery varchar(50) NOT NULL,
+    chipValue varchar(50),
+    PRIMARY KEY (username, assistant, intent,chipValue),
+    FOREIGN KEY (username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE richResponseCard
 (
     username varchar(50) NOT NULL,
     assistant varchar(40) NOT NULL,
     intent varchar(40) NOT NULL,
     useQuery varchar(50) NOT NULL,
     cardNo int,
-    CardName varchar(50) ,
-    cardValue varchar(50) ,
-    chipValue varchar(50),
-    PRIMARY KEY (username, assistant, intent,chipValue,cardValue),
+    cardName varchar(255),
+    cardValue varchar(500),
+    lastModified datetime,
+    PRIMARY KEY (username, assistant, intent,cardValue),
     FOREIGN KEY (username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 CREATE TABLE settings
 (

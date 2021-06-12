@@ -215,7 +215,7 @@ class NLP {
                         previousIntent: previousIntent,
                     }
                     if (queryCard.length !== 0 || queryChip.length !== 0) {
-                        connection.query('delete from richresponses where username=? and assistant=? and intent=? and useQuery="false";', [username, assistantName,intentName], (err) => {
+                        connection.query('delete from richResponsesChip where username=? and assistant=? and intent=? and useQuery="false";', [username, assistantName,intentName], (err) => {
                             if (err) console.log("Deletion Error", err)
                             else console.log("RichResponses Deleted Successfully");
                         })

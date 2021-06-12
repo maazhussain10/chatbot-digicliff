@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Entity } from './entity'
-import { RunQuery } from './runQueries'
-import { CreateCards } from './createCards'
+import { Entity } from './entity';
+import { RunQuery } from './runQueries';
+import { CreateCards } from './createCards';
 import { CreateChip } from './createChip'
 import axios from 'axios';
 import { ChatBox } from '../chatbox/chatbox';
@@ -121,18 +121,21 @@ class Rich extends Component {
 
     getExistingCards = () => {
         try {
+            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+            let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
             let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/getcards',
                 params: {
+                    username: username,
+                    assistantName: assistantName,
                     intentName: intentName
                 },
 
             }).then((response) => {
-                let { allCards, cardColor, textColor } = response.data;
-                // console.log("Cards:", allCards)
-                this.setState({ cards: allCards, cardColor: cardColor, textColor: textColor });
+                this.setState({ cards: response.data, cardColor: "#ffffff", textColor: "#000000" });
+                console.log("Cards:", this.state.cards);
             });
         }
         catch (e) {
@@ -141,25 +144,30 @@ class Rich extends Component {
     }
 
     // Called when the delete button is clicked in Card.
-    deleteCard = (richResponseId, index) => {
-
+    deleteCard = (cardValue) => {
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
         try {
             // Sends a request to the express server ( richresponses.js) to delete card in database. 
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/card-delete',
                 params: {
-                    richResponseId: richResponseId
+                    username: username,
+                    assistantName: assistantName,
+                    intentName: intentName,
+                    cardValue: cardValue
                 },
 
             }).then((response) => {
                 // Calls getExistingCards function to update the cards in the intent after deletion.
                 console.log("From Delete Card");
                 this.getExistingCards();
-                let { cards } = this.state;
-                if (index === cards.length - 1) {
-                    $('#card-' + (index - 1)).addClass('active');
-                }
+                // let { cards } = this.state;
+                // if (index === cards.length - 1) {
+                //     $('#card-' + (index - 1)).addClass('active');
+                // }
             })
         }
         catch (e) {
@@ -182,6 +190,7 @@ class Rich extends Component {
         // Get the necessary details ( userName, assistantName, intentName )
         let { assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         let { chips, cards, cardColor, textColor } = this.state;
+        console.log(cards);
         return (
             <React.Fragment>
                 <RichResponseNavBar />
@@ -223,7 +232,7 @@ class Rich extends Component {
                                         <div className={this.getActiveClass("carousel-item ", index)} id={"card-" + index} data-interval="2000" key={index} >
                                             <div className="card text-center" style={{ backgroundColor: cardColor, color: textColor }}>
                                                 <div className="card-header" style={{ position: "relative" }}>
-                                                    {card[0].cardValue}
+                                                    {card.cardValue[0]}
                                                     {/* Edit and Delete Buttons for each card*/}
                                                     <div className="d-flex justify-content-end" style={{ position: "absolute", top: "8px", right: "3px" }}>
                                                         <div className="btn-group" role="group" aria-label="Basic example">
@@ -236,7 +245,7 @@ class Rich extends Component {
                                                             </button>
 
                                                             {/* Delete */}
-                                                            <button type="button" onClick={() => this.deleteCard(card[0].richresponseID, index)} className="btn btn-sm btn-outline-danger">
+                                                            <button type="button" onClick={() => this.deleteCard(card.cardValue)} className="btn btn-sm btn-outline-danger">
                                                                 <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                                     <path fillRule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
                                                                 </svg>
@@ -245,12 +254,14 @@ class Rich extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    <h5 className="card-title">{card[0].cardValue}</h5>
-                                                    <p className="card-text">{card[0].cardValue}</p>
+                                                    <h5 className="card-title">{card.cardValue[1]}</h5>
+                                                    <p className="card-text">{card.cardValue[2]}</p>
+                                                    <a href={card.cardValue[3]} >{card.cardValue[4]}</a>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
+
 
                                     {/* buttons shouldnt be removed */}
                                     <a className="carousel-control-prev carousel-control" href="#displayCards" role="button" data-slide="prev">

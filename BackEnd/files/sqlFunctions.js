@@ -474,72 +474,90 @@ exports.deleteMessage = (username, assistantName, intentName, messageType, messa
 //------------------------------------------------------------Create Card-----------------------------------------------------------------------
 
 exports.insertCreateCard = (username, assistantName, intentName, useQuery, cardNo, cardName, cardValue) => {
+    let time = getTime();
+    let cardValues = [];
     for (let i = 0; i < cardName.length; i++) {
-        console.log(cardValue)
-        let tempCardValue;
         try {
-            tempCardValue = JSON.parse(cardValue)[cardName[i]];
+            cardValues.push(JSON.parse(cardValue)[cardName[i]]);
         } catch {
-            tempCardValue = cardValue[i];
+            cardValues.push(cardValue[i]);
         }
-
-        let sql = "insert into richresponses(username, assistant, intent, useQuery, cardNo, CardName, cardValue) values(?, ?, ?, ?, ?, ?, ?);";
-        connection.query(sql, [username, assistantName, intentName, useQuery, cardNo, cardName[i], tempCardValue], (err) => {
-            if (err) console.log(err)
-            else console.log("Inserted Card ");
-        });
     }
+    let sql = "insert into richResponseCard values(?, ?, ?, ?, ?, ?, ?, ?);";
+    connection.query(sql, [username, assistantName, intentName, useQuery, cardNo, JSON.stringify(cardName), JSON.stringify(cardValues),time], (err) => {
+        if (err) console.log(err)
+        else console.log("Inserted Card ");
+    });
 }
 
 
-//------------------------------------------------------------Get Query Cards-----------------------------------------------------------------------
+// //------------------------------------------------------------Get Query Cards-----------------------------------------------------------------------
 
 exports.getQueryCards = (username, assistantName,intentName) => {
-    let sql = 'select cardNo from richresponses where username=? and assistant=?  and intent=? and cardValue!="NULL" and useQuery="true" group by CardNo;';
+    let sql = 'select * from richResponseCard where username=? and assistant=?  and intent=? and useQuery="true" order by lastModified;';
+    return new Promise((resolve, reject) => {
+        connection.query(sql, [username, assistantName,intentName], async (err, results) => {
+            if (err) console.log(err)
+            else {
+                let existingCards = [];
+                for(let i = 0; i < results.length; i++){
+                    let tempExistingCards = {
+                        username: results[i].username,
+                        assistant: results[i].assistant,
+                        intent: results[i].intent,
+                        useQuery: results[i].useQuery,
+                        cardNo: results[i].cardNo,
+                        cardName: JSON.parse(results[i].cardName),
+                        cardValue: JSON.parse(results[i].cardValue),
+                        lastModifed:results[i].lastModified
+                    }
+                    existingCards.push(tempExistingCards);
+                }
+                resolve(existingCards);
+            }
+        });
+    });
+}
+
+// //------------------------------------------------------------Get All Query Cards-----------------------------------------------------------------------
+
+// exports.getCardValues = async (username, assistantName,intentName) => {
+//     let sql = 'select * from richresponses';
+//     return new Promise(resolve => {
+//         connection.query(sql, [username, assistantName,intentName], (err, results) => {
+//             if (err) console.log(err)
+//             else {
+//                 resolve(results);
+//             }
+//         })
+//     });
+// }
+
+//------------------------------------------------------------Get Cards Without Queries-----------------------------------------------------------------------
+
+exports.getCards = (username, assistantName,intentName) => {
+    let sql = 'select * from richResponseCard where username=? and assistant=?  and intent=? order by lastModified;';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username, assistantName,intentName], async (err, results) => {
             if (err) console.log(err)
             else {
                 console.log(results);
-                let cards = [];
-                for (let i = 0; i < results.length; i++) {
-                    let card = await this.getCardValues(results[i].CardNo)
-                    cards.push(card);
+                let existingCards = [];
+                for(let i = 0; i < results.length; i++){
+                    let tempExistingCards = {
+                        username: results[i].username,
+                        assistant: results[i].assistant,
+                        intent: results[i].intent,
+                        useQuery: results[i].useQuery,
+                        cardNo: results[i].cardNo,
+                        cardName: JSON.parse(results[i].cardName),
+                        cardValue: JSON.parse(results[i].cardValue),
+                        lastModifed:results[i].lastModified
+                    }
+                    existingCards.push(tempExistingCards);
                 }
-                resolve(cards);
-            }
-        });
-    });
-}
-
-//------------------------------------------------------------Get All Query Cards-----------------------------------------------------------------------
-
-exports.getCardValues = async (username, assistantName,) => {
-    let sql = 'select * from richresponses';
-    return new Promise(resolve => {
-        connection.query(sql, [username, assistantName,], (err, results) => {
-            if (err) console.log(err)
-            else {
-                resolve(results);
-            }
-        })
-    });
-}
-
-//------------------------------------------------------------Get Cards Without Queries-----------------------------------------------------------------------
-
-exports.getCards = (intentName) => {
-    let sql = 'select cardNo from richresponses where intent=? and cardValue!="NULL" and useQuery="false";';
-    return new Promise((resolve, reject) => {
-        connection.query(sql, [intentName], async (err, results) => {
-            if (err) console.log(err)
-            else {
-                let cards = [];
-                for (let i = 0; i < results.length; i++) {
-                    let card = await this.getCardValues(results[i].cardValue)
-                    cards.push(card);
-                }
-                resolve(cards);
+                console.log("ESSSS",existingCards);
+                resolve(existingCards);
             }
         });
     });
@@ -559,9 +577,9 @@ exports.updateCard = (cardName, cardValue, richResponseId) => {
 }
 //------------------------------------------------------------Delete Card-----------------------------------------------------------------------
 
-exports.deleteCard = (richResponseId) => {
-    let sql = 'delete from richresponses where richResponseID=?;';
-    connection.query(sql, [richResponseId], (err, results) => {
+exports.deleteCard = (username,assistantName,intentName,cardValue) => {
+    let sql = 'delete from richResponseCard where username=? and assistant=? and intent=? and cardValue=?;';
+    connection.query(sql, [username,assistantName,intentName,cardValue], (err, results) => {
         if (err) return console.log(err.message);
         else console.log("Deleted Card");
     });
@@ -681,7 +699,7 @@ exports.getCardTheme = (assistantName) => {
 //------------------------------------------------------------Create Chip-----------------------------------------------------------------------
 
 exports.insertCreateChip = (username, assistantName, intentName, usingQueries, chipValue) => {
-    let sql = "insert into richresponses(username, assistant, intent,  useQuery,cardValue, chipValue) values(?, ?, ?, ?, 'null', ?);";
+    let sql = "insert into richresponsesChip values(?, ?, ?, ?, ?);";
     connection.query(sql, [username, assistantName, intentName, usingQueries, chipValue], (err) => {
         if (err) console.log(err)
         else console.log("Inserted Chip ");
@@ -691,7 +709,7 @@ exports.insertCreateChip = (username, assistantName, intentName, usingQueries, c
 //------------------------------------------------------------Get All Chips without Query-----------------------------------------------------------------------
 
 exports.getChips = (username, assistantName,intentName) => {
-    let sql = 'select chipValue from richresponses where username=? and assistant=? and intent = ? and useQuery="false" and chipValue!="null"; ';
+    let sql = 'select chipValue from richresponsesChip where username=? and assistant=? and intent = ? and useQuery="false" and chipValue!="null"; ';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username, assistantName,intentName], (err, results) => {
             if (err) console.log(err)
@@ -705,7 +723,7 @@ exports.getChips = (username, assistantName,intentName) => {
 //------------------------------------------------------------Get Query Chips-----------------------------------------------------------------------
 
 exports.getQueryChips = (username, assistantName, intentName) => {
-    let sql = 'select * from richresponses where username=? and assistant=? and intent = ? and useQuery="true"; ';
+    let sql = 'select * from richresponsesChip where username=? and assistant=? and intent = ? and useQuery="true"; ';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err)
@@ -719,7 +737,7 @@ exports.getQueryChips = (username, assistantName, intentName) => {
 //------------------------------------------------------------Get All Chips-----------------------------------------------------------------------
 
 exports.getAllChips = (username, assistantName, intentName) => {
-    let sql = 'select * from richresponses where username=? and assistant=? and intent = ? and chipValue != "null";';
+    let sql = 'select * from richresponsesChip where username=? and assistant=? and intent = ? and chipValue != "null";';
     return new Promise((resolve, reject) => {
         connection.query(sql, [username, assistantName, intentName], (err, results) => {
             if (err) console.log(err)
@@ -734,7 +752,7 @@ exports.getAllChips = (username, assistantName, intentName) => {
 //------------------------------------------------------------Update Chip-----------------------------------------------------------------------
 
 exports.updateChip = (username,assistantName,intentName,chipValue,previousChipValue) => {
-    let sql = 'update richresponses set chipValue=? where username=? and assistant=? and intent=? and chipValue=?;'
+    let sql = 'update richresponsesChip set chipValue=? where username=? and assistant=? and intent=? and chipValue=?;'
     connection.query(sql, [chipValue, username,assistantName,intentName,previousChipValue], (err) => {
         if (err) console.log(err);
         else console.log("response has been updated")
@@ -745,7 +763,7 @@ exports.updateChip = (username,assistantName,intentName,chipValue,previousChipVa
 //------------------------------------------------------------Delete Chip-----------------------------------------------------------------------
 
 exports.deleteChip = (username,assistantName,intentName,chipValue) => {
-    let sql = 'delete from richresponses where username = ? and assistant = ? and intent = ? and chipValue=?;';
+    let sql = 'delete from richresponsesChip where username = ? and assistant = ? and intent = ? and chipValue=?;';
     connection.query(sql, [username,assistantName,intentName,chipValue], (err, results) => {
         if (err) return console.log(err.message);
         else console.log("Deleted Chip");
@@ -854,7 +872,6 @@ exports.getTableName = (username, assistantName,intentName) => {
 
 //------------------------------------------------------------Get Query Rows-----------------------------------------------------------------------
 exports.getQueryRows = (username, assistantName, intentName) => {
-    console.log(username, assistantName, intentName);
     let sql = 'select * from queryTable where username=? and assistant=? and intent=? and selectedColumn is not null;';
     return new Promise(resolve => {
         connection.query(sql, [username,assistantName,intentName], (err, results) => {

@@ -10,7 +10,26 @@ class Cards extends Component {
     }
 
     render() {
-        const { cards, cardTheme } = this.props;
+        let cards = [];
+        const { cardss, cardTheme } = this.props;
+        console.log(cardss);
+        if (!cardss) {
+            let temp={
+                  username: 'Zaam',
+                  assistant: 'Hello',
+                  intent: 'Welcome',
+                  useQuery: 'false',
+                  cardNo: 1,
+                  cardName: [ 'header', 'subHeader', 'details' ],
+                  cardValue: [ 'Header', 'SubHeader', 'Details' ],
+                  lastModifed: '2021-06-12T12:27:33.000Z'
+                }
+            cards.push(temp)
+        }
+        else {
+            cards = cardss;
+        }
+        console.log(cards);
         const {
             cardBgColor,
             cardTextColor,
@@ -31,10 +50,11 @@ class Cards extends Component {
                                 className="card text-center"
                                 style={{ fontFamily: cardFont, border: `2px solid ${cardBorder}`, backgroundColor: cardBgColor, color: cardTextColor, width: "18rem" }}
                             >
-                                <div className="card-header">{card[0].card_value}</div>
+                                <div className="card-header">{card.cardValue[0]}</div>
                                 <div className="card-body">
-                                    <h5 className="card-title">{card[1].card_value}</h5>
-                                    <p className="card-text">{card[2].card_value}</p>
+                                    <h5 className="card-title">{card.cardValue[1]}</h5>
+                                    <p className="card-text">{card.cardValue[2]}</p>
+                                    <a href={card.cardValue[3]} >{card.cardValue[4]}</a>
                                 </div>
                             </div>
                         </div>
