@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const DataBaseConnection = require('./DBConnection');
+const DataBaseConnection = require('./DBconnection');
 const sqlFunctions2 = require('./sqlFunctions2');
 const uuid = require('uuid-random');
 const {

@@ -2,9 +2,9 @@ const mysql = require('mysql');
 
 const connection = mysql.createConnection({
     host: "localhost",
-    user: "maaz",
-    password: "root",
-    database: "chatbotapi"
+    user: "root",
+    password: "password",
+    database: "chatbotAPI"
 });
 
 
