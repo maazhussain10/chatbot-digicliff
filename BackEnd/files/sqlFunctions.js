@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const DataBaseConnection = require('../files/DBConnection');
+const DataBaseConnection = require('./DBConnection');
 const sqlFunctions2 = require('./sqlFunctions2');
 const uuid = require('uuid-random');
 const {
@@ -880,15 +880,16 @@ exports.getQueryRows = (username, assistantName, intentName) => {
                 let queryRows = [];
                 console.log("ASESCEVRVWS",results);
                 for (let i = 0; i < results.length; i++) {
-                    if (results[i].column_name != null)
-                        queryRow = {
+                    if (results[i].column_name != null) {
+                        let queryRow = {
                             id: i + 1,
                             selectedColumn: results[i].column_name,
                             selectedOperator: results[i].compare_condition,
                             compareValue: results[i].compare_value,
                             logic: results[i].logic
                         }
-                    queryRows.push(queryRow);
+                        queryRows.push(queryRow);
+                    }
                 }
                 resolve(queryRows);
             }
