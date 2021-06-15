@@ -31,7 +31,7 @@ class MessagesPage extends Component {
                 url: 'http://localhost:5000/message',
                 params: {
                     username: username,
-                    assistantName:assistantName,
+                    assistantName: assistantName,
                     intentName: intentName,
                 },
 
@@ -58,7 +58,7 @@ class MessagesPage extends Component {
                 url: 'http://localhost:5000/intent/multiple-reply',
                 params: {
                     username: username,
-                    assistantName:assistantName,
+                    assistantName: assistantName,
                     intentName: intentName,
                     multipleReply: multipleReply,
                 },
@@ -82,10 +82,10 @@ class MessagesPage extends Component {
         return (
             <React.Fragment>
                 <Navbar />
-                <div className="container">
+                <div className="container text-center">
                     <button className="btn btn-primary button" type="button" data-toggle="collapse" data-target="#createTraining" aria-expanded="false" aria-controls="collapseExample">
                         Add training phrase / Response
-                </button>
+                    </button>
                     <div className="row text-center">
                         <div className="col-md-6">
                             <CreateTrainingPhrase getMessages={this.getMessages} />

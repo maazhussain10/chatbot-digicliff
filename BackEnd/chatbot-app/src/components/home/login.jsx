@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import $ from "jquery";
 import axios from 'axios';
+import './css/login.css';
 class Login extends Component {
     state = {
         password: "",
@@ -87,7 +88,7 @@ class Login extends Component {
         }
         return (
             <React.Fragment>
-                <button className="btn btn-sm btn-primary my-2 my-sm-0 mr-2" data-toggle="modal" data-target="#login">LOGIN</button>
+                <button className="login-btn" data-toggle="modal" data-target="#login">Login</button>
                 <div className="modal fade" id="login" data-backdrop="static" data-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">

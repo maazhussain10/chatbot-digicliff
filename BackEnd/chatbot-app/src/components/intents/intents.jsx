@@ -44,7 +44,7 @@ class Intents extends Component {
                 method: 'get',
                 url: 'http://localhost:5000/intent',
                 params: {
-                    username:username,
+                    username: username,
                     assistantName: assistantName
                 },
 
@@ -82,9 +82,11 @@ class Intents extends Component {
         } = this.state;
         return (
             <React.Fragment>
-                <button id="createI" type="button" className="btn btn-primary button1" data-toggle="modal" data-target="#intent">
-                    Create an intent
-            </button>
+                <div className="text-center">
+                    <button id="createI" type="button" className="btn btn-primary button1" data-toggle="modal" data-target="#intent">
+                        Create an intent
+                    </button>
+                </div>
                 <div className="container">
                     {existingIntents.map(intent => (
                         <DisplayIntent

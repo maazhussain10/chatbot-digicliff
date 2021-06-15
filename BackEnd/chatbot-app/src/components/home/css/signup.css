@@ -34,3 +34,39 @@
 #bootstrap-override small {
     color: red;
 }
+
+.button-primary{
+    color:#fff;
+    background-color:#5c60f5;
+    border-color:#5c60f5
+}
+.button-primary:hover{
+    color:#fff;
+    background-color:#4e52d0;
+    border-color:#4a4dc4
+}
+.signup-button {
+    background-color: rgb(0, 132, 255);
+    color: #fff;
+
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px; 
+    font-weight: bold;
+    border: 0;
+    margin: 20px;
+    padding-top: 5px;
+    padding-bottom: 7px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-decoration: none;
+    text-align: center;
+}
+.signup-button:hover {
+    
+    box-shadow: 0 0 10px 0 #ffffff inset, 0 0 10px 4px #ffffff;
+    
+}
+.signup-button:focus {
+    outline: none;
+}
