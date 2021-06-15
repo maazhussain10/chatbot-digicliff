@@ -80,9 +80,10 @@
 .chats-box {
   z-index: 1;
   margin: 20px;
+  margin-top: 50px;
   width: 440px;
   display: none;
-  position: fixed;
+  position:fixed;
   right: 20px;
   bottom: 70px;
   border-radius: 12px;
@@ -94,6 +95,7 @@
 }
 
 .chats-box .chatbox-top {
+  padding-top: 0;
   background: #1e8d80;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -106,6 +108,9 @@
   border-top-right-radius: 12px;
   background: linear-gradient(41deg, #06badf 1%, #61e2fd 50%);
   padding: 22px;
+  padding-top: 5px;
+  padding-bottom: 0px;
+
 }
 
 .chats-box .chatbox-top .g-left {

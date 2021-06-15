@@ -4,7 +4,7 @@ import axios from 'axios';
 import img1 from '../../assets/images/nobot.jpg';
 import './css/buttonalign.css';
 import './css/assistant.css';
-
+import './css/navbar.css'
 import { Navbar } from './navbar';
 import { CreateAssistantModal } from './assistant/createAssistantModal';
 import { UpdateAssistantModal } from './assistant/updateAssistantModal';
@@ -100,7 +100,7 @@ class AssistantPage extends Component {
                 <Navbar
                     userName={this.state.username}
                 />
-                <div className="container">
+                <div className="container text-center">
                     <button type="button" className="btn btn-lg btn-primary button" data-toggle="modal" data-target="#createAssistantModal">
                         Create an Assistant
                     </button>

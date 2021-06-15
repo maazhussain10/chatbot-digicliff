@@ -421,7 +421,7 @@ class Signup extends Component {
       isAccountCreated } = this.state;
     return (
       <React.Fragment>
-        <button className="btn btn-sm btn-outline-success my-2 my-sm-0 mr-2" data-toggle="modal" data-target="#signup">SIGNUP</button>
+        <button className="signup-button" data-toggle="modal" data-target="#signup">Sign up</button>
         <div className="modal fade" id="signup" data-backdrop="static" data-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
