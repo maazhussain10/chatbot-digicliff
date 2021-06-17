@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { ChatboxTop } from '../chatbox/chatboxTop';
-// import assistantLogo from '../images/chatbots-logo-white.png'
 import { Message } from '../chatbox/message';
 import $ from 'jquery';
 

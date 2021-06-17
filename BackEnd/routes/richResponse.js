@@ -1,190 +1,99 @@
-const sqlFunctions = require('../files/sqlFunctions');
-const uuid = require('uuid-random');
-
+const { getChips, createChip, getAllChips, deleteChip, updateChip } = require("../files/SQL-chip");
+const { getCards, createCard, deleteCard, updateCard } = require("../files/SQL-card");
 
 class RichResponse {
+  constructor(app) {
+    this.richResponse(app);
+  }
 
-    constructor(app) {
-        this.richResponse(app);
-    }
+  richResponse(app) {
+    app.get("/rich-response", async (req, res) => {
+      let { username, assistantName, intentName } = req.query;
 
-    richResponse(app) {
+      let existingChips = await getChips(username, assistantName, intentName);
+      if (existingChips.length != 0) {
+        res.send(existingChips);
+      }
 
-        app.get('/rich-response', (req, res) => {
-            let {
-                username, assistantName, intentName
-            } = req.query
+      let existingCards = await getCards(intentName);
+      if (existingCards.length != 0) {
+        res.send(existingCards);
+      }
+    });
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            async function getChips() {
-                let existingChips = await sqlFunctions.getChips(username, assistantName, intentName);
-                if (existingChips.length != 0) {
-                    res.send(existingChips);
-                }
+    app.post("/chip", async (req, res) => {
+      const { username, assistantName, intentName, chipResponse, usingQueries } = req.query;
+      await createChip(username, assistantName, intentName, usingQueries, chipResponse);
+      let existingChips = await getChips(username, assistantName, intentName);
+      res.send(existingChips);
+    });
 
-            }
-            async function getCards() {
-                let existingCards = await sqlFunctions.getCards(intentName);
-                if (existingCards.length != 0) {
-                    res.send(existingCards);
-                }
-            }
-            getCards();
-            getChips();
-        });
+    app.get("/getchips", async (req, res) => {
+      const { username, assistantName, intentName } = req.query;
 
-        app.post('/chip', (req, res) => {
+      let responses = await getAllChips(username, assistantName, intentName);
+      res.send(responses);
+    });
 
-            const {
-                username,
-                assistantName,
-                intentName,
-                chipResponse,
-                usingQueries,
-            } = req.query
+    app.get("/chip-delete", async (req, res) => {
+      const { username, assistantName, intentName, chipValue } = req.query;
+      await deleteChip(username, assistantName, intentName, chipValue);
+      res.send("Deleted");
+    });
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            async function createChip() {
-                await sqlFunctions.insertCreateChip(username, assistantName, intentName, usingQueries, chipResponse);
-                let existingChips = await sqlFunctions.getChips(username, assistantName, intentName);
-                res.send(existingChips);
-            }
-            createChip();
-        });
+    app.get("/chip-update", async (req, res) => {
+      const { username, assistantName, intentName, chipValue, previousChipValue } = req.query;
+      await updateChip(username, assistantName, intentName, chipValue, previousChipValue);
+      res.send("Updated");
+    });
 
-        app.get('/getchips', (req, res) => {
+    //-------------------------------------------------------CARD---------------------------------------------------------------------------------
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {username, assistantName, intentName} = req.query;
+    app.post("/card", async (req, res) => {
+      const {
+        username,
+        assistantName,
+        intentName,
+        useQuery,
+        cardNo,
+        cardName,
+        cardValue,
+        cardColor,
+        textColor,
+      } = req.query;
 
-            const getChipPhrases = async () => {
-                let responses = await sqlFunctions.getAllChips(username, assistantName, intentName);
-                res.send(responses);
-            }
-            getChipPhrases();
-        });
+      if (cardName)
+        await createCard(
+          username,
+          assistantName,
+          intentName,
+          useQuery,
+          cardNo,
+          cardName,
+          cardValue
+        );
+      let existingCards = await getCards(username, assistantName, intentName);
+      res.send(existingCards);
+    });
 
-        app.get('/chip-delete', (req, res) => {
+    app.get("/getcards", async (req, res) => {
+      const { username, assistantName, intentName } = req.query;
+      let allCards = await getCards(username, assistantName, intentName);
+      res.send(allCards);
+    });
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                username,assistantName,intentName,chipValue
-            } = req.query;
+    app.get("/card-delete", async (req, res) => {
+      const { username, assistantName, intentName, cardValue } = req.query;
+      await deleteCard(username, assistantName, intentName, JSON.stringify(cardValue));
+      res.send("Deleted");
+    });
 
-            const deleteChip = async () => {
-                await sqlFunctions.deleteChip(username,assistantName,intentName,chipValue);
-                res.send("Deleted")
-            }
-            deleteChip();
-        });
-
-        app.get('/chip-update', (req, res) => {
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                username,
-                assistantName,
-                intentName,
-                chipValue,
-                previousChipValue
-            } = req.query;
-            const updateChip = async () => {
-                await sqlFunctions.updateChip(username,assistantName,intentName,chipValue,previousChipValue);
-                res.send("Updated")
-            }
-            updateChip();
-        });
-
-        //-------------------------------------------------------CARD---------------------------------------------------------------------------------
-
-        app.post('/card', (req, res) => {
-
-            const {
-                username,
-                assistantName,
-                intentName,
-                useQuery,
-                cardNo,
-                cardName,
-                cardValue,
-                cardColor,
-                textColor,
-            } = req.query
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-
-
-
-            async function createCard() {
-                if (cardName)
-                    await sqlFunctions.insertCreateCard(username, assistantName, intentName, useQuery, cardNo, cardName, cardValue);
-                let existingCards = await sqlFunctions.getCards(username, assistantName, intentName);
-                res.send(existingCards);
-            }
-            createCard();
-        });
-
-        app.get('/getcards', (req, res) => {
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {username, assistantName,intentName } = req.query;
-
-            const getCardPhrases = async () => {
-                let allCards = await sqlFunctions.getCards(username, assistantName, intentName);
-                res.send(allCards);
-            }
-            getCardPhrases();
-        });
-
-        app.get('/card-delete', (req, res) => {
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                username,assistantName,intentName,cardValue
-            } = req.query;
-
-            const deleteCard = async () => {
-                await sqlFunctions.deleteCard(username,assistantName,intentName,JSON.stringify(cardValue));
-                res.send("Deleted")
-            }
-            deleteCard();
-        });
-
-        app.get('/card-update', (req, res) => {
-
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            const {
-                cardName,
-                cardValue,
-
-            } = req.query;
-            const updateCard = async () => {
-                await sqlFunctions.updateCard(cardName, cardValue, );
-                res.send("Deleted")
-            }
-            updateCard();
-        });
-
-    }
+    app.get("/card-update", async (req, res) => {
+      const { cardName, cardValue } = req.query;
+      await updateCard(cardName, cardValue);
+      res.send("Deleted");
+    });
+  }
 }
-
 
 module.exports = RichResponse;

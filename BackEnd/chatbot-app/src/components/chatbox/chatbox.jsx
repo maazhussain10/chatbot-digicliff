@@ -149,7 +149,8 @@ class ChatBox extends Component {
 
             }).then((response) => {
                 const { chatBoxSettings } = response.data;
-                this.setState({ settings: chatBoxSettings });
+                if (this._isMounted)
+                    this.setState({ settings: chatBoxSettings });
             });
         }
         catch (e) {

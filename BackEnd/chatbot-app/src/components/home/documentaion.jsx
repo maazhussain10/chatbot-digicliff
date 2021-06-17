@@ -14,36 +14,36 @@ class Documentation extends Component {
 
 
 
-                    <nav id="docs" class="navbar navbar-light bg-light container sticky-top shadow-sm p-3 rounded">
-                        <a class="navbar-brand" href="/#">AnyBot</a>
-                        <ul class="nav nav-pills">
+                    <nav id="docs" className="navbar navbar-light bg-light container sticky-top shadow-sm p-3 rounded">
+                        <a className="navbar-brand" href="/#">AnyBot</a>
+                        <ul className="nav nav-pills">
 
-                            <li class="nav-item dropdown">
-                                <span class="nav-link dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="false">AI</span>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#ai">AI</a>
-                                    <a class="dropdown-item" href="#nlp">NLP</a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#three">three</a>
+                            <li className="nav-item dropdown">
+                                <span className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">AI</span>
+                                <div className="dropdown-menu">
+                                    <a className="dropdown-item" href="#ai">AI</a>
+                                    <a className="dropdown-item" href="#nlp">NLP</a>
+                                    <div role="separator" className="dropdown-divider"></div>
+                                    <a className="dropdown-item" href="#three">three</a>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
-                                <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Assistant</span>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#Assistant">Assistant</a>
-                                    <a class="dropdown-item" href="#dialogue">Dialogues</a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#rich">Rich Response</a>
+                            <li className="nav-item dropdown">
+                                <span className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Assistant</span>
+                                <div className="dropdown-menu">
+                                    <a className="dropdown-item" href="#Assistant">Assistant</a>
+                                    <a className="dropdown-item" href="#dialogue">Dialogues</a>
+                                    <div role="separator" className="dropdown-divider"></div>
+                                    <a className="dropdown-item" href="#rich">Rich Response</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#entity">Entity</a>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#entity">Entity</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#dbconnection">Database</a>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#dbconnection">Database</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#statistics">Stats</a>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#statistics">Stats</a>
                             </li>
                         </ul>
                     </nav>
@@ -82,7 +82,7 @@ class Documentation extends Component {
                             <h6 className="pt-2">USER RESPONSE</h6>
                             <p className="pl-2 pr-2">User responses teaches our assistant to learn what users might say to match the intent. The more examples you provide, the higher likelihood the intent will be matched correctly.  </p>
                             <h6 className="pt-2">ASSISTANT RESPONSE</h6>
-                            <p className="pl-2 pr-2">Anything the assistant says in response to user input. If you have to specific data to encrypt in the assistants response, click on <a class="" href="#dbconnection"><strong>Database</strong></a> and refer the following</p>
+                            <p className="pl-2 pr-2">Anything the assistant says in response to user input. If you have to specific data to encrypt in the assistants response, click on <a className="" href="#dbconnection"><strong>Database</strong></a> and refer the following</p>
 
                         </div>
                         <p className="pl-2 pr-2">Once you have built your assistant with user replies and assistant replies, click the <strong>TRAIN</strong> button at the top of the page to train your Assistant using NLP </p>

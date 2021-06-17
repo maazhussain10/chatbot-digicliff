@@ -25,7 +25,7 @@ class DisplayIntent extends Component {
                 url: 'http://localhost:5000/intent-delete',
                 params: {
                     username: username,
-                    assistantName:assistantName,
+                    assistantName: assistantName,
                     intentName: intentName
                 },
 

@@ -16,7 +16,7 @@ CREATE TABLE assistant
     username varchar(50) NOT NULL,
     assistant varchar(40) NOT NULL,
     description varchar(255) NOT NULL,
-    last_modified datetime NOT NULL,
+    lastModified datetime NOT NULL,
     PRIMARY KEY (username, assistant),
     FOREIGN KEY (username) REFERENCES userAuth (username) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -40,8 +40,8 @@ CREATE TABLE intent
     assistant varchar(40) NOT NULL,
     intent varchar(40) NOT NULL,
     description varchar(128) NOT NULL,
-    previousIntent varchar(40) NOT NULL,
-    last_modified datetime NOT NULL,
+    previousIntent varchar(40),
+    lastModified datetime NOT NULL,
     multipleReply varchar(20) NOT NULL,
     PRIMARY KEY (username, assistant, intent),
     FOREIGN KEY (username, assistant) REFERENCES assistant (username, assistant) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -1,0 +1,37 @@
+[
+    {
+        "made-by": "Dwabzy",
+        "date": "",
+        "changes": [
+            "Removed 'natural' module from backend as it wasn't being used",
+            "Updated packages to remove vulnerabilities",
+            "Removed certain import statements in routes that were unnecessary",
+            "Replaced 'class' with 'className' in jsx of certain files",
+            "Added cors middleware to express app and removed the 3 lines in every method",
+            "Changed column name from time_modified to timeModified in intent and assistant table",
+            "Fixed foreign key constraint problem during Intent creation",
+            "removed 'NOT NULL' constraint from previoustIntent column in intent table",
+            "merged chatbotapi database connection and user's database connection functions into one file",
+            "Removed Train button from Messages page",
+            "Split SQL functions into various files for better readabilty, changed names of few functions ( such as insertCreateChip to createChip)",
+            "Removed async functions in richResponse.js that were unnecessary",
+            "Renamed nlpTraining.js to NLP.js"
+        ],
+        "to-do": [
+            "chat-body.png in settings page doesn't work. Says Error 404 not found",
+            "Logout button doesnt work in intents page",
+            "Two Values - cardColor and textColor are sent to backend during creation of card but are not used",
+            "Check if the await statements in chip/ card update and delete are necessary",
+            "Check if card creation is blocked when you already have chips and vice versa",
+            "getCardTheme and updateCardTheme functions in SQL-settings.js aren't used ( unless I am blind ), need to check if its needed",
+            "Add ability to have multiple databases connected, or atleast the ability to switch between them",
+            "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+            "Need to change nlpTraining.js functions , optimize it and add proper comments, its hard to understand",
+            "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+            "Modal for create chip is annoying, replace it with what we have for messages",
+            "Server crashes when you try to run a query without adding Database name",
+            "Need to be able to edit or delete database connection",
+            "Card doesnt seem to be working, I entered gibberish, but got the default words in the card"
+        ]
+    }
+]

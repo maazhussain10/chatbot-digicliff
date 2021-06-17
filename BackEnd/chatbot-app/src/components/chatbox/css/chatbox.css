@@ -38,7 +38,6 @@
   cursor: pointer;
 }
 
-
 .m-option .s-box {
   color: #222222;
   display: inline-block;
@@ -47,7 +46,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   padding: 5px 8px;
   margin: 0 4px 10px 0;
@@ -55,7 +54,6 @@
   -o-transition: all 0.16s ease-in-out;
   transition: all 0.16s ease-in-out;
 }
-
 
 .m-option .s-box:hover,
 .m-option .s-box.active {
@@ -67,15 +65,14 @@
 .center-block {
   display: block;
   margin-right: auto;
-  margin-left: auto
+  margin-left: auto;
 }
 
 .img-responsive {
   display: block;
   max-width: 100%;
-  height: auto
+  height: auto;
 }
-
 
 .chats-box {
   z-index: 1;
@@ -83,7 +80,7 @@
   margin-top: 50px;
   width: 440px;
   display: none;
-  position:fixed;
+  position: fixed;
   right: 20px;
   bottom: 70px;
   border-radius: 12px;
@@ -110,7 +107,6 @@
   padding: 22px;
   padding-top: 5px;
   padding-bottom: 0px;
-
 }
 
 .chats-box .chatbox-top .g-left {
@@ -154,14 +150,14 @@
 .chats-box .chatbox-top .g-left .media-right p {
   font-size: 25px;
   font-weight: 400;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 43px;
   color: #fff;
   margin: 0;
 }
 
 .chats-box .chatbox-top .g-left .media-right p span {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 700;
 }
 
@@ -184,7 +180,7 @@
 .chats-box .chatbox-top .g-right .close::after {
   position: absolute;
   left: 15px;
-  content: ' ';
+  content: " ";
   height: 21px;
   width: 2px;
   background-color: #fff;
@@ -225,7 +221,7 @@
 
 .chats-box .chatbox-top .chatbox-offline h3 {
   color: #fff;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 700;
   font-size: 22px;
   line-height: 24px;
@@ -239,7 +235,7 @@
 }
 
 .chats-box .chatbox-top .chatbox-offline p {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #fff;
@@ -252,7 +248,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: white;
-  background-image: url(../../images/chat-body.png);
+  background-image: url(../../../assets/images/chat-body.png);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -289,7 +285,7 @@
 
 .chats-box .chatbox-body .new-tile .box .media-right p {
   color: #222222;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
 }
 
@@ -359,7 +355,7 @@
 .chats-box .chatbox-body .chat-conversion .chat-reciever .media-right .n-content p {
   margin: 0;
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   line-height: 20px;
 }
@@ -383,7 +379,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   padding: 5px 8px;
   margin: 0 4px 10px 0;
@@ -403,7 +399,7 @@
   font-weight: 400;
   margin-bottom: 10px;
   display: block;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .chats-box .chatbox-body .chat-conversion .chatbox-sender {
@@ -421,7 +417,7 @@
   color: #fff;
   margin: 0;
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   line-height: 20px;
 }
@@ -444,7 +440,7 @@
   font-weight: 400;
   margin-bottom: 10px;
   display: block;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   text-align: right;
 }
 
@@ -465,7 +461,7 @@
 .chats-box .chatbox-body .chat-conversion .reciever-load .load-dot {
   position: relative;
   display: inline-block;
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   background-color: #06abcd;
@@ -519,7 +515,7 @@
   color: #222222;
   margin: 0;
   font-size: 15px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 500;
   margin-bottom: 6px;
 }
@@ -528,7 +524,7 @@
   display: table-cell;
   vertical-align: middle;
   font-size: 12px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   padding-right: 10px;
   margin: 0;
 }
@@ -558,14 +554,14 @@
 .chats-box .chatbox-body .college-slider .box .middle .common p {
   color: rgba(34, 34, 34, 0.81);
   font-size: 11px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin-bottom: 6px;
 }
 
 .chats-box .chatbox-body .college-slider .box .middle .common h6 {
   color: #222222;
   font-size: 11px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
 }
 
@@ -581,7 +577,7 @@
   background-color: #06abcd;
   color: #fff;
   font-size: 11px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   margin-left: 16px;
 }

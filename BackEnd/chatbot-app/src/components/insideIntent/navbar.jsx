@@ -44,7 +44,7 @@ class Navbar extends Component {
                                 CONNECT DB
                                 </button> */}
                             {/* </Link> */}
-                            <button href="/#" onClick={this.handleLogout} className="train-btn" type="submit">Train</button>
+
                             {/* <a href="/explore" className="btn btn-sm btn-outline-secondary my-2 my-sm-0 mr-2" type="submit"></a> */}
                             <a href="/#" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</a>
                         </div>

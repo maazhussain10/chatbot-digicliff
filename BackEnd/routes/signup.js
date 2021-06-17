@@ -1,68 +1,60 @@
-const md5 = require('md5');
-const express = require("express");
-const Router = express.Router();
-const cors = require('cors');
-const sqlFunctions = require('../files/sqlFunctions');
-const { response } = require('express');
+const md5 = require("md5");
+const {
+  usernameExists,
+  emailExists,
+  createUser,
+  deactivateAccount,
+} = require("../files/SQL-user");
 
 class SigningUp {
+  constructor(app, connection) {
+    this.signingUp(app, connection);
+  }
 
-    constructor(app, connection) {
-        this.signingUp(app, connection);
-    }
+  signingUp(app, connection) {
+    app.post("/signingUp", (req, res) => {
+      const { firstName, lastName, email, username } = req.query;
+      const password = md5(req.query.password);
 
-    signingUp(app, connection) {
+      // -------------------------------------------------USERNAME EXISTS?---------------------------------------------------------
 
-        app.post('/signingUp', (req, res) => {
-            const { firstName, lastName, email, username } = req.query;
-            const password = md5(req.query.password);
+      async function checkExistence() {
+        let checkUsername = await usernameExists(username);
+        let checkEmail = await emailExists(email);
+        let existenceData = {
+          usernameExists: false,
+          emailExists: false,
+          existenceStatus: false,
+        };
+        if (checkUsername) {
+          existenceData.usernameExists = true;
+          existenceData.existenceStatus = true;
+        }
+        if (checkEmail) {
+          existenceData.emailExists = true;
+          existenceData.existenceStatus = true;
+        }
+        let responseData = {
+          responseStatus: false,
+          existenceData: existenceData,
+        };
+        if (!existenceData.existenceStatus) {
+          createUser(firstName, lastName, username, email, password);
+          responseData.responseStatus = true;
+        }
+        res.send(responseData);
+      }
+      checkExistence();
+    });
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
+    app.get("/deactivate-account", (req, res) => {
+      let { username } = req.query;
 
-            // -------------------------------------------------USERNAME EXISTS?---------------------------------------------------------
-
-            async function checkExistence() {
-                let checkUsername = await sqlFunctions.usernameExists(username);
-                let checkEmail = await sqlFunctions.emailExists(email);
-                let existenceData = {
-                    usernameExists: false,
-                    emailExists: false,
-                    existenceStatus: false
-                }
-                if (checkUsername) {
-                    existenceData.usernameExists = true;
-                    existenceData.existenceStatus = true;
-                }
-                if (checkEmail) {
-                    existenceData.emailExists = true;
-                    existenceData.existenceStatus = true;
-                }
-                let responseData = {
-                    responseStatus: false,
-                    existenceData: existenceData,
-                }
-                if (!existenceData.existenceStatus) {
-                    sqlFunctions.createUser(firstName, lastName, username, email, password);
-                    responseData.responseStatus = true;
-                }
-                res.send(responseData)
-
-            }
-            checkExistence();
-        });
-
-        app.get('/deactivate-account', (req, res) => {
-            let { username } = req.query;
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-            console.log(username);
-                sqlFunctions.deactivateAccount(username);
-                res.send();
-            })
-    }
+      console.log(username);
+      deactivateAccount(username);
+      res.send();
+    });
+  }
 }
 
 module.exports = SigningUp;

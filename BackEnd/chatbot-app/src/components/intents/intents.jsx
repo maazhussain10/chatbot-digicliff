@@ -88,9 +88,9 @@ class Intents extends Component {
                     </button>
                 </div>
                 <div className="container">
-                    {existingIntents.map(intent => (
+                    {existingIntents.map((intent, index) => (
                         <DisplayIntent
-                            key={intent.intentId}
+                            key={index}
                             intent={intent}
                             setUpdateIntentDetails={this.setUpdateIntentDetails}
                             setFollowUpIntentDetails={this.setFollowUpIntentDetails}
