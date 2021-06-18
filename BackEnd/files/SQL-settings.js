@@ -93,29 +93,3 @@ exports.setChatboxSettings = (username, assistantName, settings) => {
     );
   });
 };
-//------------------------------------------------------------Update Card Theme-----------------------------------------------------------------------
-
-exports.updateCardTheme = (assistantName, cardColor, textColor) => {
-  let sql = "update settings set card_bgcolor=?, card_text_color=? where assistant=?;";
-  connection.query(sql, [cardColor, textColor, assistantName], (err) => {
-    if (err) console.log(err);
-    else console.log("Card Theme has been updated");
-  });
-};
-
-//------------------------------------------------------------Get Card Theme-----------------------------------------------------------------------
-
-exports.getCardTheme = (assistantName) => {
-  let sql = "select card_bgcolor, card_text_color from settings where assistant=?;";
-  return new Promise((resolve, reject) => {
-    connection.query(sql, [assistantName], (err, results) => {
-      if (err) console.log(err);
-      else {
-        resolve({
-          cardColor: results[0].card_bgcolor,
-          textColor: results[0].card_text_color,
-        });
-      }
-    });
-  });
-};

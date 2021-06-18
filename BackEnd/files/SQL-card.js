@@ -45,26 +45,30 @@ exports.getQueryCards = (username, assistantName, intentName) => {
   let sql =
     'select * from richResponseCard where username=? and assistant=?  and intent=? and useQuery="true" order by lastModified;';
   return new Promise((resolve, reject) => {
-    connection.query(sql, [username, assistantName, intentName], async (err, results) => {
-      if (err) console.log(err);
-      else {
-        let existingCards = [];
-        for (let i = 0; i < results.length; i++) {
-          let tempExistingCards = {
-            username: results[i].username,
-            assistant: results[i].assistant,
-            intent: results[i].intent,
-            useQuery: results[i].useQuery,
-            cardNo: results[i].cardNo,
-            cardName: JSON.parse(results[i].cardName),
-            cardValue: JSON.parse(results[i].cardValue),
-            lastModified: results[i].lastModified,
-          };
-          existingCards.push(tempExistingCards);
+    connection.query(
+      sql,
+      [username, assistantName, intentName],
+      async (err, results) => {
+        if (err) console.log(err);
+        else {
+          let existingCards = [];
+          for (let i = 0; i < results.length; i++) {
+            let tempExistingCards = {
+              username: results[i].username,
+              assistant: results[i].assistant,
+              intent: results[i].intent,
+              useQuery: results[i].useQuery,
+              cardNo: results[i].cardNo,
+              cardName: JSON.parse(results[i].cardName),
+              cardValue: JSON.parse(results[i].cardValue),
+              lastModified: results[i].lastModified,
+            };
+            existingCards.push(tempExistingCards);
+          }
+          resolve(existingCards);
         }
-        resolve(existingCards);
       }
-    });
+    );
   });
 };
 
@@ -82,34 +86,37 @@ exports.getQueryCards = (username, assistantName, intentName) => {
 //     });
 // }
 
-//------------------------------------------------------------Get Cards Without Queries-----------------------------------------------------------------------
+//------------------------------------------------------------Get All Cards-----------------------------------------------------------------------
 
 exports.getCards = (username, assistantName, intentName) => {
   let sql =
     "select * from richResponseCard where username=? and assistant=?  and intent=? order by lastModified;";
   return new Promise((resolve, reject) => {
-    connection.query(sql, [username, assistantName, intentName], async (err, results) => {
-      if (err) console.log(err);
-      else {
-        console.log(results);
-        let existingCards = [];
-        for (let i = 0; i < results.length; i++) {
-          let tempExistingCards = {
-            username: results[i].username,
-            assistant: results[i].assistant,
-            intent: results[i].intent,
-            useQuery: results[i].useQuery,
-            cardNo: results[i].cardNo,
-            cardName: JSON.parse(results[i].cardName),
-            cardValue: JSON.parse(results[i].cardValue),
-            lastModified: results[i].lastModified,
-          };
-          existingCards.push(tempExistingCards);
+    connection.query(
+      sql,
+      [username, assistantName, intentName],
+      async (err, results) => {
+        if (err) console.log(err);
+        else {
+          console.log(results);
+          let existingCards = [];
+          for (let i = 0; i < results.length; i++) {
+            let tempExistingCards = {
+              username: results[i].username,
+              assistant: results[i].assistant,
+              intent: results[i].intent,
+              useQuery: results[i].useQuery,
+              cardNo: results[i].cardNo,
+              cardName: JSON.parse(results[i].cardName),
+              cardValue: JSON.parse(results[i].cardValue),
+              lastModified: results[i].lastModified,
+            };
+            existingCards.push(tempExistingCards);
+          }
+          resolve(existingCards);
         }
-        console.log("ESSSS", existingCards);
-        resolve(existingCards);
       }
-    });
+    );
   });
 };
 
@@ -118,11 +125,16 @@ exports.getCards = (username, assistantName, intentName) => {
 exports.updateCard = (cardName, cardValue, richResponseId) => {
   console.log(cardName, cardValue, richResponseId);
   for (let i = 0; i < cardName.length; i++) {
-    let sql = "update richresponses set cardValue=? where CardName=? and richResponseID=?";
-    connection.query(sql, [cardValue[i], cardName[i], richResponseId], (err, results) => {
-      if (err) return console.log(err.message);
-      else console.log("updated Card");
-    });
+    let sql =
+      "update richresponses set cardValue=? where CardName=? and richResponseID=?";
+    connection.query(
+      sql,
+      [cardValue[i], cardName[i], richResponseId],
+      (err, results) => {
+        if (err) return console.log(err.message);
+        else console.log("updated Card");
+      }
+    );
   }
 };
 //------------------------------------------------------------Delete Card-----------------------------------------------------------------------
@@ -130,8 +142,12 @@ exports.updateCard = (cardName, cardValue, richResponseId) => {
 exports.deleteCard = (username, assistantName, intentName, cardValue) => {
   let sql =
     "delete from richResponseCard where username=? and assistant=? and intent=? and cardValue=?;";
-  connection.query(sql, [username, assistantName, intentName, cardValue], (err, results) => {
-    if (err) return console.log(err.message);
-    else console.log("Deleted Card");
-  });
+  connection.query(
+    sql,
+    [username, assistantName, intentName, cardValue],
+    (err, results) => {
+      if (err) return console.log(err.message);
+      else console.log("Deleted Card");
+    }
+  );
 };

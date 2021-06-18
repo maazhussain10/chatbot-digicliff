@@ -43,7 +43,7 @@ class Navbar extends Component {
                             <span onClick={() => updateDisplayComponent()} className="settings-btn" type="submit">
                                 {displayComponent === "intents" ? "Settings" : "INTENTS"}
                             </span>
-                            <button href="/#" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</button>
+                            <button href="/" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</button>
                             {/* <a href="/explore" className="btn btn-sm btn-outline-secondary my-2 my-sm-0 mr-2" type="submit"></a> */}
                         </div>
                     </div>

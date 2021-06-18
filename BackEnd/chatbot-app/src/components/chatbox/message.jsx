@@ -13,7 +13,7 @@ function RichResponse(props) {
     if (cardMessage.length >= 1) {
         return (
             <Cards
-                cards={cardMessage}
+                cardsMessage={cardMessage}
                 cardTheme={cardTheme} />
 
         )
@@ -101,7 +101,7 @@ class Message extends Component {
             chipTheme,
             chatBoxTheme } = this.props;
         const { from, messages, time, cardMessage, chipMessage } = messageObject;
-
+        console.log("CARDDDD",cardMessage);
         let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont } = chatBoxTheme;
 
         const { load } = this.state;

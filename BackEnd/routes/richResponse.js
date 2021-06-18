@@ -21,11 +21,10 @@ class RichResponse {
       }
     });
 
-    app.post("/chip", async (req, res) => {
+    app.post("/chip", (req, res) => {
       const { username, assistantName, intentName, chipResponse, usingQueries } = req.query;
-      await createChip(username, assistantName, intentName, usingQueries, chipResponse);
-      let existingChips = await getChips(username, assistantName, intentName);
-      res.send(existingChips);
+      createChip(username, assistantName, intentName, usingQueries, chipResponse);
+      res.send();
     });
 
     app.get("/getchips", async (req, res) => {
@@ -35,21 +34,21 @@ class RichResponse {
       res.send(responses);
     });
 
-    app.get("/chip-delete", async (req, res) => {
+    app.get("/chip-delete", (req, res) => {
       const { username, assistantName, intentName, chipValue } = req.query;
-      await deleteChip(username, assistantName, intentName, chipValue);
+      deleteChip(username, assistantName, intentName, chipValue);
       res.send("Deleted");
     });
 
-    app.get("/chip-update", async (req, res) => {
+    app.get("/chip-update", (req, res) => {
       const { username, assistantName, intentName, chipValue, previousChipValue } = req.query;
-      await updateChip(username, assistantName, intentName, chipValue, previousChipValue);
+      updateChip(username, assistantName, intentName, chipValue, previousChipValue);
       res.send("Updated");
     });
 
     //-------------------------------------------------------CARD---------------------------------------------------------------------------------
 
-    app.post("/card", async (req, res) => {
+    app.post("/card", (req, res) => {
       const {
         username,
         assistantName,
@@ -57,13 +56,11 @@ class RichResponse {
         useQuery,
         cardNo,
         cardName,
-        cardValue,
-        cardColor,
-        textColor,
+        cardValue
       } = req.query;
 
       if (cardName)
-        await createCard(
+        createCard(
           username,
           assistantName,
           intentName,
@@ -72,8 +69,7 @@ class RichResponse {
           cardName,
           cardValue
         );
-      let existingCards = await getCards(username, assistantName, intentName);
-      res.send(existingCards);
+      res.send();
     });
 
     app.get("/getcards", async (req, res) => {
@@ -82,15 +78,15 @@ class RichResponse {
       res.send(allCards);
     });
 
-    app.get("/card-delete", async (req, res) => {
+    app.get("/card-delete", (req, res) => {
       const { username, assistantName, intentName, cardValue } = req.query;
-      await deleteCard(username, assistantName, intentName, JSON.stringify(cardValue));
+      deleteCard(username, assistantName, intentName, JSON.stringify(cardValue));
       res.send("Deleted");
     });
 
-    app.get("/card-update", async (req, res) => {
+    app.get("/card-update", (req, res) => {
       const { cardName, cardValue } = req.query;
-      await updateCard(cardName, cardValue);
+      updateCard(cardName, cardValue);
       res.send("Deleted");
     });
   }

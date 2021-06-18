@@ -57,10 +57,6 @@ class ChatBox extends Component {
 
         this.getSettings();
     }
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
-
 
     sendMessage = (chipMessage) => {
         let message;
@@ -106,7 +102,7 @@ class ChatBox extends Component {
                     chipMessage: chipResponse,
                     time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
                 }
-
+                console.log("TECT", textMessage);
                 if (cardResponse.length !== 0 || chipResponse.length !== 0) {
                     textMessage.hasRichResponse = true;
                 }
@@ -138,6 +134,7 @@ class ChatBox extends Component {
         // Get the necessary details ( username, assistantName )
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        console.log("SEE", username, assistantName);
         try {
             axios({
                 method: 'get',
@@ -149,8 +146,7 @@ class ChatBox extends Component {
 
             }).then((response) => {
                 const { chatBoxSettings } = response.data;
-                if (this._isMounted)
-                    this.setState({ settings: chatBoxSettings });
+                this.setState({ settings: chatBoxSettings });
             });
         }
         catch (e) {
@@ -180,7 +176,8 @@ class ChatBox extends Component {
                         <div className="chat-conversion">
                             {this.state.messageStorage.map(message => (
                                 <Message
-                                    messageObject={message} key={message.messageId}
+                                    messageObject={message}
+                                    key={message.messageId}
                                     sendMessage={this.sendMessage}
                                     chipTheme={chipTheme}
                                     cardTheme={cardTheme}

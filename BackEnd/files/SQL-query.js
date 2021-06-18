@@ -2,6 +2,7 @@ const { connection, DataBaseConnection } = require("./connection");
 const { getDatabaseDetails } = require("./SQL-database");
 const { createChip } = require("./SQL-chip");
 const { createCard } = require("./SQL-card");
+const { getTime } = require("./utilityFunctions");
 
 //----------------------------------------------------Get Column Names of Users Database-----------------------------------------------------------------------
 
@@ -242,9 +243,9 @@ exports.getQuery = async (username, assistantName, intentName) => {
   });
 };
 
-exports.createQueryRichResponses = async (id, sqlQuery, type, values, cardNo) => {
+exports.createQueryRichResponses = async (id, sqlQuery, type, values,cardNo) => {
   const { username, assistantName, intentName } = id;
-  console.log(assistantName);
+  console.log(values);
   //Soft code knowledge Store, Please <3 ^_^
   let databaseDetails = await getDatabaseDetails(username, assistantName);
   let { hostname, dbUsername, password, databaseName } = databaseDetails;
@@ -281,7 +282,6 @@ exports.createQueryRichResponses = async (id, sqlQuery, type, values, cardNo) =>
               username,
               assistantName,
               intentName,
-              uuid(),
               "false",
               cardNo,
               columnNames,

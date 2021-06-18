@@ -5,7 +5,7 @@ class BasicCardWith3Fields extends Component {
         cardDetails: {
             cardNo: "1",
             cardName: ['header', 'subHeader', 'details'],
-            cardValue: {}
+            cardValue: {header:"Header", subHeader:"Dark Card title", details:"Some quick example text to build on the card title and make up the bulk of the card's content."}
         }
     }
 

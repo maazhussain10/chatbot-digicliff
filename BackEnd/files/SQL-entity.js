@@ -41,7 +41,6 @@ exports.entityValue = (username, assistantName, intentName, existingEntities, se
     connection.query(sql, [username, assistantName, intentName], async (err, results) => {
       if (err) console.log(err);
       else {
-        console.log(results);
         for (let i = 0; i < results.length; i++) {
           if (results[i].entityType === "name" || results[i].entityType === "other")
             existingEntities.push(results[i].entityType);
@@ -49,6 +48,9 @@ exports.entityValue = (username, assistantName, intentName, existingEntities, se
         let value;
         for (let i = 0; i < existingEntities.length; i++) {
           if (existingEntities[i] === "name") {
+            sendMessage = sendMessage.replace('my ', '');
+            sendMessage = sendMessage.replace('name ', '');
+            sendMessage = sendMessage.replace('is ', '');
             value = sendMessage;
             entityName = "name";
           } else if (existingEntities[i] === "other") {

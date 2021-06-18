@@ -11,9 +11,9 @@ class Cards extends Component {
 
     render() {
         let cards = [];
-        const { cardss, cardTheme } = this.props;
-        console.log(cardss);
-        if (!cardss) {
+        const { cardsMessage, cardTheme } = this.props;
+        console.log(cardsMessage);
+        if (!cardsMessage) {
             let temp={
                   username: 'Zaam',
                   assistant: 'Hello',
@@ -27,7 +27,7 @@ class Cards extends Component {
             cards.push(temp)
         }
         else {
-            cards = cardss;
+            cards = cardsMessage;
         }
         console.log(cards);
         const {

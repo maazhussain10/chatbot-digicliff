@@ -28,7 +28,7 @@ class Navbar extends Component {
                             <Link to={`/${username}/profile`}>
                                 <button className="profile-btn" href={`/${username}/profile`}>Profile</button>
                             </Link>
-                            <button href="/#" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</button>
+                            <button href="/" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</button>
                         </div>
                     </div>
                 </nav>

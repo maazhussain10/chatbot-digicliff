@@ -21,10 +21,15 @@ class Rich extends Component {
         cardColor: "#000000",
         textColor: "#ffffff",
     }
+
+    componentDidMount() {
+        this.disable();
+    }
     disable = () => {
         console.log("inside disable", this.state.cards.length, this.state.chips.length);
         if (this.state.cards.length === 0 && this.state.chips.length !== 0) this.setState({ disableCard: true });
         else if (this.state.cards.length !== 0 && this.state.chips.length === 0) this.setState({ disableChip: true });
+        else this.setState({ disableCard: false, disableChip: false });
         console.log(this.state.disableCard, this.state.disableChip);
     }
     handleOnDragEnd = (result) => {
@@ -50,7 +55,7 @@ class Rich extends Component {
 
             }).then((response) => {
                 this.setState({ chips: response.data });
-                // console.log(response.data);
+                this.disable();
             });
         }
         catch (e) {
@@ -75,6 +80,7 @@ class Rich extends Component {
 
             }).then((response) => {
                 this.getExistingChips();
+                this.disable()
             })
         }
         catch (e) {
@@ -119,6 +125,9 @@ class Rich extends Component {
         }
     }
 
+
+// Card Functions
+
     getExistingCards = () => {
         try {
             let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
@@ -135,7 +144,7 @@ class Rich extends Component {
 
             }).then((response) => {
                 this.setState({ cards: response.data, cardColor: "#ffffff", textColor: "#000000" });
-                console.log("Cards:", this.state.cards);
+                this.disable();
             });
         }
         catch (e) {
@@ -162,12 +171,8 @@ class Rich extends Component {
 
             }).then((response) => {
                 // Calls getExistingCards function to update the cards in the intent after deletion.
-                console.log("From Delete Card");
                 this.getExistingCards();
-                // let { cards } = this.state;
-                // if (index === cards.length - 1) {
-                //     $('#card-' + (index - 1)).addClass('active');
-                // }
+                this.disable();
             })
         }
         catch (e) {
@@ -190,7 +195,6 @@ class Rich extends Component {
         // Get the necessary details ( userName, assistantName, intentName )
         let { assistantName, description } = JSON.parse(sessionStorage.getItem('assistantDetails'));
         let { chips, cards, cardColor, textColor } = this.state;
-        console.log(cards);
         return (
             <React.Fragment>
                 <RichResponseNavBar />
