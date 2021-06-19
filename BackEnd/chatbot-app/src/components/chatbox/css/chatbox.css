@@ -248,7 +248,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: white;
-  background-image: url(../../../assets/images/chat-body.png);
+  /* background-image: url(../../../assets/images/chat-body.png); */
   background-repeat: no-repeat;
   background-size: cover;
 }

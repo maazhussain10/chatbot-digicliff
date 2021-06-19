@@ -4,7 +4,6 @@ const { getTime } = require("./utilityFunctions");
 exports.createAssistant = (username, assistantName, description) => {
   let sql = `Insert into assistant values(?, ?, ?, ?);`;
   //Get assistant Id and Time
-
   let time = getTime();
 
   connection.query(sql, [username, assistantName, description, time], (err) => {
@@ -26,6 +25,7 @@ exports.getExistingAssistants = (username) => {
           let assistant = {
             assistantName: results[i].assistant,
             assistantDesc: results[i].description,
+            lastModified: results[i].lastModified
           };
           assistantsList.push(assistant);
         }

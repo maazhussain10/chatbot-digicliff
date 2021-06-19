@@ -5,8 +5,100 @@ import axios from 'axios';
 class DisplayAssistant extends Component {
 
     state = {
-        checkDelete: false
+        checkDelete: false,
+        currentTime: "",
+        lastModified: "",
+        timeInfo: "0 seconds ago"
     }
+    componentDidMount() {
+        console.log(this.props);
+        if (this.props.assistant)
+            this.dispTime(this.props.assistant.lastModified);
+    }
+
+    //-----------------------------------------------------------------PROCESS TIME-----------------------------------------------------
+
+    dispTime = (lastModified) => setInterval(() => {
+        console.log(lastModified);
+        this.processTime(lastModified);
+    }, 1000);
+
+    getCurrentTime = () => {
+
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, "0");
+        const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        const yyyy = today.getFullYear();
+        const hour = String(today.getHours()).padStart(2, "0");
+        const minute = String(today.getMinutes()).padStart(2, "0");
+        const seconds = String(today.getSeconds()).padStart(2, "0");
+
+        let date = {
+            dd: Number(dd),
+            mm: Number(mm),
+            yyyy: Number(yyyy),
+            hour: Number(hour),
+            minute: Number(minute),
+            seconds: Number(seconds)
+        }
+        return date;
+
+    }
+
+    getRecordedTime = (lastModified) => {
+
+        const dd = lastModified.slice(8, 10);
+        const mm = lastModified.slice(5, 7);
+        const yyyy = lastModified.slice(0, 4);
+        const hour = lastModified.slice(11, 13);
+        const minute = lastModified.slice(14, 16);
+        const seconds = lastModified.slice(17, 19);
+
+        let date = {
+            dd: Number(dd),
+            mm: Number(mm),
+            yyyy: Number(yyyy),
+            hour: Number(hour),
+            minute: Number(minute),
+            seconds: Number(seconds)
+        }
+
+        return date;
+    }
+
+    processTime = (lastModified) => {
+        let currentDate = this.getCurrentTime();
+        let recordedDate = this.getRecordedTime(lastModified);
+        let timeInfo = ""
+
+        if (currentDate.mm === recordedDate.mm) {
+            if (currentDate.dd === recordedDate.dd) {
+                if (currentDate.hour === recordedDate.hour) {
+                    if (currentDate.minute === recordedDate.minute) {
+                        if (currentDate.seconds !== recordedDate.seconds) {
+                            if (Math.abs(currentDate.seconds - recordedDate.seconds) === 1) timeInfo = Math.abs(currentDate.seconds - recordedDate.seconds) + " second ago";
+                            else timeInfo = Math.abs(currentDate.seconds - recordedDate.seconds) + " seconds ago";
+                        }
+                    } else {
+                        if (Math.abs(currentDate.minute - recordedDate.minute) === 1) timeInfo = Math.abs(currentDate.minute - recordedDate.minute) + " minute ago";
+                        else timeInfo = Math.abs(currentDate.minute - recordedDate.minute) + " minutes ago";
+
+                    }
+                } else {
+                    if (Math.abs(currentDate.hour - recordedDate.hour) === 1) timeInfo = Math.abs(currentDate.hour - recordedDate.hour) + " hour ago";
+                    else timeInfo = Math.abs(currentDate.hour - recordedDate.hour) + " hours ago";
+                }
+            } else {
+                if (Math.abs(currentDate.dd - recordedDate.dd) === 1) timeInfo = Math.abs(currentDate.dd - recordedDate.dd) + " day ago";
+                else timeInfo = Math.abs(currentDate.dd - recordedDate.dd) + " days ago";
+
+            }
+        } else {
+            timeInfo = String(currentDate.dd) + '-' + String(currentDate.mm) + '-' + String(currentDate.yyyy) + "";
+        }
+        this.setState({ timeInfo: timeInfo });
+    }
+
     //------------------------------------------------------------------DELETE ASSISTANT AXIOS----------------------------------------------------------------------
 
     deletion = (e) => {
@@ -35,12 +127,14 @@ class DisplayAssistant extends Component {
             console.log(e);
         }
     }
+
     //------------------------------------------------------------------ADD ASSISTANT ID TO STATE OF PARENT ( UPDATE )----------------------------------------------------------------------
 
     setUpdateAssistantDetails = () => {
         let { setUpdateAssistantDetails, assistant } = this.props;
         setUpdateAssistantDetails(assistant);
     }
+
 
     //------------------------------------------------------------------RENDER----------------------------------------------------------------------
     render() {
@@ -53,7 +147,10 @@ class DisplayAssistant extends Component {
 
         // get username from sessionStorage.
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantName, assistantId, assistantDesc } = assistant;
+        let { assistantName, assistantId, assistantDesc, lastModified } = assistant;
+        // let dateTime = this.processTime(lastModified);
+
+
         return (
             <React.Fragment>
                 <div className="card text-center">
@@ -82,8 +179,8 @@ class DisplayAssistant extends Component {
                         <a href={`/assistant/${username}/${assistantName}`} onClick={() => handleAssistant(assistantName, assistantDesc, assistantId)} className="btn btn-primary text-center">Build</a>
                     </div>
                     <div className="card-footer text-muted">
-                        {/* Add time here */}
-                        2 days ago
+                        Created: {this.state.timeInfo}
+                        <br />
                     </div>
 
                 </div>
@@ -104,7 +201,6 @@ class DisplayAssistant extends Component {
                                     className="form-control"
                                     id="inputDeleteConfirmation"
                                 />
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-success" data-dismiss="modal">Cancel</button>

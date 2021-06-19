@@ -20,12 +20,29 @@
             "Server crashes when you try to run a query without adding Database name",
             "Need to be able to edit or delete database connection",
             "Allow entity value to be able to given as an input in run queries",
+            "setting card crash",
 
             "Logout button doesnt work in any page( it doesnt redirect but clears the session storage)",
             "Modal for create chip is annoying, replace it with what we have for messages",
             "Fix Time in the asssitant Display",
             "Add Edit Modal Box for Card",
             "Display Follow Up intents in an hierarchical form"
+        ]
+    },
+    {
+        "made-by": "Prajeshwar",
+        "changes": [
+            "drag and drop in chips",
+            "No bot display image",
+            "Assistant delete confirmation",
+            "create chip fixed",
+            "Time in assistant display",
+            "edit card modal"
+        ],
+        "to-do": [
+            "chat-body.png in settings page doesn't work. Says Error 404 not found",
+            "Display Follow Up intents in an hierarchical form",
+            "STATS"
         ]
     }
 ]

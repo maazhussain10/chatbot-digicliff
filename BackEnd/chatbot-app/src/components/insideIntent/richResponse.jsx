@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Entity } from './entity';
 import { RunQuery } from './runQueries';
 import { CreateCards } from './createCards';
+import { UpdateModal } from './updateCard';
 import { CreateChip } from './createChip'
 import axios from 'axios';
 import { ChatBox } from '../chatbox/chatbox';
@@ -126,7 +127,7 @@ class Rich extends Component {
     }
 
 
-// Card Functions
+    // Card Functions
 
     getExistingCards = () => {
         try {
@@ -334,6 +335,7 @@ class Rich extends Component {
                 <ChatBox
                     assistantName={assistantName}
                     description={description} />
+                <UpdateModal />
             </React.Fragment >
         );
     }

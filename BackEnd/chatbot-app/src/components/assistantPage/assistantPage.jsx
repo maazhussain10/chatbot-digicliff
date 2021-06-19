@@ -94,6 +94,7 @@ class AssistantPage extends Component {
         let {
             existingAssistants,
             updateAssistantDetails,
+            dateTime
         } = this.state;
         return (
             <React.Fragment>
@@ -107,17 +108,13 @@ class AssistantPage extends Component {
                 </div>
                 {this.state.noBots === true ?
                     <div className="container">
-                        {/* //     <div className="row"> */}
-                        {/* //         <div className="col-lg-12"> */}
                         <img src={img1} className="rounded mx-auto d-block no-bot" alt="No bot image" />
-                        {/* //         </div> */}
-                        {/* //     </div> */}
                     </div>
                     : null
                 }
                 {/* Display 2 cards in a row */}
                 {existingAssistants.slice(0, existingAssistants.length / 2 + 1).map((assistant, index) => (
-                    <div className="container" style={{ fontFamily: 'Tinos' }} key={index}>
+                    <div className="container" style={{ fontFamily: 'Tinos' }} key={assistant.assistantName}>
                         <div className="row text-center">
                             <div className="col-sm-6">
                                 <DisplayAssistant
@@ -126,6 +123,7 @@ class AssistantPage extends Component {
                                     handleAssistant={this.handleAssistant}
                                     updateAssistant={this.updateAssistant}
                                     getAssistants={this.getAssistants}
+
                                 />
                             </div>
                             <div className="col-sm-6">
@@ -135,6 +133,7 @@ class AssistantPage extends Component {
                                     handleAssistant={this.handleAssistant}
                                     updateAssistant={this.updateAssistant}
                                     getAssistants={this.getAssistants}
+
                                 />
                             </div>
                         </div>

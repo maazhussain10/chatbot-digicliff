@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { ChatboxTop } from './chatboxTop';
 import { Message } from './message';
 import assistantLogo from '../../assets/images/chatbots-logo-white.png'
+// import back from '../../assets/images/chat-body.png';
 import 'font-awesome/css/font-awesome.min.css';
 import './css/chatbox.css';
 
