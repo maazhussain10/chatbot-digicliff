@@ -16,7 +16,7 @@ CREATE TABLE assistant
     username varchar(50) NOT NULL,
     assistant varchar(40) NOT NULL,
     description varchar(255) NOT NULL,
-    lastModified datetime NOT NULL,
+    lastModified varchar(20) NOT NULL,
     PRIMARY KEY (username, assistant),
     FOREIGN KEY (username) REFERENCES userAuth (username) ON DELETE CASCADE ON UPDATE CASCADE
 );

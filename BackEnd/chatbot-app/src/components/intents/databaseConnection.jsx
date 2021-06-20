@@ -2,8 +2,41 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 class DatabaseConnection extends Component {
-    state = {}
+    state = {
+        dbHostname:"",
+        dbUsername: "",
+        dbPassword: "",
+        databaseName:""
+    }
 
+    componentDidMount() {
+        this.checkDBAlreadyConnected();
+    }
+
+    // Check if the Database already exists.
+
+    checkDBAlreadyConnected = () => {
+        // Get the necessary details ( username, assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+
+        // Send a request to the express server ()
+        try {
+            axios({
+                method: 'get',
+                url: 'http://localhost:5000/getDatabaseDetails',
+                params: {
+                    username: username,
+                    assistantName: assistantName
+                },
+            }).then((response) => {
+                this.setState({ dbHostname:response.data.hostname , dbUsername: response.data.dbUsername, dbPassword: response.data.dbPassword, databaseName: response.data.databaseName });
+        });
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
     //------------------------------------------------------------KNOWLEDGE STORE AXIOS------------------------------------------------------------
     connectDatabase = () => {
         // Get the necessary details ( username, assistantName )
@@ -12,7 +45,7 @@ class DatabaseConnection extends Component {
 
         // Get the values entered by the user.
         let dbUsername = document.getElementById('dbUsername').value;
-        let password = document.getElementById('dbPassword').value;
+        let dbPassword = document.getElementById('dbPassword').value;
         let databaseName = document.getElementById('databaseName').value;
 
         // Send a request to the express server ()
@@ -25,17 +58,41 @@ class DatabaseConnection extends Component {
                     assistantName: assistantName,
                     dbUsername: dbUsername,
                     databaseName: databaseName,
-                    password: password
+                    dbPassword: dbPassword
                 },
-
             }).then((response) => {
-            });
+                //
+        });
         }
         catch (e) {
             console.log(e);
         }
     }
 
+    // Break the Database connection.
+
+    breakConnection = () => {
+        // Get the necessary details ( username, assistantName )
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+
+        // Send a request to the express server ()
+        try {
+            axios({
+                method: 'get',
+                url: 'http://localhost:5000/breakConnection',
+                params: {
+                    username: username,
+                    assistantName: assistantName
+                },
+            }).then((response) => {
+                this.setState({ dbHostname:"" , dbUsername: "", dbPassword: "", databaseName: "" });
+        });
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
 
     render() {
         return (
@@ -58,38 +115,49 @@ class DatabaseConnection extends Component {
                                                 <path fillRule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
                                             </svg></small>
                                         <br />
-                                        <label htmlFor="dbUsername">Username</label>
+                                        <label htmlFor="dbHostname">Hostname</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="dbHostname"
+                                            defaultValue={this.state.dbHostname}
+                                            aria-describedby="db-hostname"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                    <label htmlFor="dbUsername">Username</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="dbUsername"
+                                            defaultValue={this.state.dbUsername}
                                             aria-describedby="db-username"
                                         />
-                                        <small id="db-username" className="form-text text-muted">Type the username of your SQL DB</small>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="assistantDesc">Password</label>
                                         <input
                                             type="password"
                                             id="dbPassword"
+                                            defaultValue={this.state.dbPassword}
                                             className="form-control"
                                         />
-                                        {/* <small id="emailHelp" className="form-text text-muted">Describe The purpose of this intent</small> */}
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="assistantDesc">Database Name</label>
                                         <input
                                             id="databaseName"
                                             type="text"
+                                            defaultValue={this.state.databaseName}
                                             className="form-control"
                                         />
-                                        <small id="emailHelp" className="form-text text-muted">Enter the Database Name</small>
                                     </div>
                                 </form>
                             </div>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                            <button type="button" onClick={() => this.breakConnection()}className="btn btn-outline-danger" data-dismiss="modal">Cancel Connection</button>
                             <button type="button" onClick={() => this.connectDatabase()} data-dismiss="modal" className="btn btn-primary">Connect</button>
                         </div>
                     </div>

@@ -20,7 +20,6 @@ class Intent {
     app.get("/intent", async (req, res) => {
       const { username, assistantName } = req.query;
       const intentData = await getExistingIntents(username, assistantName);
-      console.log(intentData.existingIntents);
       res.send(intentData.existingIntents);
     });
   }
@@ -85,8 +84,6 @@ class Intent {
   deleteIntent(app) {
     app.get("/intent-delete", (req, res) => {
       let { username, assistantName, intentName } = req.query;
-      console.log("Delete in backend");
-
       deleteIntent(username, assistantName, intentName);
       res.send();
     });

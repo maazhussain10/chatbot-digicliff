@@ -10,7 +10,6 @@ exports.addMessage = (username, assistantName, intentName, messageType, message)
     [username, assistantName, intentName, messageType, message, getTime()],
     (err) => {
       if (err) console.log(err);
-      else console.log("Created Training Phrase ", message);
     }
   );
 };
@@ -25,7 +24,6 @@ exports.getMessages = (username, assistantName, intentName, messageType) => {
       if (err) return console.log(err);
       else {
         let messages = [];
-        console.log(results);
         for (let i = 0; i < results.length; i++) {
           messages.push({
             message: results[i].message,
@@ -52,7 +50,6 @@ exports.getAllMessages = (username, assistantName, intentName) => {
             message: results[i].message,
             messageType: results[i].messageType,
           });
-          console.log(results[i].message);
         }
         resolve(messages);
       }
@@ -77,7 +74,6 @@ exports.updateMessage = (
     [message, username, assistantName, intentName, messageType, previousMessage],
     (err) => {
       if (err) console.log(err);
-      else console.log("Message has been updated");
     }
   );
 };
@@ -85,7 +81,6 @@ exports.updateMessage = (
 //------------------------------------------------------------Delete Messages-----------------------------------------------------------------------
 
 exports.deleteMessage = (username, assistantName, intentName, messageType, message) => {
-  console.log(username, message, messageType, assistantName, intentName);
   let sql =
     "delete from messages where username=? and assistant=? and intent=? and messageType=? and message = ?;";
   connection.query(

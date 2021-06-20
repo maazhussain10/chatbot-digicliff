@@ -4,16 +4,13 @@ import { Chips } from './richresponses/chips';
 import { MessageIcon } from './messageIcon';
 import axios from 'axios';
 
-// import ReactMarkdown from 'react-markdown';
-
-
 function RichResponse(props) {
     const { cardMessage, chipMessage, sendMessage, cardTheme, chipTheme } = props;
 
     if (cardMessage.length >= 1) {
         return (
             <Cards
-                cardsMessage={cardMessage}
+                cards={cardMessage}
                 cardTheme={cardTheme} />
 
         )
@@ -93,6 +90,7 @@ class Message extends Component {
             console.log(e);
         }
     }
+
     render() {
         const {
             sendMessage,
@@ -101,7 +99,6 @@ class Message extends Component {
             chipTheme,
             chatBoxTheme } = this.props;
         const { from, messages, time, cardMessage, chipMessage } = messageObject;
-        console.log("CARDDDD",cardMessage);
         let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont } = chatBoxTheme;
 
         const { load } = this.state;

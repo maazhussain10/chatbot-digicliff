@@ -31,9 +31,9 @@ class Query {
     });
 
     app.get("/deleteQuery", (req, res) => {
-      let { intentName } = req.query;
+      let { username, assistantName, intentName } = req.query;
 
-      deleteExistingQuery(intentName);
+      deleteExistingQuery( username, assistantName, intentName);
       res.send();
     });
 

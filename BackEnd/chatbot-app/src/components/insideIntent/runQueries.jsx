@@ -51,7 +51,6 @@ class RunQuery extends Component {
 
     handleQuery = () => {
         try {
-            // const { rows } = this.state
             const { selectedColumns, distinctColumn, tableName, rows } = this.state;
             // Get the necessary details ( username, assistantName, intentName )
             let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
@@ -82,6 +81,8 @@ class RunQuery extends Component {
     deleteQuery = () => {
         try {
             // Get Intent Id from session storage
+            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+            let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
             let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
 
             // Send request to express server ( query.js ) to delete query from database.
@@ -89,6 +90,8 @@ class RunQuery extends Component {
                 method: 'get',
                 url: 'http://localhost:5000/deleteQuery',
                 params: {
+                    username: username,
+                    assistantName:assistantName,
                     intentName: intentName,
                 },
 
@@ -102,7 +105,6 @@ class RunQuery extends Component {
                     tableName: "",
                     queryTable: [],
                 })
-                // document.getElementById('input-tablename').value = "";
             });
         }
         catch (e) {
@@ -131,7 +133,6 @@ class RunQuery extends Component {
                 }
                 if (distinctColumn)
                     this.makeDistinct(distinctColumn);
-
             });
         }
         catch (e) {

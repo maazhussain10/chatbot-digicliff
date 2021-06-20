@@ -10,26 +10,7 @@ class Cards extends Component {
     }
 
     render() {
-        let cards = [];
-        const { cardsMessage, cardTheme } = this.props;
-        console.log(cardsMessage);
-        if (!cardsMessage) {
-            let temp={
-                  username: 'Zaam',
-                  assistant: 'Hello',
-                  intent: 'Welcome',
-                  useQuery: 'false',
-                  cardNo: 1,
-                  cardName: [ 'header', 'subHeader', 'details' ],
-                  cardValue: [ 'Header', 'SubHeader', 'Details' ],
-                  lastModifed: '2021-06-12T12:27:33.000Z'
-                }
-            cards.push(temp)
-        }
-        else {
-            cards = cardsMessage;
-        }
-        console.log(cards);
+        const { cards, cardTheme } = this.props;
         const {
             cardBgColor,
             cardTextColor,

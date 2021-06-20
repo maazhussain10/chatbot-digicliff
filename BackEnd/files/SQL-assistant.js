@@ -8,9 +8,6 @@ exports.createAssistant = (username, assistantName, description) => {
 
   connection.query(sql, [username, assistantName, description, time], (err) => {
     if (err) console.log(err);
-    else {
-      console.log("CREATED ", assistantName);
-    }
   });
 };
 
@@ -63,7 +60,6 @@ exports.updateAssistant = (username, assistantName, description, previousAssista
     [assistantName, description, time, previousAssistantName, username],
     (err) => {
       if (err) console.log(err);
-      else console.log("Assistant name has been updated");
     }
   );
 };

@@ -15,7 +15,6 @@ class CreateCards extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props.disableCard);
         let { getExistingCards } = this.props;
         getExistingCards();
 

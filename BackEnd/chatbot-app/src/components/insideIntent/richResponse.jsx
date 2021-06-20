@@ -27,11 +27,9 @@ class Rich extends Component {
         this.disable();
     }
     disable = () => {
-        console.log("inside disable", this.state.cards.length, this.state.chips.length);
         if (this.state.cards.length === 0 && this.state.chips.length !== 0) this.setState({ disableCard: true });
         else if (this.state.cards.length !== 0 && this.state.chips.length === 0) this.setState({ disableChip: true });
         else this.setState({ disableCard: false, disableChip: false });
-        console.log(this.state.disableCard, this.state.disableChip);
     }
     handleOnDragEnd = (result) => {
         if (!result.destination) return;
@@ -188,7 +186,6 @@ class Rich extends Component {
 
     getCardTheme = () => {
         let { cardColor, textColor } = this.state;
-        // console.log(cardColor, textColor);
         return { cardColor: cardColor, textColor: textColor };
     }
 

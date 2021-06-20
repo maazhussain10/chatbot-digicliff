@@ -34,7 +34,6 @@ exports.createCard = (
     ],
     (err) => {
       if (err) console.log(err);
-      else console.log("Inserted Card ");
     }
   );
 };
@@ -72,20 +71,6 @@ exports.getQueryCards = (username, assistantName, intentName) => {
   });
 };
 
-// //------------------------------------------------------------Get All Query Cards-----------------------------------------------------------------------
-
-// exports.getCardValues = async (username, assistantName,intentName) => {
-//     let sql = 'select * from richresponses';
-//     return new Promise(resolve => {
-//         connection.query(sql, [username, assistantName,intentName], (err, results) => {
-//             if (err) console.log(err)
-//             else {
-//                 resolve(results);
-//             }
-//         })
-//     });
-// }
-
 //------------------------------------------------------------Get All Cards-----------------------------------------------------------------------
 
 exports.getCards = (username, assistantName, intentName) => {
@@ -98,7 +83,6 @@ exports.getCards = (username, assistantName, intentName) => {
       async (err, results) => {
         if (err) console.log(err);
         else {
-          console.log(results);
           let existingCards = [];
           for (let i = 0; i < results.length; i++) {
             let tempExistingCards = {
@@ -123,7 +107,6 @@ exports.getCards = (username, assistantName, intentName) => {
 //------------------------------------------------------------Update Card-----------------------------------------------------------------------
 
 exports.updateCard = (cardName, cardValue, richResponseId) => {
-  console.log(cardName, cardValue, richResponseId);
   for (let i = 0; i < cardName.length; i++) {
     let sql =
       "update richresponses set cardValue=? where CardName=? and richResponseID=?";
@@ -132,7 +115,6 @@ exports.updateCard = (cardName, cardValue, richResponseId) => {
       [cardValue[i], cardName[i], richResponseId],
       (err, results) => {
         if (err) return console.log(err.message);
-        else console.log("updated Card");
       }
     );
   }
@@ -147,7 +129,6 @@ exports.deleteCard = (username, assistantName, intentName, cardValue) => {
     [username, assistantName, intentName, cardValue],
     (err, results) => {
       if (err) return console.log(err.message);
-      else console.log("Deleted Card");
     }
   );
 };

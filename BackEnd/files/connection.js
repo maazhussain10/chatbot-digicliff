@@ -2,8 +2,8 @@ const mysql = require("mysql");
 
 const connection = mysql.createConnection({
   host: "localhost",
-  user: "newuser",
-  password: "newuser",
+  user: "maaz",
+  password: "root",
   database: "chatbotapi",
 });
 
@@ -22,7 +22,7 @@ connection.connect(function (err) {
 });
 
 DataBaseConnection = async (hostname, userName, password, databaseName) => {
-  console.log("Knowledge Store", hostname, userName, password, databaseName);
+  console.log(hostname,userName,password,databaseName)
   const DBconnection = mysql.createConnection({
     host: hostname,
     user: userName,

@@ -1,4 +1,4 @@
-const { createEntity, getEntities } = require("../files/SQL-entity");
+const { createEntity, getEntities, updateEntity, deleteEntity } = require("../files/SQL-entity");
 
 class Entity {
   constructor(app) {
@@ -6,29 +6,39 @@ class Entity {
   }
 
   entity(app) {
-    app.post("/create-entity", (req, res) => {
-      const { username, assistantName, intentName, selectedColumns, entityName } = req.query;
-      console.log(
-        "Details (Create - Entity ):",
-        username,
-        assistantName,
-        intentName,
-        selectedColumns,
-        entityName
-      );
 
-      createEntity(username, assistantName, intentName, selectedColumns, entityName);
+    // Create and Update Entity.
+    app.post("/create-entity", async(req, res) => {
+      const { username, assistantName, intentName, selectedColumns, entityName } = req.query;
+      let entities = await getEntities(username, assistantName, intentName);
+      for (let i = 0; i < entities.length; i++){
+        if (selectedColumns.includes(entities[i].entityType)) {
+          // Update Entity if Entity Type Exists.
+          await updateEntity(username, assistantName, intentName, JSON.parse(entityName)[entities[i].entityType], entities[i].entityType);
+          // Remove the entities that have been updated from the selected Columns Array.
+          selectedColumns.splice(selectedColumns.indexOf(entities[i].entityType), 1);
+        }
+      }
+      // Create Entities for which entity Type does not exist.
+      await createEntity(username, assistantName, intentName, selectedColumns, entityName,entities);
       res.send();
     });
+
+//  Get entity Details.
     app.get("/get-entity", async (req, res) => {
       const { username, assistantName, intentName } = req.query;
-      console.log(intentName);
-
       let entities = await getEntities(username, assistantName, intentName);
-      console.log("Entities:", entities);
       res.send(entities);
     });
+
+//  Delete Entity.
+    app.get("/delete-entity", async (req, res) => {
+      const { username, assistantName, intentName,entityType } = req.query;
+      await deleteEntity(username, assistantName, intentName,entityType);
+      res.send();
+    });
   }
+
 }
 
 module.exports = Entity;

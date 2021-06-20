@@ -47,11 +47,9 @@ class SigningUp {
       checkExistence();
     });
 
-    app.get("/deactivate-account", (req, res) => {
+    app.get("/deactivate-account", async(req, res) => {
       let { username } = req.query;
-
-      console.log(username);
-      deactivateAccount(username);
+      await deactivateAccount(username);
       res.send();
     });
   }

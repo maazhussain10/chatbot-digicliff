@@ -14,24 +14,23 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-        let userDetails = JSON.parse(sessionStorage.getItem("userDetails"));
-        if (userDetails.userId)
-            this.getAssistant(userDetails.userId);
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
+        if (username)
+            this.getAssistant(username);
     }
 
-    getAssistant = (userId) => {
+    getAssistant = (username) => {
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/assistant',
                 params: {
-                    userId: userId
+                    username: username
                 },
 
             }).then((response) => {
 
                 this.setState({ existingAssistant: response.data });
-                console.log(this.state.existingAssistant);
 
             });
         }
@@ -41,19 +40,16 @@ class Profile extends Component {
     }
 
     deactivateAccount = () => {
-        let userDetails = JSON.parse(sessionStorage.getItem("userDetails"));
-        let { userId } = userDetails;
+        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         try {
             axios({
                 method: 'get',
                 url: 'http://localhost:5000/deactivate-account',
                 params: {
-                    userId: userId
+                    username: username
                 },
 
             }).then((response) => {
-
-                console.log("Success");
                 this.handleLogout();
             });
         }

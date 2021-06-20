@@ -6,7 +6,8 @@ exports.createEntity = async (
   assistantName,
   intentName,
   selectedColumns,
-  entityNames
+  entityNames,
+  entities
 ) => {
   let ipAddress = "172.19.12.1";
   for (let i = 0; i < selectedColumns.length; i++) {
@@ -24,18 +25,31 @@ exports.createEntity = async (
       ],
       (err, results) => {
         if (err) console.log(err);
-        else {
-          console.log("entityId");
-        }
       }
     );
   }
 };
+// ------------------------------------------------------------Update Entity Name-------------------------------------------------------
+exports.updateEntity = async (
+  username,
+  assistantName,
+  intentName,
+  entityName,
+  entityType
+) => {
+  let ipAddress = "172.19.12.1";
+  let sql = 'update entity set ipAddress=?, entityName=? where entityType=? and username=? and assistant=? and intent=?';
+    connection.query(
+      sql, [ipAddress, entityName, entityType, username, assistantName, intentName],
+      (err, results) => {
+        if (err) console.log(err);
+      }
+    );
+}
 
 //------------------------------------------------------------Add Entity Value(Do in Save Conversation)-----------------------------------------------------------------------
 
 exports.entityValue = (username, assistantName, intentName, existingEntities, sendMessage) => {
-  console.log(username, assistantName, intentName, existingEntities, sendMessage);
   let sql = "select * from entity where username=? and assistant=? and intent=?";
   return new Promise((resolve) => {
     connection.query(sql, [username, assistantName, intentName], async (err, results) => {
@@ -71,7 +85,6 @@ exports.entityValue = (username, assistantName, intentName, existingEntities, se
 //------------------------------------------------------------Get Entities-----------------------------------------------------------------------
 
 exports.getEntities = (username, assistantName, intentName) => {
-  console.log(intentName);
   let sql = "select * from entity where username=? and assistant=? and intent=? ";
   return new Promise((resolve) => {
     connection.query(sql, [username, assistantName, intentName], (err, results) => {
@@ -83,10 +96,25 @@ exports.getEntities = (username, assistantName, intentName) => {
   });
 };
 
+//------------------------------------------------------------Get Entities-----------------------------------------------------------------------
+
+exports.getAllEntities = (username, assistantName) => {
+  let sql = "select * from entity where username=? and assistant=? ";
+  return new Promise((resolve) => {
+    connection.query(sql, [username, assistantName], (err, results) => {
+      if (err) console.log(err);
+      else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+
+
 //------------------------------------------------------------Update Entity-----------------------------------------------------------------------
 
 exports.updateEntityValue = (username, assistantName, entityName, intentName, value) => {
-  console.log(intentName, entityName, value);
   let sql =
     "update entity set entityValue=? where username=? and assistant=? and intent=? and entityType=?";
   return new Promise((resolve) => {
@@ -105,12 +133,12 @@ exports.updateEntityValue = (username, assistantName, entityName, intentName, va
 
 //------------------------------------------------------------Delete Entity-----------------------------------------------------------------------
 
-exports.deleteEntity = (username, assistantName, intentName) => {
-  let sql = "delete from entity where username=? and assistant=? and intent=? and entityName=?";
+exports.deleteEntity = (username, assistantName, intentName,entityType) => {
+  let sql = "delete from entity where username=? and assistant=? and intent=? and entityType=?";
   return new Promise((resolve) => {
     connection.query(
       sql,
-      [username, assistantName, intentName, entityName.toLowerCase()],
+      [username, assistantName, intentName, entityType.toLowerCase()],
       (err2) => {
         if (err2) console.log(err2);
         else {

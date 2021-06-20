@@ -41,7 +41,6 @@ class Settings extends Component {
         let { saveChangesStatus } = this.state;
 
         window.onbeforeunload = function () {
-            console.log(saveChangesStatus)
             if (!saveChangesStatus)
                 return 'Are you sure you want to leave?';
         };
@@ -65,7 +64,6 @@ class Settings extends Component {
             }).then((response) => {
                 const { chatBoxSettings } = response.data;
                 this.setState({ settings: chatBoxSettings });
-                console.log(this.state.settings);
             });
         }
         catch (e) {
@@ -131,7 +129,6 @@ class Settings extends Component {
         let { settings } = this.state;
         settings.chatBoxTheme.userFont = font;
         this.setState({ settings: settings })
-        console.log(settings);
         this.setState({ saveChangesStatus: false });
     }
 
@@ -251,8 +248,7 @@ class Settings extends Component {
             messages: ["Sample Card Reply"],
             hasRichResponse: true,
             cardMessage: [
-                [{ card_value: "Sample Header" }, { card_value: "Sample SubHeader" }, { card_value: "Sample Paragraph" }],
-                [{ card_value: "Another Header" }, { card_value: "Another SubHeader" }, { card_value: "Another Paragraph" }]],
+                { cardValue: ["Sample Header", "Sample SubHeader","Sample Paragraph"] }],
             chipMessage: "",
             time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
         }
@@ -263,7 +259,7 @@ class Settings extends Component {
             messages: ["Sample Chip Reply"],
             hasRichResponse: true,
             cardMessage: "",
-            chipMessage: [{ chip_value: "Chip 1", clickable: "false" }, { chip_value: "Chip 2", clickable: "false" }],
+            chipMessage: [{ chipValue: "Chip 1", clickable: "false" }, { chipValue: "Chip 2", clickable: "false" }],
             time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
         }
 

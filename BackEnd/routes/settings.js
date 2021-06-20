@@ -16,7 +16,6 @@ class Settings {
     app.post("/settings", async (req, res) => {
       const { username, assistantName, settings } = req.query;
 
-      console.log("Settings Post", settings);
       let chatBoxSettings = await setChatboxSettings(username, assistantName, settings);
       res.send(chatBoxSettings);
     });

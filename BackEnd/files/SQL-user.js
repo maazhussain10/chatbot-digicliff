@@ -4,9 +4,6 @@ exports.createUser = (firstName, lastName, username, email, password) => {
   let sql = `Insert into userAuth values(?, ?, ?, ?, ?);`;
   connection.query(sql, [firstName, lastName, email, username, password], (err, results) => {
     if (err) return console.log(err);
-    else {
-      console.log("User has been created");
-    }
   });
 };
 
@@ -65,7 +62,7 @@ exports.emailExists = async (email) => {
 
 exports.deactivateAccount = (username) => {
   // Delete user from table.
-  let sql = "delete FROM userAuth where username=?";
+  let sql = "delete from userAuth where username=?";
   connection.query(sql, [username], (err, results) => {
     if (err) return console.log(err.message);
   });

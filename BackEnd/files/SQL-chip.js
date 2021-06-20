@@ -6,7 +6,6 @@ exports.createChip = (username, assistantName, intentName, usingQueries, chipVal
   let sql = "insert into richresponsesChip values(?, ?, ?, ?, ?);";
   connection.query(sql, [username, assistantName, intentName, usingQueries, chipValue], (err) => {
     if (err) console.log(err);
-    else console.log("Inserted Chip ");
   });
 };
 
@@ -49,7 +48,6 @@ exports.getAllChips = (username, assistantName, intentName) => {
     connection.query(sql, [username, assistantName, intentName], (err, results) => {
       if (err) console.log(err);
       else {
-        console.log("Chips are ", results);
         resolve(results);
       }
     });
@@ -66,7 +64,6 @@ exports.updateChip = (username, assistantName, intentName, chipValue, previousCh
     [chipValue, username, assistantName, intentName, previousChipValue],
     (err) => {
       if (err) console.log(err);
-      else console.log("response has been updated");
     }
   );
 };
@@ -78,6 +75,5 @@ exports.deleteChip = (username, assistantName, intentName, chipValue) => {
     "delete from richresponsesChip where username = ? and assistant = ? and intent = ? and chipValue=?;";
   connection.query(sql, [username, assistantName, intentName, chipValue], (err, results) => {
     if (err) return console.log(err.message);
-    else console.log("Deleted Chip");
   });
 };

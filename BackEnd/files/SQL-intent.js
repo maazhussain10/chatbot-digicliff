@@ -3,16 +3,12 @@ const { getTime } = require("./utilityFunctions");
 
 exports.createIntent = (username, assistantName, previousIntent, intentName, intentDescription) => {
   let sql = `Insert into intent values(?, ?, ?, ?, ?, ?, ?);`;
-
   let time = getTime();
   connection.query(
     sql,
     [username, assistantName, intentName, intentDescription, previousIntent, time, "false"],
     (err) => {
       if (err) console.log(err);
-      else {
-        console.log("Intent Created ", intentName);
-      }
     }
   );
 };
@@ -39,7 +35,6 @@ exports.getExistingIntents = (username, assistantName) => {
     connection.query(sql, [username, assistantName], (err, results) => {
       if (err) console.log(err);
       else {
-        console.log(results);
         let intentsList = [];
         for (let i = 0; i < results.length; i++) {
           let intent = {
@@ -150,9 +145,11 @@ exports.handleMultipleReply = (username, assistantName, intentName, multipleRepl
   let sql = "update intent set multipleReply=? where username=? and assistant=? and intent=?;";
   connection.query(sql, [multipleReply, username, assistantName, intentName], (err) => {
     if (err) console.log(err);
-    else console.log("Multiple Reply has been updated");
   });
 };
+
+
+//------------------------------------------------------------Check if Multiple Reply Exist--------------------------------------------------
 
 exports.checkMultipleReply = (username, assistantName, intentName) => {
   let sql = "select * from intent where username=? and assistant=? and intent=?;";
@@ -172,7 +169,6 @@ exports.checkMultipleReply = (username, assistantName, intentName) => {
 
 exports.updateIntent = (username, assistantName, intentName, description, previousIntentName) => {
   let time = getTime();
-  console.log("HELLLOOO", username, assistantName, intentName, description, previousIntentName);
   let sql =
     "update intent set intent=?, description=?, lastModified=? where username=? and assistant=? and intent=?;";
   connection.query(
@@ -180,7 +176,6 @@ exports.updateIntent = (username, assistantName, intentName, description, previo
     [intentName, description, time, username, assistantName, previousIntentName],
     (err) => {
       if (err) console.log(err);
-      else console.log("Intent has been updated");
     }
   );
 };
@@ -188,7 +183,6 @@ exports.updateIntent = (username, assistantName, intentName, description, previo
 //------------------------------------------------------------Delete Intent-----------------------------------------------------------------------
 
 exports.deleteIntent = (username, assistantName, intentName) => {
-  // Delete the specified intent.
   let sql =
     "delete from intent where username=? and assistant=? and intent = ? or previousIntent = ?;";
   connection.query(sql, [username, assistantName, intentName, intentName], (err, results) => {

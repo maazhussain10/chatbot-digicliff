@@ -11,7 +11,6 @@ class DisplayAssistant extends Component {
         timeInfo: "0 seconds ago"
     }
     componentDidMount() {
-        console.log(this.props);
         if (this.props.assistant)
             this.dispTime(this.props.assistant.lastModified);
     }
@@ -19,7 +18,6 @@ class DisplayAssistant extends Component {
     //-----------------------------------------------------------------PROCESS TIME-----------------------------------------------------
 
     dispTime = (lastModified) => setInterval(() => {
-        console.log(lastModified);
         this.processTime(lastModified);
     }, 1000);
 

@@ -73,11 +73,9 @@ class UpdateIntentModal extends Component {
 
         if (updateIntentName === null && intentName !== "") {
             updateIntentName = intentName;
-            console.log(updateIntentName);
         }
         if (updateIntentDesc === null && intentDesc !== "") {
             updateIntentDesc = intentDesc;
-            console.log(updateIntentDesc);
         }
 
         // Send post request to express server ( Route in intent.js ) to update in database.

@@ -16,9 +16,6 @@ exports.addDatabaseDetails = (
     [username, assistantName, hostname, dbUsername, password, databaseName],
     (err) => {
       if (err) return console.log(err);
-      else {
-        console.log("Database Details have been added");
-      }
     }
   );
 };
@@ -32,7 +29,7 @@ exports.getDatabaseDetails = (username, assistantName) => {
         resolve({
           hostname: results[0].hostname,
           dbUsername: results[0].dbUsername,
-          password: results[0].dbPassword,
+          dbPassword: results[0].dbPassword,
           databaseName: results[0].databaseName,
         });
       } else {
@@ -40,6 +37,23 @@ exports.getDatabaseDetails = (username, assistantName) => {
       }
     });
   });
+};
+
+exports.breakConnection = (username, assistantName) => {
+  let sql = "delete from databaseConnection where username=? and assistant=?;";
+  return new Promise((resolve) => {
+    connection.query(sql, [username, assistantName], (err, results) => {
+      if (err) console.log(err);
+      else if (results.length !== 0) {
+        connection.query('delete from queryTable where username=? and assistant=?', [username, assistantName]);
+        resolve();
+      } else {
+        connection.query('delete from queryTable where username=? and assistant=?', [username, assistantName]);
+        resolve();
+      }
+    });
+  });
+
 };
 
 

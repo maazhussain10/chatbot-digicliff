@@ -103,7 +103,6 @@ class ChatBox extends Component {
                     chipMessage: chipResponse,
                     time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
                 }
-                console.log("TECT", textMessage);
                 if (cardResponse.length !== 0 || chipResponse.length !== 0) {
                     textMessage.hasRichResponse = true;
                 }
@@ -135,7 +134,6 @@ class ChatBox extends Component {
         // Get the necessary details ( username, assistantName )
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
         let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        console.log("SEE", username, assistantName);
         try {
             axios({
                 method: 'get',
@@ -170,7 +168,7 @@ class ChatBox extends Component {
             <div>
                 <div className="chats-box">
                     <ChatboxTop
-                        name={assistantName.slice(0, -5)}
+                        name={assistantName}
                         description={description}
                         chatBoxColor={chatBoxTheme.chatBoxColor} />
                     <div className="chatbox-body">
