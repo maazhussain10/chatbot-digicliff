@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Cards } from "./richresponses/cards";
 import { Chips } from "./richresponses/chips";
 import { MessageIcon } from "./messageIcon";
+import URL from '../../websiteURL';
+
 import axios from "axios";
 
 function RichResponse(props) {
@@ -68,7 +70,7 @@ class Message extends Component {
         try {
             axios({
                 method: "get",
-                url: "http://localhost:5000/settings",
+                url: "http://" + URL + ":5000/settings",
                 params: {
                     userId: userId,
                     assistantId: assistantId,

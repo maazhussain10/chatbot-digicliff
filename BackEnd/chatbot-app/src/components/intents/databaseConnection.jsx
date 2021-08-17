@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
+import URL from '../../websiteURL';
+``
 class DatabaseConnection extends Component {
     state = {
-        dbHostname:"",
+        dbHostname: "",
         dbUsername: "",
         dbPassword: "",
-        databaseName:""
+        databaseName: ""
     }
 
     componentDidMount() {
@@ -24,14 +25,14 @@ class DatabaseConnection extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/getDatabaseDetails',
+                url: 'http://' + URL + ':5000/getDatabaseDetails',
                 params: {
                     username: username,
                     assistantName: assistantName
                 },
             }).then((response) => {
-                this.setState({ dbHostname:response.data.hostname , dbUsername: response.data.dbUsername, dbPassword: response.data.dbPassword, databaseName: response.data.databaseName });
-        });
+                this.setState({ dbHostname: response.data.hostname, dbUsername: response.data.dbUsername, dbPassword: response.data.dbPassword, databaseName: response.data.databaseName });
+            });
         }
         catch (e) {
             console.log(e);
@@ -52,7 +53,7 @@ class DatabaseConnection extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/addDatabaseDetails',
+                url: 'http://' + URL + ':5000/addDatabaseDetails',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -62,7 +63,7 @@ class DatabaseConnection extends Component {
                 },
             }).then((response) => {
                 //
-        });
+            });
         }
         catch (e) {
             console.log(e);
@@ -80,14 +81,14 @@ class DatabaseConnection extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/breakConnection',
+                url: 'http://' + URL + ':5000/breakConnection',
                 params: {
                     username: username,
                     assistantName: assistantName
                 },
             }).then((response) => {
-                this.setState({ dbHostname:"" , dbUsername: "", dbPassword: "", databaseName: "" });
-        });
+                this.setState({ dbHostname: "", dbUsername: "", dbPassword: "", databaseName: "" });
+            });
         }
         catch (e) {
             console.log(e);
@@ -125,7 +126,7 @@ class DatabaseConnection extends Component {
                                         />
                                     </div>
                                     <div className="form-group">
-                                    <label htmlFor="dbUsername">Username</label>
+                                        <label htmlFor="dbUsername">Username</label>
                                         <input
                                             type="text"
                                             className="form-control"
@@ -157,7 +158,7 @@ class DatabaseConnection extends Component {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                            <button type="button" onClick={() => this.breakConnection()}className="btn btn-outline-danger" data-dismiss="modal">Cancel Connection</button>
+                            <button type="button" onClick={() => this.breakConnection()} className="btn btn-outline-danger" data-dismiss="modal">Cancel Connection</button>
                             <button type="button" onClick={() => this.connectDatabase()} data-dismiss="modal" className="btn btn-primary">Connect</button>
                         </div>
                     </div>

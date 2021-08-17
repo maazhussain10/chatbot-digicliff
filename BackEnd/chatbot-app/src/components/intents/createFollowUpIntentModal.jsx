@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import validate from '../home/js/validation';
+import URL from '../../websiteURL';
 
 class CreateFollowUpIntentModal extends Component {
     state = {
@@ -49,9 +50,9 @@ class CreateFollowUpIntentModal extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/follow-intent',
+                url: 'http://' + URL + ':5000/follow-intent',
                 params: {
-                    username:username,
+                    username: username,
                     intentName: followUpIntentName,
                     intentDesc: followUpIntentDesc,
                     assistantName: assistantName,

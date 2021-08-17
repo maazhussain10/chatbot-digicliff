@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import URL from '../../websiteURL';
 
 class BotReply extends Component {
     state = {}
@@ -12,7 +13,7 @@ class BotReply extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/message/delete',
+                url: 'http://' + URL + ':5000/message/delete',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -40,13 +41,13 @@ class BotReply extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/message/update',
+                url: 'http://' + URL + ':5000/message/update',
                 params: {
                     username: username,
                     assistantName: assistantName,
                     intentName: intentName,
                     message: botReply,
-                    previousMessage:message,
+                    previousMessage: message,
                     messageType: "bot",
                 },
 
@@ -90,7 +91,7 @@ class BotReply extends Component {
                     <pre
                         contentEditable
                         suppressContentEditableWarning
-                        style={{ textAlign: "left" }}
+                        style={{ textAlign: "left", whiteSpace: "pre-wrap", height: "auto" }}
                         onKeyDown={this.botReplyKeyPress}
                         type="text"
                         className="form-control"

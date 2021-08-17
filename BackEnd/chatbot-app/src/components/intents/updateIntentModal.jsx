@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import $ from 'jquery';
 import validate from '../home/js/validation';
+import URL from '../../websiteURL';
 
 class UpdateIntentModal extends Component {
     state = {
@@ -82,9 +83,9 @@ class UpdateIntentModal extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/intent/update',
+                url: 'http://' + URL + ':5000/intent/update',
                 params: {
-                    username:username,
+                    username: username,
                     assistantName: assistantName,
                     intentName: updateIntentName,
                     description: updateIntentDesc,

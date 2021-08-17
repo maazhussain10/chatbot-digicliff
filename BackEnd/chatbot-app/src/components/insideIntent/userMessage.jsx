@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import URL from '../../websiteURL';
+
 
 class UserMessage extends Component {
     deleteUserMessage = () => {
@@ -10,11 +12,11 @@ class UserMessage extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/message/delete',
+                url: 'http://' + URL + ':5000/message/delete',
                 params: {
                     username: username,
                     assistantName: assistantName,
-                    intentName:intentName,
+                    intentName: intentName,
                     message: message,
                     messageType: "user",
                 },
@@ -37,13 +39,13 @@ class UserMessage extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/message/update',
+                url: 'http://' + URL + ':5000/message/update',
                 params: {
                     username: username,
                     assistantName: assistantName,
-                    intentName:intentName,
+                    intentName: intentName,
                     message: userMessage,
-                    previousMessage:message,
+                    previousMessage: message,
                     messageType: "user",
                 },
 
@@ -89,7 +91,7 @@ class UserMessage extends Component {
                         type="text"
                         className="form-control"
                         onKeyDown={this.userMessageKeyPress}
-                        style={{ textAlign: "left" }}
+                        style={{ textAlign: "left", whiteSpace: "pre-wrap", height: "auto" }}
                         suppressContentEditableWarning={true}
                         contentEditable
                         aria-label="Username"
@@ -102,7 +104,7 @@ class UserMessage extends Component {
                         </svg></button>
                     </div>
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }

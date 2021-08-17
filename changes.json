@@ -1,129 +1,161 @@
 [
-    {
-        "made-by": "Dwabzy",
-        "date": "17/06/21",
-        "changes": [
-            "Removed 'natural' module from backend as it wasn't being used",
-            "Updated packages to remove vulnerabilities",
-            "Removed certain import statements in routes that were unnecessary",
-            "Replaced 'class' with 'className' in jsx of certain files",
-            "Added cors middleware to express app and removed the 3 lines in every method",
-            "Changed column name from time_modified to timeModified in intent and assistant table",
-            "Fixed foreign key constraint problem during Intent creation",
-            "removed 'NOT NULL' constraint from previoustIntent column in intent table",
-            "merged chatbotapi database connection and user's database connection functions into one file",
-            "Removed Train button from Messages page",
-            "Split SQL functions into various files for better readabilty, changed names of few functions ( such as insertCreateChip to createChip)",
-            "Removed async functions in richResponse.js that were unnecessary",
-            "Renamed nlpTraining.js to NLP.js"
-        ],
-        "to-do": [
-            "chat-body.png in settings page doesn't work. Says Error 404 not found",
-            "Logout button doesnt work in intents page",
-            "Two Values - cardColor and textColor are sent to backend during creation of card but are not used",
-            "Check if the await statements in chip/ card update and delete are necessary",
-            "Check if card creation is blocked when you already have chips and vice versa",
-            "getCardTheme and updateCardTheme functions in SQL-settings.js aren't used ( unless I am blind ), need to check if its needed",
-            "Add ability to have multiple databases connected, or atleast the ability to switch between them",
-            "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
-            "Need to change nlpTraining.js functions , optimize it and add proper comments, its hard to understand",
-            "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
-            "Modal for create chip is annoying, replace it with what we have for messages",
-            "Server crashes when you try to run a query without adding Database name",
-            "Need to be able to edit or delete database connection",
-            "Card doesnt seem to be working, I entered gibberish, but got the default words in the card"
-        ]
-    },
-    {
-        "made-by": "Maaz",
-        "date": "18/06/21",
-        "changes": [
-            "Removed the Two Values - cardColor and textColor that were sent to backend during creation of card, cuz settings for card can be done in settings page",
-            "Removed all the await statements in chip/ card update and delete that werent necessary",
-            "Blocked card creation if a chip Exist and vice versa",
-            "Added comments in NLP.js file with clear explanaitions.",
-            "Removed getCardTheme and updateCardTheme functions in SQL-settings.js as they aren't used",
-            "Settings Changes wasnt working so removed the if(_isMounted) in response of getSettings and removed the componentDidUnmount()",
-            "Card creation fixed and the card color and text color option removed from creation modal.",
-            "Card display works while chatting now."
-        ],
-        "to-do": [
-            "chat-body.png in settings page doesn't work. Says Error 404 not found",
-            "Add ability to have multiple databases connected, or atleast the ability to switch between them",
-            "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
-            "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
-            "Server crashes when you try to run a query without adding Database name",
-            "Need to be able to edit or delete database connection",
-            "Allow entity value to be able to given as an input in run queries",
-            "setting card crash",
-            "Display Follow Up intents in an hierarchical form"
-        ]
-    },
-    {
-        "made-by": "Prajeshwar",
-        "date": "19/06/21",
-        "changes": [
-            "drag and drop in chips",
-            "No bot display image",
-            "Assistant delete confirmation",
-            "create chip fixed",
-            "Time in assistant display",
-            "edit card modal",
-            "Logout button"
-        ],
-        "to-do": [
-            "Display Follow Up intents in an hierarchical form",
-            "Design the Stats Page",
-            "Add ability to have multiple databases connected, or atleast the ability to switch between them",
-            "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
-            "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
-            "Server crashes when you try to run a query without adding Database name",
-            "Need to be able to edit or delete database connection",
-            "Allow entity value to be able to given as an input in run queries",
-            "setting card crash",
-            "Display Follow Up intents in an hierarchical form"
-        ]
-    },
-    {
-        "made-by": "Maaz",
-        "date": "20/06/21",
-        "changes": [
-           "Fixed Card Settings",
-           "Database connection stays even after reload",
-           "Run Queries stays even after reload",
-           "Entities stays Even after reload",
-           "Delete Database Connection works",
-           "All console.log() from both frontend and backend removed",
-           "Entity Update and Delete done",
-           "Entities value can be accessed anywhere in inside the assistant",
-           "Fixed Chatbot name in chatbox top",
-           "Fixed Existing assistants in Profile",
-           "Fixed Deactivate Account in User Profile"
-        ],
-        "to-do": [
-            "Design the Stats Page",
-            "Design the Profile Page",
-            "Design the Integration Page",
-            "While chating with the bot- user message input field if one line is full make it go to next line",
-            "Block the runqueries tab if databaseConnection is empty",
-            "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour",
-            "Remove the horizontal scroll from usermessages and bot replies and allow it to go multiple lines",
-            "Add a back button once you click on profile",
-            "Add intent button in navbar once you go inside intent pages",
-            "Keep Multiple intents triggered even when refreshed",
-            "In entities show the delete button to only those entities that exists",
-            "For entities add info icon, cuz font awesome no work which is bad",
-            "In deactivate account Modal ask them to type yes 'Deactivate' then allow deactivation",
-            "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
-            "Display Follow Up intents in an hierarchical form",
+  {
+    "made-by": "Dwabzy",
+    "date": "17/06/21",
+    "changes": [
+      "Removed 'natural' module from backend as it wasn't being used",
+      "Updated packages to remove vulnerabilities",
+      "Removed certain import statements in routes that were unnecessary",
+      "Replaced 'class' with 'className' in jsx of certain files",
+      "Added cors middleware to express app and removed the 3 lines in every method",
+      "Changed column name from time_modified to timeModified in intent and assistant table",
+      "Fixed foreign key constraint problem during Intent creation",
+      "removed 'NOT NULL' constraint from previoustIntent column in intent table",
+      "merged chatbotapi database connection and user's database connection functions into one file",
+      "Removed Train button from Messages page",
+      "Split SQL functions into various files for better readabilty, changed names of few functions ( such as insertCreateChip to createChip)",
+      "Removed async functions in richResponse.js that were unnecessary",
+      "Renamed nlpTraining.js to NLP.js"
+    ],
+    "to-do": [
+      "chat-body.png in settings page doesn't work. Says Error 404 not found",
+      "Logout button doesnt work in intents page",
+      "Two Values - cardColor and textColor are sent to backend during creation of card but are not used",
+      "Check if the await statements in chip/ card update and delete are necessary",
+      "Check if card creation is blocked when you already have chips and vice versa",
+      "getCardTheme and updateCardTheme functions in SQL-settings.js aren't used ( unless I am blind ), need to check if its needed",
+      "Add ability to have multiple databases connected, or atleast the ability to switch between them",
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Need to change nlpTraining.js functions , optimize it and add proper comments, its hard to understand",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Modal for create chip is annoying, replace it with what we have for messages",
+      "Server crashes when you try to run a query without adding Database name",
+      "Need to be able to edit or delete database connection",
+      "Card doesnt seem to be working, I entered gibberish, but got the default words in the card"
+    ]
+  },
+  {
+    "made-by": "Maaz",
+    "date": "18/06/21",
+    "changes": [
+      "Removed the Two Values - cardColor and textColor that were sent to backend during creation of card, cuz settings for card can be done in settings page",
+      "Removed all the await statements in chip/ card update and delete that werent necessary",
+      "Blocked card creation if a chip Exist and vice versa",
+      "Added comments in NLP.js file with clear explanaitions.",
+      "Removed getCardTheme and updateCardTheme functions in SQL-settings.js as they aren't used",
+      "Settings Changes wasnt working so removed the if(_isMounted) in response of getSettings and removed the componentDidUnmount()",
+      "Card creation fixed and the card color and text color option removed from creation modal.",
+      "Card display works while chatting now."
+    ],
+    "to-do": [
+      "chat-body.png in settings page doesn't work. Says Error 404 not found",
+      "Add ability to have multiple databases connected, or atleast the ability to switch between them",
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Server crashes when you try to run a query without adding Database name",
+      "Need to be able to edit or delete database connection",
+      "Allow entity value to be able to given as an input in run queries",
+      "setting card crash",
+      "Display Follow Up intents in an hierarchical form"
+    ]
+  },
+  {
+    "made-by": "Prajeshwar",
+    "date": "19/06/21",
+    "changes": [
+      "drag and drop in chips",
+      "No bot display image",
+      "Assistant delete confirmation",
+      "create chip fixed",
+      "Time in assistant display",
+      "edit card modal",
+      "Logout button"
+    ],
+    "to-do": [
+      "Display Follow Up intents in an hierarchical form",
+      "Design the Stats Page",
+      "Add ability to have multiple databases connected, or atleast the ability to switch between them",
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Server crashes when you try to run a query without adding Database name",
+      "Need to be able to edit or delete database connection",
+      "Allow entity value to be able to given as an input in run queries",
+      "setting card crash",
+      "Display Follow Up intents in an hierarchical form"
+    ]
+  },
+  {
+    "made-by": "Maaz",
+    "date": "20/06/21",
+    "changes": [
+      "Fixed Card Settings",
+      "Database connection stays even after reload",
+      "Run Queries stays even after reload",
+      "Entities stays Even after reload",
+      "Delete Database Connection works",
+      "All console.log() from both frontend and backend removed",
+      "Entity Update and Delete done",
+      "Entities value can be accessed anywhere in inside the assistant",
+      "Fixed Chatbot name in chatbox top",
+      "Fixed Existing assistants in Profile",
+      "Fixed Deactivate Account in User Profile"
+    ],
+    "to-do": [
+      "Design the Stats Page",
+      "Design the Profile Page",
+      "Design the Integration Page",
+      "While chating with the bot- user message input field if one line is full make it go to next line",
+      "Block the runqueries tab if databaseConnection is empty",
+      "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour",
+      "Remove the horizontal scroll from usermessages and bot replies and allow it to go multiple lines",
+      "Add a back button once you click on profile",
+      "Add intent button in navbar once you go inside intent pages",
+      "Keep Multiple intents triggered even when refreshed",
+      "In entities show the delete button to only those entities that exists",
+      "For entities add info icon, cuz font awesome no work which is bad",
+      "In deactivate account Modal ask them to type yes 'Deactivate' then allow deactivation",
+      "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
+      "Display Follow Up intents in an hierarchical form",
 
-            "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
-            "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
-            "Allow entity value to be able to given as an input in run queries",
-            "Create Card Update",
-            "Integrate bot in other sites",
-            "Handle all console.log(err) from backend",
-            "Need to create a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table."
-        ]
-    }
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Allow entity value to be able to given as an input in run queries",
+      "Create Card Update",
+      "Integrate bot in other sites",
+      "Handle all console.log(err) from backend",
+      "Need to create a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table."
+    ]
+  },
+  {
+    "made-by": "Dwabzy",
+    "date": "17/08/21",
+    "changes": [
+      "Remove the horizontal scroll from usermessages and bot replies and allow it to go multiple lines",
+      "Added URL for ease of change in the future"
+    ],
+    "to-do": [
+      "Design the Stats Page",
+      "Design the Profile Page",
+      "Design the Integration Page",
+      "While chating with the bot- user message input field if one line is full make it go to next line",
+      "Block the runqueries tab if databaseConnection is empty",
+      "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour",
+      "Add a back button once you click on profile",
+      "Add intent button in navbar once you go inside intent pages",
+      "Keep Multiple intents triggered even when refreshed",
+      "In entities show the delete button to only those entities that exists",
+      "For entities add info icon, cuz font awesome no work which is bad",
+      "In deactivate account Modal ask them to type yes 'Deactivate' then allow deactivation",
+      "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
+      "Display Follow Up intents in an hierarchical form",
+
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Allow entity value to be able to given as an input in run queries",
+      "Create Card Update",
+      "Integrate bot in other sites",
+      "Handle all console.log(err) from backend",
+      "Need to create a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table."
+    ]
+  }
 ]

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './css/buttonAllignment.css'
 import validate from '../home/js/validation.js';
+import URL from '../../websiteURL';
 
 class CreateIntentModal extends Component {
     state = {
@@ -48,7 +49,7 @@ class CreateIntentModal extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/intent',
+                url: 'http://' + URL + ':5000/intent',
                 params: {
                     intentName: intentName,
                     intentDesc: intentDesc,

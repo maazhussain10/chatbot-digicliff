@@ -3,6 +3,7 @@ import $ from "jquery";
 import axios from 'axios';
 import validate from './js/validation.js';
 import './css/signup.css';
+import URL from '../../websiteURL';
 
 class Signup extends Component {
   state = {
@@ -131,7 +132,7 @@ class Signup extends Component {
     try {
       axios({
         method: 'post',
-        url: 'http://localhost:5000/signingUp',
+        url: 'http://' + URL + ':5000/signingUp',
         params: {
           firstName: firstName,
           lastName: lastName,

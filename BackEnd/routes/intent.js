@@ -18,6 +18,7 @@ class Intent {
   }
   existingIntents(app) {
     app.get("/intent", async (req, res) => {
+      console.log("Get Intents - backend");
       const { username, assistantName } = req.query;
       const intentData = await getExistingIntents(username, assistantName);
       res.send(intentData.existingIntents);

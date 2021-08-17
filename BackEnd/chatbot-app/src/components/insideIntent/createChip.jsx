@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import $ from 'jquery';
+import URL from '../../websiteURL';
 
 class CreateChip extends Component {
     state = {
@@ -26,7 +27,7 @@ class CreateChip extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/chip',
+                url: 'http://' + URL + ':5000/chip',
                 params: {
                     username: username,
                     assistantName: assistantName,

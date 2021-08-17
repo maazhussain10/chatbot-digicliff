@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import URL from '../../websiteURL';
 
 class CreateTrainingPhrase extends Component {
 
@@ -20,7 +21,7 @@ class CreateTrainingPhrase extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/message',
+                url: 'http://' + URL + ':5000/message',
                 params: {
                     username: username,
                     assistantName: assistantName,

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import validate from '../../home/js/validation';
 import $ from 'jquery';
+import URL from '../../../websiteURL';
+
 
 class UpdateAssistantModal extends Component {
     state = {
@@ -77,7 +79,7 @@ class UpdateAssistantModal extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/assistant/update',
+                url: 'http://' + URL + ':5000/assistant/update',
                 params: {
                     username: username,
                     assistantName: updateAssistantName,
@@ -257,13 +259,13 @@ class UpdateAssistantModal extends Component {
                                 {assistantUpdateStatus === true ?
                                     <div className="alert alert-success alert-dismissible fade show" role="alert">
                                         Assistant has been updated Successfully!
-                            </div>
+                                    </div>
                                     : null}
                                 {/* Prints error alert message if assistant was not updated. */}
                                 {assistantUpdateStatus === false ?
                                     <div className="alert alert-danger alert-dismissible fade show" role="alert">
                                         Failed to update Assistant!
-                            </div>
+                                    </div>
                                     : null}
 
                                 <div className="container" id="override-boostrap">

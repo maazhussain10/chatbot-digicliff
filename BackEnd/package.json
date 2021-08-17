@@ -18,5 +18,8 @@
     "mysql": "^2.18.1",
     "node-nlp": "^4.22.1",
     "uuid-random": "^1.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

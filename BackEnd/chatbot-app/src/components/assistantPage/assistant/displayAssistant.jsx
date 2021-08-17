@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import URL from '../../../websiteURL';
 
 class DisplayAssistant extends Component {
 
@@ -109,7 +110,7 @@ class DisplayAssistant extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/assistant/delete',
+                url: 'http://' + URL + ':5000/assistant/delete',
                 params: {
                     username: username,
                     assistantName: assistantName
@@ -197,7 +198,7 @@ class DisplayAssistant extends Component {
                             </div>
                             <div className="modal-body">
                                 <p>To embed the chat widget in your website use the following script tag.</p>
-                                <strong> &lt;script src="localhost:8080/assistant/{username}/{assistantName}/chatwidget"&gt; &lt;/script&gt;</strong>
+                                <strong> &lt;script src="{URL}:8080/assistant/{username}/{assistantName}/chatwidget"&gt; &lt;/script&gt;</strong>
                             </div>
                         </div>
                     </div>

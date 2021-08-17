@@ -3,9 +3,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import { ChatboxTop } from "./chatboxTop";
 import { Message } from "./message";
 import assistantLogo from "../../assets/images/chatbots-logo-white.png";
-import { useParams } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "./css/chatbox.css";
+import URL from '../../websiteURL';
 
 import axios from "axios";
 import $ from "jquery";
@@ -84,7 +84,7 @@ class ChatBox extends Component {
 
             axios({
                 method: "post",
-                url: "http://localhost:5000/nlp",
+                url: "http://" + URL + ":5000/nlp",
                 params: {
                     sendMessage: message,
                     username: username,
@@ -148,7 +148,7 @@ class ChatBox extends Component {
         try {
             axios({
                 method: "get",
-                url: "http://localhost:5000/settings",
+                url: "http://" + URL + ":5000/settings",
                 params: {
                     username: username,
                     assistantName: assistantName,

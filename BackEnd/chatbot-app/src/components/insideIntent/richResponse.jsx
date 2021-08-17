@@ -8,7 +8,7 @@ import { CreateChip } from './createChip'
 import axios from 'axios';
 import { ChatBox } from '../chatbox/chatbox';
 import { RichResponseNavBar } from './richResponseNavbar';
-import $ from 'jquery';
+import URL from '../../websiteURL';
 import './css/buttonalign.css'
 
 
@@ -45,7 +45,7 @@ class Rich extends Component {
         let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails')); try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/getchips',
+                url: 'http://' + URL + ':5000/getchips',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -69,7 +69,7 @@ class Rich extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/chip-delete',
+                url: 'http://' + URL + ':5000/chip-delete',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -106,7 +106,7 @@ class Rich extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/chip-update',
+                url: 'http://' + URL + ':5000/chip-update',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -134,7 +134,7 @@ class Rich extends Component {
             let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/getcards',
+                url: 'http://' + URL + ':5000/getcards',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -160,7 +160,7 @@ class Rich extends Component {
             // Sends a request to the express server ( richresponses.js) to delete card in database. 
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/card-delete',
+                url: 'http://' + URL + ':5000/card-delete',
                 params: {
                     username: username,
                     assistantName: assistantName,

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import URL from '../../websiteURL';
 
 class Profile extends Component {
     state = {
@@ -23,7 +24,7 @@ class Profile extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/assistant',
+                url: 'http://' + URL + ':5000/assistant',
                 params: {
                     username: username
                 },
@@ -44,7 +45,7 @@ class Profile extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/deactivate-account',
+                url: 'http://' + URL + ':5000/deactivate-account',
                 params: {
                     username: username
                 },

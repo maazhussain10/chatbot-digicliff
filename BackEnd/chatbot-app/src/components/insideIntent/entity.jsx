@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import $ from 'jquery';
+import URL from '../../websiteURL';
 
 class Entity extends Component {
     state = {
@@ -13,7 +14,7 @@ class Entity extends Component {
             'It gets the date which the user gives in various formats',
             'Create your own Entity Name and use it anywhere.'],
         selectedColumns: [],
-        entityNames:[]
+        entityNames: []
     }
 
     componentDidMount() {
@@ -27,7 +28,7 @@ class Entity extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/delete-entity',
+                url: 'http://' + URL + ':5000/delete-entity',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -35,7 +36,7 @@ class Entity extends Component {
                     entityType: entity
                 },
 
-            }).then((response)=>{
+            }).then((response) => {
                 this.getEntity();
             })
         }
@@ -58,7 +59,7 @@ class Entity extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/create-entity',
+                url: 'http://' + URL + ':5000/create-entity',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -80,17 +81,17 @@ class Entity extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/get-entity',
+                url: 'http://' + URL + ':5000/get-entity',
                 params: {
                     username: username,
                     assistantName: assistantName,
                     intentName: intentName,
                 },
 
-            }).then(async(response) => {
+            }).then(async (response) => {
                 for (let i = 0; i < response.data.length; i++) {
                     $('#' + response.data[i].entityType + '-input').removeClass('invisible');
-                    document.getElementById(response.data[i].entityType + '-select').checked=true;
+                    document.getElementById(response.data[i].entityType + '-select').checked = true;
                     await this.selectColumn(response.data[i].entityType);
                     document.getElementById(response.data[i].entityType + '-input').defaultValue = response.data[i].entityName;
                 }
@@ -162,10 +163,10 @@ class Entity extends Component {
                                             </div>
                                             <input id={entity + "-input"} className="col-md-6 form-control invisible" />
                                             <button onClick={() => this.deleteEntity(entity)} type="button" className="btn btn-sm btn-outline-danger col-md-1">
-                                            <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                <path fillRule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
-                                            </svg>
-                                        </button>
+                                                <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fillRule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                                                </svg>
+                                            </button>
                                         </div>
                                         <br />
                                     </React.Fragment>

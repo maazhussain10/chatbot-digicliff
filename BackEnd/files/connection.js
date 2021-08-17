@@ -2,9 +2,10 @@ const mysql = require("mysql");
 
 const connection = mysql.createConnection({
   host: "localhost",
-  user: "maaz",
-  password: "root",
+  user: "root",
+  password: "Dwabzy",
   database: "chatbotapi",
+  port: "3306",
 });
 
 // To print stack trace of fatal error
@@ -22,7 +23,7 @@ connection.connect(function (err) {
 });
 
 DataBaseConnection = async (hostname, userName, password, databaseName) => {
-  console.log(hostname,userName,password,databaseName)
+  console.log(hostname, userName, password, databaseName);
   const DBconnection = mysql.createConnection({
     host: hostname,
     user: userName,

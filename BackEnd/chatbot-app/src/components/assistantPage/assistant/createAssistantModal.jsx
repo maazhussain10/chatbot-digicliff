@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import validate from '../../home/js/validation';
+import URL from '../../../websiteURL';
+
 
 class CreateAssistantModal extends Component {
     state = {
@@ -51,7 +53,7 @@ class CreateAssistantModal extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/assistant',
+                url: 'http://' + URL + ':5000/assistant',
                 params: {
                     assistantName: assistantName,
                     assistantDesc: assistantDesc,

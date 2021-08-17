@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import $ from 'jquery';
 import './css/buttonAllignment.css'
+import URL from '../../websiteURL';
+
 class DisplayIntent extends Component {
     state = {
     }
@@ -22,7 +24,7 @@ class DisplayIntent extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/intent-delete',
+                url: 'http://' + URL + ':5000/intent-delete',
                 params: {
                     username: username,
                     assistantName: assistantName,

@@ -8,6 +8,7 @@ class LoggingIn {
 
   loggingIn(app, connection) {
     app.post("/loggingIn", (req, res) => {
+      console.log("Login test - backend");
       let usernameEmail = req.query.usernameEmail;
       let password = md5(req.query.password);
 

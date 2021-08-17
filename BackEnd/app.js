@@ -14,6 +14,7 @@ const RichResponse = require("./routes/richResponse");
 const Settings = require("./routes/settings");
 const Query = require("./routes/query");
 
+
 const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname, "build")));
@@ -32,7 +33,8 @@ app.use(
 );
 
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, build, "index.html"));
+  res.send("fuck");
+  // res.sendFile(path.join(__dirname, build, "index.html"));
 });
 
 new SigningUp(app);

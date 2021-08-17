@@ -9,6 +9,7 @@ import { Navbar } from './navbar';
 import { CreateAssistantModal } from './assistant/createAssistantModal';
 import { UpdateAssistantModal } from './assistant/updateAssistantModal';
 import { DisplayAssistant } from './assistant/displayAssistant';
+import URL from '../../websiteURL';
 
 class AssistantPage extends Component {
     state = {
@@ -39,7 +40,7 @@ class AssistantPage extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/assistant',
+                url: 'http://' + URL + ':5000/assistant',
                 params: {
                     username: username
                 },

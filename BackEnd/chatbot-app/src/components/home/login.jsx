@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import $ from "jquery";
 import axios from 'axios';
 import './css/login.css';
+import URL from '../../websiteURL';
 class Login extends Component {
     state = {
         password: "",
@@ -43,13 +44,14 @@ class Login extends Component {
             this.handlePassword(e.target.value);
     }
     doLogin = async () => {
+        console.log("Login Test - Frontend");
         if (!this.state.usernameEmail && !this.state.password) {
             return;
         }
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/loggingIn',
+                url: 'http://' + URL + ':5000/loggingIn',
                 params: {
                     usernameEmail: this.state.usernameEmail,
                     password: this.state.password

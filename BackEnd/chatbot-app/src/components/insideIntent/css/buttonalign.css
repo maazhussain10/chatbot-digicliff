@@ -1,49 +1,48 @@
 .button {
-    /* position: absolute;
+  /* position: absolute;
     top: 30%; */
-    margin: auto;
-    display: block;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
+  margin: auto;
+  display: block;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
 }
 
-
 .spinner {
-    margin-top: 6px;
-    margin-right: 5px;
-    /* border-radius: 20px; */
-    outline: none;
-    border: none;
-    width: 3em;
+  margin-top: 6px;
+  margin-right: 5px;
+  /* border-radius: 20px; */
+  outline: none;
+  border: none;
+  width: 3em;
 }
 
 .spinner :focus {
-    outline: none;
-    border-color: none;
-    border-radius: 20px;
+  outline: none;
+  border-color: none;
+  border-radius: 20px;
 }
 
 .input-card {
-    width: 80%;
-    text-align: center;
-    background: transparent;
-    color: white;
-    outline: none;
-    border: none;
+  width: 80%;
+  text-align: center;
+  background: transparent;
+  color: white;
+  outline: none;
+  border: none;
 }
 
 .cardTextArea {
-    min-height: 100px;
-    max-height: 100px;
+  min-height: 100px;
+  max-height: 100px;
 }
 
 .input-card:focus {
-    background: transparent;
-    outline: none;
-    border: none;
+  background: transparent;
+  outline: none;
+  border: none;
 }
 
 a.carousel-control {
-    margin: 100px 0;
-    border-radius: 60px;
+  margin: 100px 0;
+  border-radius: 60px;
 }

@@ -6,6 +6,7 @@ import { DisplayIntent } from './displayIntent'
 import { CreateIntentModal } from './createIntentModal'
 import { UpdateIntentModal } from './updateIntentModal';
 import { CreateFollowUpIntentModal } from './createFollowUpIntentModal';
+import URL from '../../websiteURL';
 
 class Intents extends Component {
     state = {
@@ -38,11 +39,11 @@ class Intents extends Component {
     //---------------------------------------------------------------GET INTENTS AXIOS---------------------------------------------------------------
     getIntents = (assistantName) => {
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-
+        console.log("");
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/intent',
+                url: 'http://' + URL + ':5000/intent',
                 params: {
                     username: username,
                     assistantName: assistantName

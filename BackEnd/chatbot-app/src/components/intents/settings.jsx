@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ChatboxTop } from '../chatbox/chatboxTop';
 import { Message } from '../chatbox/message';
 import $ from 'jquery';
+import URL from '../../websiteURL';
 
 class Settings extends Component {
     state = {
@@ -55,7 +56,7 @@ class Settings extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/settings',
+                url: 'http://' + URL + ':5000/settings',
                 params: {
                     username: username,
                     assistantName: assistantName
@@ -79,9 +80,9 @@ class Settings extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/settings',
+                url: 'http://' + URL + ':5000/settings',
                 params: {
-                    username:username,
+                    username: username,
                     settings: settings,
                     assistantName: assistantName
                 },
@@ -248,7 +249,7 @@ class Settings extends Component {
             messages: ["Sample Card Reply"],
             hasRichResponse: true,
             cardMessage: [
-                { cardValue: ["Sample Header", "Sample SubHeader","Sample Paragraph"] }],
+                { cardValue: ["Sample Header", "Sample SubHeader", "Sample Paragraph"] }],
             chipMessage: "",
             time: new Date().toLocaleString().split(',')[1].replace(/(.*)\D\d+/, '$1')
         }

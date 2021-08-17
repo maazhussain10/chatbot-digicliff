@@ -3,6 +3,8 @@ import axios from 'axios';
 import './css/buttonalign.css'
 import { BasicCardWith3Fields } from './cardDesigns/basicCardWith3Fields';
 import { BasicCardWith3Fields1Link } from './cardDesigns/basicCardWith3Fields1Link';
+import URL from '../../websiteURL';
+
 class CreateCards extends Component {
     state = {
         color: false,
@@ -44,7 +46,7 @@ class CreateCards extends Component {
         try {
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/card',
+                url: 'http://' + URL + ':5000/card',
                 params: {
                     username: username,
                     assistantName: assistantName,

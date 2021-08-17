@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import QueryTable from './queryTable';
+import URL from '../../websiteURL';
+
 
 class RunQuery extends Component {
     state = {
@@ -30,7 +32,7 @@ class RunQuery extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/getQueryDetails',
+                url: 'http://' + URL + ':5000/getQueryDetails',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -59,7 +61,7 @@ class RunQuery extends Component {
 
             axios({
                 method: 'post',
-                url: 'http://localhost:5000/createQuery',
+                url: 'http://' + URL + ':5000/createQuery',
                 params: {
                     rows: rows,
                     selectedColumns: selectedColumns,
@@ -88,10 +90,10 @@ class RunQuery extends Component {
             // Send request to express server ( query.js ) to delete query from database.
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/deleteQuery',
+                url: 'http://' + URL + ':5000/deleteQuery',
                 params: {
                     username: username,
-                    assistantName:assistantName,
+                    assistantName: assistantName,
                     intentName: intentName,
                 },
 
@@ -119,10 +121,10 @@ class RunQuery extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/getColumnNames',
+                url: 'http://' + URL + ':5000/getColumnNames',
                 params: {
                     username: username,
-                    assistantName:assistantName,
+                    assistantName: assistantName,
                     tableName: tableName
                 },
 

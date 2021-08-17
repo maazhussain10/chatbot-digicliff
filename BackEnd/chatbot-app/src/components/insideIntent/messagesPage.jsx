@@ -7,6 +7,9 @@ import './css/buttonalign.css'
 import { CreateBotReply } from './createBotReply';
 import axios from 'axios';
 import { ChatBox } from '../chatbox/chatbox';
+import URL from '../../websiteURL';
+
+
 class MessagesPage extends Component {
     state = {
         messages: [],
@@ -28,7 +31,7 @@ class MessagesPage extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/message',
+                url: 'http://' + URL + ':5000/message',
                 params: {
                     username: username,
                     assistantName: assistantName,
@@ -55,7 +58,7 @@ class MessagesPage extends Component {
         try {
             axios({
                 method: 'get',
-                url: 'http://localhost:5000/intent/multiple-reply',
+                url: 'http://' + URL + ':5000/intent/multiple-reply',
                 params: {
                     username: username,
                     assistantName: assistantName,
