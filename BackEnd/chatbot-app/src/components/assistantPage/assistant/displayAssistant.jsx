@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-
 class DisplayAssistant extends Component {
 
     state = {
@@ -145,7 +144,7 @@ class DisplayAssistant extends Component {
 
         // get username from sessionStorage.
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantName, assistantId, assistantDesc, lastModified } = assistant;
+        let { assistantName, assistantId, assistantDesc } = assistant;
         // let dateTime = this.processTime(lastModified);
 
 
@@ -155,6 +154,11 @@ class DisplayAssistant extends Component {
                     <div className="card-body">
                         <div className="d-flex justify-content-end">
                             <div className="btn-group" role="group" aria-label="Basic example">
+                                {/* Get Assistant Embed Script */}
+
+                                <button type="button" data-toggle="modal" data-target="#embedscript" className="btn btn-sm btn-outline-dark">
+                                    &lt; &gt;
+                                </button>
                                 {/* Update Assistant Button */}
                                 <button onClick={() => this.setUpdateAssistantDetails(assistantName, assistantDesc)} type="button" data-toggle="modal" data-target="#updateAssistant" className="btn btn-sm btn-outline-success">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -181,6 +185,22 @@ class DisplayAssistant extends Component {
                         <br />
                     </div>
 
+                </div>
+                <div className="modal fade" id="embedscript" tabIndex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Embed Chat Widget</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <p>To embed the chat widget in your website use the following script tag.</p>
+                                <strong> &lt;script src="localhost:8080/assistant/{username}/{assistantName}/chatwidget"&gt; &lt;/script&gt;</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="modal fade" id="confirmDelete" tabIndex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered">

@@ -103,6 +103,7 @@
         "to-do": [
             "Design the Stats Page",
             "Design the Profile Page",
+            "Design the Integration Page",
             "While chating with the bot- user message input field if one line is full make it go to next line",
             "Block the runqueries tab if databaseConnection is empty",
             "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour",
@@ -114,13 +115,11 @@
             "For entities add info icon, cuz font awesome no work which is bad",
             "In deactivate account Modal ask them to type yes 'Deactivate' then allow deactivation",
             "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
+            "Display Follow Up intents in an hierarchical form",
 
             "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
             "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
             "Allow entity value to be able to given as an input in run queries",
-            "Display Follow Up intents in an hierarchical form",
-            "Allow Database Connection Update",
-            "Allow Run Queries Update",
             "Create Card Update",
             "Integrate bot in other sites",
             "Handle all console.log(err) from backend",

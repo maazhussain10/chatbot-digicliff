@@ -11,6 +11,7 @@ import { Error } from './components/home/error';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
+import { ChatBox } from './components/chatbox/chatbox';
 class App extends Component {
     state = {}
     render() {
@@ -22,6 +23,7 @@ class App extends Component {
                     <Route exact path='/:username/profile' component={Profile} />
                     <Route exact path='/assistant/:username' component={AssistantPage} />
                     <Route exact path='/assistant/:username/:assistant' component={IntentPage} />
+                    <Route exact path='/assistant/:username/:assistantName/chatwidget' component={ChatBox} />
                     <Route exact path='/assistant/:username/:assistant/:intent' component={MessagesPage} />
                     <Route path='/assistant/:username/:assistant/:intent/rich' component={Rich} />
                     <Route path="*" component={Error} />

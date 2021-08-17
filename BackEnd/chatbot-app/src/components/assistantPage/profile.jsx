@@ -157,7 +157,7 @@ class Profile extends Component {
                             <div className="mt-5 container">
                                 <div className="list-group text-center">
                                     {existingAssistant.map((assistant, index) => (
-                                        <a href={`/assistant/${username}/${assistant.assistantName}`} className="list-group-item list-group-item-action" key={index}>{assistant.assistantName.slice(0, -5)}
+                                        <a href={`/assistant/${username}/${assistant.assistantName}`} className="list-group-item list-group-item-action" key={index}>{assistant.assistantName}
                                         </a>
                                     ))}
                                 </div>
