@@ -159,6 +159,17 @@ CREATE TABLE settings
     assistantFont varchar(40) NOT NULL,
     assistantTextColor varchar(15) NOT NULL,
     chatboxColor varchar(15) NOT NULL,
+    chatboxFont varchar(15) NOT NULL,
+    chatboxFontColor varchar(15) NOT NULL,
+    sendMessageColor varchar(15) NOT NULL,
     PRIMARY KEY (username, assistant),
     FOREIGN KEY (username, assistant) REFERENCES assistant(username, assistant) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE settings ADD chatboxFont varchar(15) NOT NULL;
+ALTER TABLE settings ADD chatboxFontColor varchar(15) NOT NULL;
+ALTER TABLE settings ADD sendMessageColor varchar(15) NOT NULL;
+
+UPDATE settings SET chatboxFont="Arial";
+UPDATE settings SET chatboxFontColor="#FFFFFF";
+UPDATE settings SET sendMessageColor="#000000";

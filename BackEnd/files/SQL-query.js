@@ -148,10 +148,10 @@ exports.getQueryRows = (username, assistantName, intentName) => {
                                 selectedOperator: results[i].compareCondition,
                                 compareValue: results[i].compareValue,
                                 logic: results[i].logic,
-                          };
+                            };
                             queryRows.push(queryRow);
                         }
-                  }
+                    }
                     resolve(queryRows);
                 }
             }
@@ -207,6 +207,11 @@ exports.getDistinctColumn = (username, assistantName, intentName) => {
 
 exports.getQueryDetails = async (username, assistantName, intentName) => {
     return new Promise(async (resolve) => {
+        //Database Exists
+        let databaseExist = await getDatabaseDetails(
+            username,
+            assistantName
+        );
         // Table name
         let tableName = await this.getTableName(
             username,
@@ -232,6 +237,7 @@ exports.getQueryDetails = async (username, assistantName, intentName) => {
             intentName
         );
         resolve({
+            databaseExist,
             tableName,
             queryRows,
             selectedColumns,

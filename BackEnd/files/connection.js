@@ -2,10 +2,9 @@ const mysql = require("mysql");
 
 const connection = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "Dwabzy",
-  database: "chatbotapi",
-  port: "3306",
+  user: "maaz",
+  password: "root",
+  database: "chatbotapi"
 });
 
 // To print stack trace of fatal error

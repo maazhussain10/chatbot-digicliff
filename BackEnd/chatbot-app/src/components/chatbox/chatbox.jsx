@@ -5,7 +5,7 @@ import { Message } from "./message";
 import assistantLogo from "../../assets/images/chatbots-logo-white.png";
 import "font-awesome/css/font-awesome.min.css";
 import "./css/chatbox.css";
-import URL from '../../websiteURL';
+import URL from "../../websiteURL";
 
 import axios from "axios";
 import $ from "jquery";
@@ -33,14 +33,19 @@ class ChatBox extends Component {
                 chipShape: "",
                 chipFont: "",
             },
-            chatBoxTheme: {
+            messagesTheme: {
                 userBg: "",
                 userFont: "",
                 userColor: "",
                 assistantBg: "",
                 assistantFont: "",
                 assistantColor: "",
+            },
+            chatBoxTheme: {
                 chatBoxColor: "",
+                chatboxFont: "",
+                chatboxFontColor: "",
+                sendMessageColor: "",
             },
         },
     };
@@ -170,7 +175,8 @@ class ChatBox extends Component {
 
     render() {
         const { assistantName, description } = this.props;
-        const { cardTheme, chipTheme, chatBoxTheme } = this.state.settings;
+        const { cardTheme, chipTheme, messagesTheme, chatBoxTheme } =
+            this.state.settings;
         return (
             <div>
                 <div className="chats-box">
@@ -178,6 +184,9 @@ class ChatBox extends Component {
                         name={assistantName}
                         description={description}
                         chatBoxColor={chatBoxTheme.chatBoxColor}
+                        chatboxFont={chatBoxTheme.chatboxFont}
+                        chatboxFontColor={chatBoxTheme.chatboxFontColor}
+                        sendMessageColor={chatBoxTheme.sendMessageColor}
                     />
                     <div className="chatbox-body">
                         <div className="chat-conversion">
@@ -188,6 +197,7 @@ class ChatBox extends Component {
                                     sendMessage={this.sendMessage}
                                     chipTheme={chipTheme}
                                     cardTheme={cardTheme}
+                                    messagesTheme={messagesTheme}
                                     chatBoxTheme={chatBoxTheme}
                                 />
                             ))}

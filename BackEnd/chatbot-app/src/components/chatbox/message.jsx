@@ -89,7 +89,7 @@ class Message extends Component {
             messageObject,
             cardTheme,
             chipTheme,
-            chatBoxTheme,
+            messagesTheme,
         } = this.props;
         const { from, messages, time, cardMessage, chipMessage } =
             messageObject;
@@ -100,7 +100,7 @@ class Message extends Component {
             assistantBg,
             assistantColor,
             assistantFont,
-        } = chatBoxTheme;
+        } = messagesTheme;
 
         const { load } = this.state;
         if (from === "user") {

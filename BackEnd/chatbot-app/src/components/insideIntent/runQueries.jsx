@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import QueryTable from './queryTable';
-import URL from '../../websiteURL';
-
+import React, { Component } from "react";
+import axios from "axios";
+import QueryTable from "./queryTable";
+import URL from "../../websiteURL";
 
 class RunQuery extends Component {
     state = {
@@ -10,58 +9,79 @@ class RunQuery extends Component {
         columnNames: [],
         selectedColumns: [],
         distinctColumn: undefined,
+        databaseExist: [],
         displayTable: false,
         tableName: "",
         queryTable: [],
-    }
+    };
 
     componentDidMount = () => {
         this.getQueryDetails();
-    }
+    };
 
     getRows = (rows) => {
         this.setState({ rows: rows });
-    }
+    };
 
     getQueryDetails = () => {
         // Get intentName from SessionStorage
-        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-        let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+        let { username } = JSON.parse(sessionStorage.getItem("userDetails"));
+        let { assistantName } = JSON.parse(
+            sessionStorage.getItem("assistantDetails")
+        );
+        let { intentName } = JSON.parse(
+            sessionStorage.getItem("intentDetails")
+        );
 
         try {
             axios({
-                method: 'get',
-                url: 'http://' + URL + ':5000/getQueryDetails',
+                method: "get",
+                url: "http://" + URL + ":5000/getQueryDetails",
                 params: {
                     username: username,
                     assistantName: assistantName,
-                    intentName: intentName
+                    intentName: intentName,
                 },
-
             }).then((response) => {
-                let { tableName, queryRows, selectedColumns, distinctColumn } = response.data;
-                this.setState({ tableName: tableName, selectedColumns: selectedColumns, distinctColumn: distinctColumn, rows: queryRows });
-                if (selectedColumns.length > 0)
-                    this.getColumnNames();
-            })
-        }
-        catch (e) {
+                let {
+                    databaseExist,
+                    tableName,
+                    queryRows,
+                    selectedColumns,
+                    distinctColumn,
+                } = response.data;
+                this.setState({
+                    databaseExist: databaseExist,
+                    tableName: tableName,
+                    selectedColumns: selectedColumns,
+                    distinctColumn: distinctColumn,
+                    rows: queryRows,
+                });
+                if (selectedColumns.length > 0) this.getColumnNames();
+            });
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
 
     handleQuery = () => {
         try {
-            const { selectedColumns, distinctColumn, tableName, rows } = this.state;
+            const { selectedColumns, distinctColumn, tableName, rows } =
+                this.state;
             // Get the necessary details ( username, assistantName, intentName )
-            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-            let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-            let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+            let { username } = JSON.parse(
+                sessionStorage.getItem("userDetails")
+            );
+            let { assistantName } = JSON.parse(
+                sessionStorage.getItem("assistantDetails")
+            );
+            let { intentName } = JSON.parse(
+                sessionStorage.getItem("intentDetails")
+            );
 
             axios({
-                method: 'post',
-                url: 'http://' + URL + ':5000/createQuery',
+                method: "post",
+                url: "http://" + URL + ":5000/createQuery",
                 params: {
                     rows: rows,
                     selectedColumns: selectedColumns,
@@ -71,32 +91,34 @@ class RunQuery extends Component {
                     intentName: intentName,
                     tableName: tableName,
                 },
-
-            }).then((response) => {
-            });
-        }
-        catch (e) {
+            }).then((response) => {});
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
 
     deleteQuery = () => {
         try {
             // Get Intent Id from session storage
-            let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-            let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
-            let { intentName } = JSON.parse(sessionStorage.getItem('intentDetails'));
+            let { username } = JSON.parse(
+                sessionStorage.getItem("userDetails")
+            );
+            let { assistantName } = JSON.parse(
+                sessionStorage.getItem("assistantDetails")
+            );
+            let { intentName } = JSON.parse(
+                sessionStorage.getItem("intentDetails")
+            );
 
             // Send request to express server ( query.js ) to delete query from database.
             axios({
-                method: 'get',
-                url: 'http://' + URL + ':5000/deleteQuery',
+                method: "get",
+                url: "http://" + URL + ":5000/deleteQuery",
                 params: {
                     username: username,
                     assistantName: assistantName,
                     intentName: intentName,
                 },
-
             }).then((response) => {
                 this.setState({
                     rows: [],
@@ -106,74 +128,78 @@ class RunQuery extends Component {
                     displayTable: false,
                     tableName: "",
                     queryTable: [],
-                })
+                });
             });
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
 
     getColumnNames = () => {
         const { selectedColumns, distinctColumn, tableName } = this.state;
-        let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-        let { assistantName } = JSON.parse(sessionStorage.getItem('assistantDetails'));
+        let { username } = JSON.parse(sessionStorage.getItem("userDetails"));
+        let { assistantName } = JSON.parse(
+            sessionStorage.getItem("assistantDetails")
+        );
         try {
             axios({
-                method: 'get',
-                url: 'http://' + URL + ':5000/getColumnNames',
+                method: "get",
+                url: "http://" + URL + ":5000/getColumnNames",
                 params: {
                     username: username,
                     assistantName: assistantName,
-                    tableName: tableName
+                    tableName: tableName,
                 },
-
             }).then((response) => {
-                this.setState({ columnNames: response.data, displayTable: true });
+                this.setState({
+                    columnNames: response.data,
+                    displayTable: true,
+                });
                 for (let i = 0; i < selectedColumns.length; i++) {
-                    document.getElementById(selectedColumns[i] + "-select").checked = true;
+                    document.getElementById(
+                        selectedColumns[i] + "-select"
+                    ).checked = true;
                 }
-                if (distinctColumn)
-                    this.makeDistinct(distinctColumn);
+                if (distinctColumn) this.makeDistinct(distinctColumn);
             });
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
     handleSelect = (columnName, index) => {
-        const selected = document.getElementById(columnName + "-select").checked;
+        const selected = document.getElementById(
+            columnName + "-select"
+        ).checked;
         if (selected) {
             this.setState({ selected: true });
             this.selectColumn(columnName);
-        }
-        else {
+        } else {
             this.setState({ selected: false });
             this.removeColumn(columnName);
         }
-
-    }
+    };
 
     handleDistinct = (columnName, index) => {
-        const selected = document.getElementById(columnName + "-distinct").checked;
+        const selected = document.getElementById(
+            columnName + "-distinct"
+        ).checked;
         if (selected) {
             document.getElementById(columnName + "-select").checked = true;
             this.handleSelect(columnName, index);
             this.makeDistinct(columnName, index);
-        }
-        else {
+        } else {
             document.getElementById(columnName + "-select").checked = false;
             this.handleSelect(columnName, index);
-            this.removeDistinct(columnName, index)
+            this.removeDistinct(columnName, index);
         }
-    }
+    };
 
     selectColumn = (columnName) => {
         let { selectedColumns } = this.state;
         if (!selectedColumns.includes(columnName))
             selectedColumns.push(columnName);
         this.setState({ selectedColumns: selectedColumns });
-    }
+    };
 
     removeColumn = (columnName) => {
         let { selectedColumns } = this.state;
@@ -182,16 +208,19 @@ class RunQuery extends Component {
             selectedColumns.splice(index, 1);
         }
         this.setState({ selectedColumns: selectedColumns });
-    }
+    };
 
     makeDistinct = (columnName) => {
         document.getElementById(columnName + "-distinct").checked = true;
-        let tableRows = document.querySelectorAll('input[type = "checkbox"]')
+        let tableRows = document.querySelectorAll('input[type = "checkbox"]');
         for (let i = 0; i < tableRows.length; i++) {
-            if (tableRows[i].id !== columnName + "-select" && tableRows[i].id !== columnName + "-distinct") {
+            if (
+                tableRows[i].id !== columnName + "-select" &&
+                tableRows[i].id !== columnName + "-distinct"
+            ) {
                 tableRows[i].disabled = true;
                 tableRows[i].checked = false;
-                let tempColumnName = tableRows[i].id.split('-')[0];
+                let tempColumnName = tableRows[i].id.split("-")[0];
                 this.removeColumn(tempColumnName);
             }
             if (tableRows[i].id === columnName + "-select") {
@@ -199,10 +228,10 @@ class RunQuery extends Component {
             }
         }
         this.setState({ distinctColumn: columnName });
-    }
+    };
 
     removeDistinct = (columnName) => {
-        let tableRows = document.querySelectorAll('input[type = "checkbox"]')
+        let tableRows = document.querySelectorAll('input[type = "checkbox"]');
         for (let i = 0; i < tableRows.length; i++) {
             if (tableRows[i].id !== columnName + "-distinct") {
                 tableRows[i].disabled = false;
@@ -214,52 +243,107 @@ class RunQuery extends Component {
         }
         this.removeColumn(columnName);
         this.setState({ distinctColumn: undefined });
-    }
+    };
 
     tableNameKeyPress = async (e) => {
         if (e.keyCode === 13) {
-            let tableName = document.getElementById('input-tablename').value;
-            await this.setState({ tableName: tableName })
+            let tableName = document.getElementById("input-tablename").value;
+            await this.setState({ tableName: tableName });
             this.getColumnNames();
         }
-    }
+    };
 
     addTableNameButton = async () => {
-        let tableName = document.getElementById('input-tablename').value;
-        await this.setState({ tableName: tableName })
+        if (this.state.databaseExist) {
+            document.getElementById("input-tablename").disabled = true;
+            document.getElementById("add-table-btn").disabled = true;
+        }
+        let tableName = document.getElementById("input-tablename").value;
+        await this.setState({ tableName: tableName });
         this.getColumnNames();
-    }
+    };
 
     queryTabLinkClass = () => {
         let classes = "nav-link disabled";
-        if (this.state.displayTable)
-            classes = "nav-link"
+        if (this.state.displayTable) classes = "nav-link";
         return classes;
-    }
+    };
 
+    queryTableClass = (value) => {
+        let classes = value + " disabled";
+        if (this.state.databaseExist) classes = value + " active";
+        return classes;
+    };
     render() {
         let { columnNames, displayTable, tableName, rows } = this.state;
 
         return (
-            <div className="modal fade" id="runquery" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div
+                className="modal fade"
+                id="runquery"
+                tabIndex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+            >
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-body text-center">
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <button
+                                type="button"
+                                className="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <ul className="nav nav-tabs row" id="myTab" role="tablist">
-                                <li className="nav-item col-6" role="presentation">
-                                    <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="Column" aria-selected="true">Table</a>
+                            <ul
+                                className="nav nav-tabs row"
+                                id="myTab"
+                                role="tablist"
+                            >
+                                <li
+                                    className="nav-item col-6"
+                                    role="presentation"
+                                >
+                                    <a
+                                        className={this.queryTableClass(
+                                            "nav-link"
+                                        )}
+                                        id="home-tab"
+                                        data-toggle="tab"
+                                        href="#home"
+                                        role="tab"
+                                        aria-controls="Column"
+                                        aria-selected="true"
+                                    >
+                                        Table
+                                    </a>
                                 </li>
-                                <li className="nav-item col-6" role="presentation">
+                                <li
+                                    className="nav-item col-6"
+                                    role="presentation"
+                                >
                                     {/* for making it disabled "nav-link disabled" or "nav-link" + {this.something} */}
-                                    <a className={this.queryTabLinkClass()} id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="Table" aria-selected="false">Queries</a>
+                                    <a
+                                        className={this.queryTabLinkClass()}
+                                        id="profile-tab"
+                                        data-toggle="tab"
+                                        href="#profile"
+                                        role="tab"
+                                        aria-controls="Table"
+                                        aria-selected="false"
+                                    >
+                                        Queries
+                                    </a>
                                 </li>
-
                             </ul>
                             <div className="tab-content" id="myTabContent">
-                                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div
+                                    className="tab-pane fade show active"
+                                    id="home"
+                                    role="tabpanel"
+                                    aria-labelledby="home-tab"
+                                >
                                     <div className="container">
                                         <br />
 
@@ -267,76 +351,171 @@ class RunQuery extends Component {
                                             <div className="input-group mb-3">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">
-                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-file-spreadsheet-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fillRule="evenodd" d="M12 0H4a2 2 0 0 0-2 2v4h12V2a2 2 0 0 0-2-2zm2 7h-4v2h4V7zm0 3h-4v2h4v-2zm0 3h-4v3h2a2 2 0 0 0 2-2v-1zm-5 3v-3H6v3h3zm-4 0v-3H2v1a2 2 0 0 0 2 2h1zm-3-4h3v-2H2v2zm0-3h3V7H2v2zm4 0V7h3v2H6zm0 1h3v2H6v-2z" />
+                                                        <svg
+                                                            width="1em"
+                                                            height="1em"
+                                                            viewBox="0 0 16 16"
+                                                            className="bi bi-file-spreadsheet-fill"
+                                                            fill="currentColor"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M12 0H4a2 2 0 0 0-2 2v4h12V2a2 2 0 0 0-2-2zm2 7h-4v2h4V7zm0 3h-4v2h4v-2zm0 3h-4v3h2a2 2 0 0 0 2-2v-1zm-5 3v-3H6v3h3zm-4 0v-3H2v1a2 2 0 0 0 2 2h1zm-3-4h3v-2H2v2zm0-3h3V7H2v2zm4 0V7h3v2H6zm0 1h3v2H6v-2z"
+                                                            />
                                                         </svg>
                                                     </span>
                                                 </div>
                                                 <input
                                                     defaultValue={tableName}
                                                     id="input-tablename"
-                                                    onKeyDown={this.tableNameKeyPress}
+                                                    onKeyDown={
+                                                        this.tableNameKeyPress
+                                                    }
                                                     type="text"
-                                                    className="form-control" />
+                                                    className="form-control"
+                                                    disabled
+                                                />
                                             </div>
                                         </div>
-                                        <button onClick={() => this.addTableNameButton()} type="submit" className="btn btn-primary" >
+                                        <button
+                                            onClick={() =>
+                                                this.addTableNameButton()
+                                            }
+                                            id="add-table-btn"
+                                            type="submit"
+                                            className="btn btn-primary"
+                                        >
                                             Add table
                                         </button>
 
                                         <br />
                                         <br />
                                         {/* this part comes only after user enters table name */}
-                                        {(displayTable ?
+                                        {displayTable ? (
                                             <table className="table table-responsiv-md table-striped table-borderless">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">S.No</th>
-                                                        <th scope="col">Column Name</th>
-                                                        <th scope="col">Select</th>
-                                                        <th scope="col">Distinct</th>
+                                                        <th scope="col">
+                                                            S.No
+                                                        </th>
+                                                        <th scope="col">
+                                                            Column Name
+                                                        </th>
+                                                        <th scope="col">
+                                                            Select
+                                                        </th>
+                                                        <th scope="col">
+                                                            Distinct
+                                                        </th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
                                                     {/* beginning of map func */}
-                                                    {columnNames.map((column, index) => (
-                                                        <tr key={index}>
-                                                            <th scope="row">{index + 1}</th>
-                                                            <td>{column}</td>
-                                                            <td>
-                                                                <div className="custom-control custom-switch">
-                                                                    <input type="checkbox" id={column + "-select"} onClick={() => this.handleSelect(column)} className="custom-control-input" />
-                                                                    <label className="custom-control-label" htmlFor={column + "-select"}></label>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div className="custom-control custom-switch">
-                                                                    <input type="checkbox" id={column + "-distinct"} onClick={() => this.handleDistinct(column)} className="custom-control-input" />
-                                                                    <label className="custom-control-label" htmlFor={column + "-distinct"}></label>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                    {columnNames.map(
+                                                        (column, index) => (
+                                                            <tr key={index}>
+                                                                <th scope="row">
+                                                                    {index + 1}
+                                                                </th>
+                                                                <td>
+                                                                    {column}
+                                                                </td>
+                                                                <td>
+                                                                    <div className="custom-control custom-switch">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id={
+                                                                                column +
+                                                                                "-select"
+                                                                            }
+                                                                            onClick={() =>
+                                                                                this.handleSelect(
+                                                                                    column
+                                                                                )
+                                                                            }
+                                                                            className="custom-control-input"
+                                                                        />
+                                                                        <label
+                                                                            className="custom-control-label"
+                                                                            htmlFor={
+                                                                                column +
+                                                                                "-select"
+                                                                            }
+                                                                        ></label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className="custom-control custom-switch">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id={
+                                                                                column +
+                                                                                "-distinct"
+                                                                            }
+                                                                            onClick={() =>
+                                                                                this.handleDistinct(
+                                                                                    column
+                                                                                )
+                                                                            }
+                                                                            className="custom-control-input"
+                                                                        />
+                                                                        <label
+                                                                            className="custom-control-label"
+                                                                            htmlFor={
+                                                                                column +
+                                                                                "-distinct"
+                                                                            }
+                                                                        ></label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )}
                                                 </tbody>
                                             </table>
-                                            : null)}
+                                        ) : null}
                                         {/* end of that column part */}
                                     </div>
                                 </div>
                                 {/* tab 2 */}
-                                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div
+                                    className="tab-pane fade"
+                                    id="profile"
+                                    role="tabpanel"
+                                    aria-labelledby="profile-tab"
+                                >
                                     <QueryTable
                                         rows={rows}
                                         getRows={this.getRows}
-                                        columnNames={columnNames} />
+                                        columnNames={columnNames}
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={() => this.deleteQuery()} type="button" className="btn btn-outline-danger">Clear Query</button>
-                            <button type="button" className="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                            <button onClick={() => this.handleQuery()} type="button" className="btn btn-primary">Save changes</button>
+                            <button
+                                onClick={() => this.deleteQuery()}
+                                type="button"
+                                className="btn btn-outline-danger"
+                            >
+                                Clear Query
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-outline-danger"
+                                data-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                                onClick={() => this.handleQuery()}
+                                type="button"
+                                className="btn btn-primary"
+                            >
+                                Save changes
+                            </button>
                         </div>
                     </div>
                 </div>

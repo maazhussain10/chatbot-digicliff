@@ -21,17 +21,22 @@ class Settings extends Component {
                 chipShape: "",
                 chipFont: "",
             },
-            chatBoxTheme: {
+            messagesTheme: {
                 userBg: "",
                 userFont: "",
                 userColor: "",
                 assistantBg: "",
                 assistantFont: "",
                 assistantColor: "",
+            },
+            chatBoxTheme: {
                 chatBoxColor: "",
+                chatboxFont: "",
+                chatboxFontColor: "",
+                sendMessageColor:"",
             }
         },
-        selectedPane: "message",
+        selectedPane: "chatbox",
         saveChangesStatus: true,
     }
 
@@ -109,10 +114,34 @@ class Settings extends Component {
         this.setState({ saveChangesStatus: false });
     }
 
+    // Handle text font style of Chatbox Font.
+    chatboxFontSelect = (font) => {
+        let { settings } = this.state;
+        settings.chatBoxTheme.chatboxFont = font;
+        this.setState({ settings: settings })
+        this.setState({ saveChangesStatus: false });
+    }
+
+    // Handle text color of Chatbox.
+    chatboxFontColorChange = (e) => {
+        let { settings } = this.state;
+        settings.chatBoxTheme.chatboxFontColor = e.target.value
+        this.setState({ settings: settings })
+        this.setState({ saveChangesStatus: false });
+    }
+
+    // Handle text color of Chatbox.
+    sendMessageIconColorChange = (e) => {
+        let { settings } = this.state;
+        settings.chatBoxTheme.sendMessageColor = e.target.value
+        this.setState({ settings: settings })
+        this.setState({ saveChangesStatus: false });
+    }
+
     // Handle background color of user's text message.
     userBgChange = (e) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.userBg = e.target.value;
+        settings.messagesTheme.userBg = e.target.value;
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -120,7 +149,7 @@ class Settings extends Component {
     // Handle text color of user's text message.
     userColorChange = (e) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.userColor = e.target.value
+        settings.messagesTheme.userColor = e.target.value
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -128,7 +157,7 @@ class Settings extends Component {
     // Handle text font style of user's text message.
     userFontSelect = (font) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.userFont = font;
+        settings.messagesTheme.userFont = font;
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -137,7 +166,7 @@ class Settings extends Component {
     // Handle background color of assistant's text message.
     assistantBgChange = (e) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.assistantBg = e.target.value;
+        settings.messagesTheme.assistantBg = e.target.value;
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -145,7 +174,7 @@ class Settings extends Component {
     // Handle text color of assistant's text message.
     assistantColorChange = (e) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.assistantColor = e.target.value
+        settings.messagesTheme.assistantColor = e.target.value
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -153,7 +182,7 @@ class Settings extends Component {
     // Handle text font style of assistant's text message.
     assistantFontSelect = (font) => {
         let { settings } = this.state;
-        settings.chatBoxTheme.assistantFont = font;
+        settings.messagesTheme.assistantFont = font;
         this.setState({ settings: settings })
         this.setState({ saveChangesStatus: false });
     }
@@ -220,9 +249,10 @@ class Settings extends Component {
 
     render() {
         let { settings, selectedPane } = this.state;
-        let { chipTheme, chatBoxTheme, cardTheme } = settings;
+        let { chipTheme, chatBoxTheme,messagesTheme, cardTheme } = settings;
 
-        let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont, chatBoxColor } = chatBoxTheme;
+        let { chatBoxColor,chatboxFont,chatboxFontColor,sendMessageColor } = chatBoxTheme;
+        let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont } = messagesTheme;
         let { cardBgColor, cardTextColor, cardBorder, cardFont, } = cardTheme;
         let { chipBgColor, chipTextColor, chipBorder, chipShape, chipFont } = chipTheme;
 
@@ -277,7 +307,8 @@ class Settings extends Component {
                                     <div className="col-3">
                                         <div className="text-center">
                                             <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                                <a onClick={() => this.handleSelect("message")} className="nav-link active" id="v-pills-chatBoxSettings-tab" data-toggle="pill" href="#v-pills-chatBoxSettings" role="tab" aria-controls="v-pills-chatBoxSettings" aria-selected="false">Chatbox</a>
+                                                <a onClick={() => this.handleSelect("chatbox")} className="nav-link active" id="v-pills-chatBoxSettings-tab" data-toggle="pill" href="#v-pills-chatBoxSettings" role="tab" aria-controls="v-pills-chatBoxSettings" aria-selected="false">Chatbox</a>
+                                                <a onClick={() => this.handleSelect("message")} className="nav-link" id="v-pills-messagesSettings-tab" data-toggle="pill" href="#v-pills-messagesSettings" role="tab" aria-controls="v-pills-messagesSettings" aria-selected="false">Messages</a>
                                                 <a onClick={() => this.handleSelect("card")} className="nav-link" id="v-pills-cardSettings-tab" data-toggle="pill" href="#v-pills-cardSettings" role="tab" aria-controls="v-pills-cardSettings" aria-selected="false">Card</a>
                                                 <a onClick={() => this.handleSelect("chip")} className="nav-link" id="v-pills-chipSettings-tab" data-toggle="pill" href="#v-pills-chipSettings" role="tab" aria-controls="v-pills-chipSettings" aria-selected="false">Chip</a>
                                             </div>
@@ -292,6 +323,31 @@ class Settings extends Component {
                                                     <div className="col-6">Chatbox Color:</div>
                                                     <div className="col-6"><input onChange={this.chatboxColorChange} value={chatBoxColor} type="color"></input></div>
                                                 </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-6">Chatbox Font:</div>
+
+                                                    <div className="col-6">
+                                                        <div className="dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span style={{ "fontFamily": chatboxFont }}>{chatboxFont} </span>
+                                                        </div>
+                                                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                            {fonts.map((font, index) => (
+                                                                <span style={{ "fontFamily": font }} key={index} onClick={() => this.chatboxFontSelect(font)} className="dropdown-item" > {font} </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-6">Chatbox Font Color:</div>
+                                                    <div className="col-6"><input onChange={this.chatboxFontColorChange} value={chatboxFontColor} type="color"></input></div>
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-6">Send Message Icon Color:</div>
+                                                    <div className="col-6"><input onChange={this.sendMessageIconColorChange} value={sendMessageColor} type="color"></input></div>
+                                                </div>
+                                            </div>
+                                            {/* MESSAGES SETTING */}
+                                            <div className="tab-pane fade" id="v-pills-messagesSettings" role="tabpanel" aria-labelledby="v-pills-messagesSettings-tab">
                                                 <div className="row mb-3">
                                                     <div className="col-6">User Text BgColor:</div>
                                                     <div className="col-6"><input onChange={this.userBgChange} value={userBg} type="color"></input></div>
@@ -406,21 +462,27 @@ class Settings extends Component {
                                         <ChatboxTop
                                             name={"Testbot"}
                                             description={"Check your theme settings here."}
-                                            chatBoxColor={chatBoxColor} />
+                                            chatBoxColor={chatBoxColor}
+                                            chatboxFont={chatboxFont}
+                                            chatboxFontColor={chatboxFontColor}
+                                            sendMessageColor={sendMessageColor}
+                                        />
                                         <div className="chatbox-body">
                                             <div className="chat-conversion">
                                                 <Message
                                                     messageObject={sampleUserMessage}
                                                     chipTheme={chipTheme}
                                                     cardTheme={cardTheme}
-                                                    chatBoxTheme={chatBoxTheme} />
+                                                    messagesTheme={messagesTheme}
+                                                   />
                                                 {selectedPane === "message" ?
                                                     <Message
                                                         messageObject={sampleBotMessage}
                                                         duration={0}
                                                         chipTheme={chipTheme}
                                                         cardTheme={cardTheme}
-                                                        chatBoxTheme={chatBoxTheme} /> : null}
+                                                        messagesTheme={messagesTheme}
+                                                       /> : null}
 
                                                 {selectedPane === "card" ?
                                                     <Message
@@ -428,14 +490,16 @@ class Settings extends Component {
                                                         chipTheme={chipTheme}
                                                         duration={0}
                                                         cardTheme={cardTheme}
-                                                        chatBoxTheme={chatBoxTheme} /> : null}
+                                                        messagesTheme={messagesTheme}
+                                                       /> : null}
                                                 {selectedPane === "chip" ?
                                                     <Message
                                                         messageObject={sampleChipMessage}
                                                         chipTheme={chipTheme}
                                                         duration={0}
                                                         cardTheme={cardTheme}
-                                                        chatBoxTheme={chatBoxTheme} /> : null}
+                                                        messagesTheme={messagesTheme}
+                                                       /> : null}
                                             </div >
                                             <div className="clearfix"></div>
                                         </div>

@@ -31,14 +31,19 @@ exports.getChatboxSettings = (username, assistantName) => {
             chipShape: results[0].chipShape,
             chipFont: results[0].chipFont,
           },
-          chatBoxTheme: {
+          messagesTheme: {
             userBg: results[0].userTextBgcolor,
             userFont: results[0].userFont,
             userColor: results[0].userTextColor,
             assistantBg: results[0].assistantTextBgcolor,
             assistantFont: results[0].assistantFont,
             assistantColor: results[0].assistantTextColor,
+          },
+          chatBoxTheme: {
             chatBoxColor: results[0].chatboxColor,
+            chatboxFont: results[0].chatboxFont,
+            chatboxFontColor: results[0].chatboxFontColor,
+            sendMessageColor:results[0].sendMessageColor,
           },
         };
         resolve({ chatBoxSettings });
@@ -51,10 +56,10 @@ exports.getChatboxSettings = (username, assistantName) => {
 
 exports.setChatboxSettings = (username, assistantName, settings) => {
   let sql =
-    "update settings set cardBgcolor=?, cardTextColor=?, cardBorder=?, cardFont=?, chipBgcolor=?, chipTextColor=?, chipBorder=?, chipShape=?, chipFont=?, userTextBgcolor=?, userFont=?, userTextColor=?, assistantTextBgcolor =?, assistantFont =?, assistantTextColor=?, chatboxColor =? where assistant=? and username=?; ";
-  let { chipTheme, chatBoxTheme, cardTheme } = JSON.parse(settings);
-  let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont, chatBoxColor } =
-    chatBoxTheme;
+    "update settings set cardBgcolor=?, cardTextColor=?, cardBorder=?, cardFont=?, chipBgcolor=?, chipTextColor=?, chipBorder=?, chipShape=?, chipFont=?, userTextBgcolor=?, userFont=?, userTextColor=?, assistantTextBgcolor =?, assistantFont =?, assistantTextColor=?, chatboxColor =?, chatboxFont=?, chatboxFontColor=?,sendMessageColor=? where assistant=? and username=?; ";
+  let { chipTheme, chatBoxTheme, messagesTheme, cardTheme } = JSON.parse(settings);
+  let { userBg, userColor, userFont, assistantBg, assistantColor, assistantFont } = messagesTheme;
+  let { chatBoxColor,chatboxFont,chatboxFontColor,sendMessageColor } = chatBoxTheme;
   let { cardBgColor, cardTextColor, cardBorder, cardFont } = cardTheme;
   let { chipBgColor, chipTextColor, chipBorder, chipShape, chipFont } = chipTheme;
   return new Promise((resolve, reject) => {
@@ -77,6 +82,9 @@ exports.setChatboxSettings = (username, assistantName, settings) => {
         assistantFont,
         assistantColor,
         chatBoxColor,
+        chatboxFont,
+        chatboxFontColor,
+        sendMessageColor,
         assistantName,
         username,
       ],
