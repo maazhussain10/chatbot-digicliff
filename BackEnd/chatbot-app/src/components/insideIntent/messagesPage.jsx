@@ -39,7 +39,9 @@ class MessagesPage extends Component {
                 },
 
             }).then((response) => {
-                let { messages, userMessages, botReplies } = response.data;
+                let { messages, userMessages, botReplies, multipleReply } = response.data;
+                if (multipleReply==='true')
+                    document.getElementById('multipleBotReply').checked=true;
                 this.setState({ messages: messages, userMessages: userMessages, botReplies: botReplies });
 
             });

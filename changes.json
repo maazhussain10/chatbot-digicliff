@@ -163,7 +163,7 @@
     "date": "18/08/21",
     "changes": [
         "Blocked the runqueries tab if databaseConnection is empty",
-        "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour",
+        "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour"
     ],
     "to-do": [
       "Design the Stats Page",
@@ -176,6 +176,35 @@
       "In entities show the delete button to only those entities that exists",
       "For entities add info icon, cuz font awesome no work which is bad",
       "In deactivate account Modal ask them to type yes 'Deactivate' then allow deactivation",
+      "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
+      "Display Follow Up intents in an hierarchical form",
+
+      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
+      "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
+      "Allow entity value to be able to given as an input in run queries",
+      "Create Card Update",
+      "Integrate bot in other sites",
+      "Handle all console.log(err) from backend",
+      "Need to create a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table."
+    ]
+  },
+  {
+    "made-by": "Maaz",
+    "date": "19/08/21",
+    "changes": [
+      "Multiple intents are triggered even when refreshed",
+      "Added intent button in navbar once you go inside intent pages",
+      "Deleted richResponseNavbar.jsx as it was of no use",
+      "For entities added info icon, cuz font awesome no work which is bad",
+      "In entities added the delete button to only those entities that exists",
+      "In deactivate account Modal ask them to type 'Deactivate' then allow deactivation"
+    ],
+    "to-do": [
+      "Design the Stats Page",
+      "Design the Profile Page",
+      "Design the Integration Page",
+      "While chating with the bot- user message input field if one line is full make it go to next line",
+      "Add a back button once you click on profile",
       "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
       "Display Follow Up intents in an hierarchical form",
 

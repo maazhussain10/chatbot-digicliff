@@ -5,6 +5,7 @@ const {
   deleteMessage,
   updateMessage,
 } = require("../files/SQL-messages");
+const { checkMultipleReply } = require("../files/SQL-intent");
 class Messages {
   constructor(app) {
     this.addMessage(app);
@@ -19,7 +20,8 @@ class Messages {
       let userMessages = await getMessages(username, assistantName, intentName, "User");
       let botReplies = await getMessages(username, assistantName, intentName, "Bot");
       let messages = await getAllMessages(username, assistantName, intentName);
-      res.send({ userMessages, botReplies, messages });
+      let multipleReply = await checkMultipleReply(username, assistantName, intentName)
+      res.send({ userMessages, botReplies, messages,multipleReply });
     });
   }
 

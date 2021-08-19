@@ -7,9 +7,9 @@ import { UpdateModal } from './updateCard';
 import { CreateChip } from './createChip'
 import axios from 'axios';
 import { ChatBox } from '../chatbox/chatbox';
-import { RichResponseNavBar } from './richResponseNavbar';
 import URL from '../../websiteURL';
 import './css/buttonalign.css'
+import { Navbar } from './navbar';
 
 
 
@@ -195,7 +195,7 @@ class Rich extends Component {
         let { chips, cards, cardColor, textColor } = this.state;
         return (
             <React.Fragment>
-                <RichResponseNavBar />
+                <Navbar />
                 <Entity />
                 <RunQuery />
                 <br />

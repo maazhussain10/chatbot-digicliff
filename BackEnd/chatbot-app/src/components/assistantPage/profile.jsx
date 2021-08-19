@@ -7,7 +7,7 @@ class Profile extends Component {
     state = {
         assistant: false,
         existingAssistant: [],
-        conformDeactivate: false
+        conformDeactivate: false,
     }
 
     handleLogout = () => {
@@ -42,22 +42,29 @@ class Profile extends Component {
 
     deactivateAccount = () => {
         let { username } = JSON.parse(sessionStorage.getItem('userDetails'));
-        try {
-            axios({
-                method: 'get',
-                url: 'http://' + URL + ':5000/deactivate-account',
-                params: {
-                    username: username
-                },
+        if (this.state.deletionMessage) {
+            try {
+                axios({
+                    method: 'get',
+                    url: 'http://' + URL + ':5000/deactivate-account',
+                    params: {
+                        username: username
+                    },
 
-            }).then((response) => {
-                this.handleLogout();
-            });
-        }
-        catch (e) {
-            console.log(e);
+                }).then((response) => {
+                    this.handleLogout();
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
         }
     }
+
+    deletion = (e) => {
+        if (e.target.value === "DEACTIVATE") this.setState({ conformDeactivate: true });
+        else this.setState({ conformDeactivate: false });    }
+
     renderAssistant = () => {
         if (this.state.assistant === false) {
             this.setState({ assistant: true });
@@ -146,9 +153,15 @@ class Profile extends Component {
                                         Are you sure you want to deactivate your account. Deactivating your account will remove all Assistants and All datas created till now.
                                         Remember this decision cannot be undone.
                                     </div>
+                                    <input
+                                        onChange={this.deletion}
+                                        type="text"
+                                        className="form-control"
+                                        id="inputDeleteConfirmation"
+                                    />
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                                        <a type="button" href="/#" onClick={() => this.deactivateAccount()} className="btn btn-primary">Yes, Deactivate</a>
+                                        <a type="button" href="/" onClick={() => this.deactivateAccount()} className="btn btn-primary">Yes, Deactivate</a>
                                     </div>
                                 </div>
                             </div >

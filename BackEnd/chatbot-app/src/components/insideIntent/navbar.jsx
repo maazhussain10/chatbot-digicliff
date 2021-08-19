@@ -27,6 +27,9 @@ class Navbar extends Component {
                                     <a className="nav-link  navlinks" href={`/assistant/${username}`} style={{ marginRight: "20px" }}>Home<span className="sr-only">(current)</span></a>
                                 </li>
                                 <li className="nav-item ">
+                                    <a className="nav-link navlinks" href={`/assistant/${username}/${assistantName}`} style={{ marginRight: "20px" }}>Intent</a>
+                                </li>
+                                <li className="nav-item ">
                                     <a className="nav-link navlinks" data-toggle="modal" data-target="#entity" href="/explore" style={{ marginRight: "20px" }}>Entity</a>
                                 </li>
                                 <li className="nav-item ">
@@ -40,12 +43,6 @@ class Navbar extends Component {
                             <Link to={`/${username}/profile`}>
                                 <button href={`/${username}/profile`} className="profile-btn" >Profile</button>
                             </Link>
-                            {/* <button id="creat" type="button" className="btn btn-sm btn-outline-success my-2 my-sm-0 mr-2" data-toggle="modal" data-target="#DB">
-                                CONNECT DB
-                                </button> */}
-                            {/* </Link> */}
-
-                            {/* <a href="/explore" className="btn btn-sm btn-outline-secondary my-2 my-sm-0 mr-2" type="submit"></a> */}
                             <a href="/#" onClick={this.handleLogout} className="logout-btn" type="submit">Logout</a>
                         </div>
                     </div>
