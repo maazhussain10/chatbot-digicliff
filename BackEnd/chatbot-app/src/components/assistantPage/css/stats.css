@@ -1,6 +1,8 @@
-th{
-    padding: 30px;
+.background
+{
+    background-color: #b0dfe5;
 }
-td{
-    padding: 15px;
+.primary{
+    color: white;
+    background-color: #0d6efd;
 }
