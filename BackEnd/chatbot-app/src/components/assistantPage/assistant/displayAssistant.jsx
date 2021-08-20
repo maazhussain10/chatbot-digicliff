@@ -198,7 +198,7 @@ class DisplayAssistant extends Component {
                             </div>
                             <div className="modal-body">
                                 <p>To embed the chat widget in your website use the following script tag.</p>
-                                <strong> &lt;script src="{URL}:8080/assistant/{username}/{assistantName}/chatwidget"&gt; &lt;/script&gt;</strong>
+                                <strong> &lt;iframe src="{URL}:8080/assistant/{username}/{assistantName}/chatwidget"&gt; &lt;/iframe&gt;</strong>
                             </div>
                         </div>
                     </div>

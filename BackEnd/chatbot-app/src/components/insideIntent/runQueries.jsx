@@ -374,7 +374,6 @@ class RunQuery extends Component {
                                                     }
                                                     type="text"
                                                     className="form-control"
-                                                    disabled
                                                 />
                                             </div>
                                         </div>

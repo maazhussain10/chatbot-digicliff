@@ -10,6 +10,7 @@ const {
     entityValue,
     getEntities,
     getAllEntities,
+    getAllDetailsOfVisitor,
 } = require("../files/SQL-entity");
 const { getQueryCards, getCards } = require("../files/SQL-card");
 const { getQueryChips, getChips } = require("../files/SQL-chip");
@@ -219,7 +220,8 @@ class NLP {
                 );
                 //   Get the entities belonging to the particular Intent.
                 // let entities = await getEntities(username, assistantName, intentName);
-                let entities = await getAllEntities(username, assistantName);
+                let ipAddress = "171.0.10.1";
+                let entities = await getAllDetailsOfVisitor(username, assistantName,ipAddress);
                 let message = undefined;
                 let previousIntent = intentName;
                 //   Check if the multiple replies option is enabled for the intent.
@@ -228,7 +230,6 @@ class NLP {
                     assistantName,
                     intentName
                 );
-
                 let messages = [];
                 //   If Multiple replies is true then add all the responses.
                 if (hasMultipleReply === "true") {

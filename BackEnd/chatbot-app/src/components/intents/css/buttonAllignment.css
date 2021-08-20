@@ -38,3 +38,7 @@
     color: black;
     text-decoration: none;
 }
+
+.follow{
+    border-left: 3px solid blue;
+}

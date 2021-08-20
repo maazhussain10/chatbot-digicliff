@@ -197,24 +197,39 @@
       "Deleted richResponseNavbar.jsx as it was of no use",
       "For entities added info icon, cuz font awesome no work which is bad",
       "In entities added the delete button to only those entities that exists",
-      "In deactivate account Modal ask them to type 'Deactivate' then allow deactivation"
+      "In deactivate account Modal ask them to type 'Deactivate' then allow deactivation",
+      "Created a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table.",
+      "Integrated bot in other sites",
+      "Designed the Stats Page",
+      "Designed the Profile Page",
+      "Designed the Integration Page"
     ],
     "to-do": [
-      "Design the Stats Page",
-      "Design the Profile Page",
-      "Design the Integration Page",
       "While chating with the bot- user message input field if one line is full make it go to next line",
       "Add a back button once you click on profile",
-      "Assistant time after a new bot created alters other bots time and shows wrong but gets back correctly once refreshed",
-      "Display Follow Up intents in an hierarchical form",
+      "Assistant time not working",
+      "Add assistant name in session for profile redirection",
 
-      "Adding complex queries like JOIN. For now, we can only have queries made from a single table in each intent",
       "Follow up shouldnt work if you say the same sentence again, Ask Dwabzy for more explanation if you don't understand what I am trying to say",
       "Allow entity value to be able to given as an input in run queries",
       "Create Card Update",
-      "Integrate bot in other sites",
-      "Handle all console.log(err) from backend",
-      "Need to create a seperate table to store entity value with ipAddress in that and remove ipAddress and entityValue from entity Table."
+      "Handle all console.log(err) from backend"
+    ]
+  },
+  {
+    "made-by": "Maaz",
+    "date": "20/08/21",
+    "changes": [
+      "Displayed Follow up intent in a different colour",
+      "Allowed entity value to be given as an input in run queries"
+    ],
+    "to-do": [
+      "While chating with the bot- user message input field if one line is full make it go to next line",
+      "Add a back button once you click on profile",
+      "Assistant time not working",
+      "Add assistant name in session for profile redirection",
+      "Create Card Update",
+      "Handle all console.log(err) from backend"
     ]
   }
 ]

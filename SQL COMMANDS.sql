@@ -95,22 +95,26 @@ CREATE TABLE entity
     username varchar(50) NOT NULL,
     assistant varchar(40) NOT NULL,
     intent varchar(40) NOT NULL,
+    entityName varchar(30) NOT NULL,
+    entityType varchar(30) NOT NULL,
+    UNIQUE uniqueEntity(intent, entityName),
+    PRIMARY KEY(username, assistant, intent,entityName),
+    FOREIGN KEY(username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE visitordetails
+(
+    username varchar(50) NOT NULL,
+    assistant varchar(40) NOT NULL,
+    intent varchar(40) NOT NULL,
     ipAddress varchar(30) ,
     entityName varchar(30) NOT NULL,
     entityType varchar(30) NOT NULL,
     entityValue varchar(30),
-    UNIQUE
-        uniqueEntity
-(intent, entityName),
-    PRIMARY KEY
-(username, assistant, intent,entityName, ipAddress),
-    FOREIGN KEY
-(username, assistant, intent) REFERENCES intent
-(username, assistant, intent) ON
-DELETE CASCADE ON
-UPDATE CASCADE
+    UNIQUE uniqueEntity(intent, entityName,ipAddress),
+    PRIMARY KEY(username, assistant, intent,entityName, ipAddress),
+    FOREIGN KEY(username, assistant, intent) REFERENCES intent(username, assistant, intent) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 CREATE TABLE richResponsesChip
 (

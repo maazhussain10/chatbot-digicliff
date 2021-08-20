@@ -3,6 +3,7 @@ const { getDatabaseDetails } = require("./SQL-database");
 const { createChip } = require("./SQL-chip");
 const { createCard } = require("./SQL-card");
 const { getTime } = require("./utilityFunctions");
+const { getAllDetailsOfVisitor } = require("./SQL-entity");
 
 //----------------------------------------------------Get Column Names of Users Database-----------------------------------------------------------------------
 
@@ -310,6 +311,29 @@ exports.createQueryRichResponses = async (
     cardNo
 ) => {
     const { username, assistantName, intentName } = id;
+
+    // Check if SQL Query has any Entity Present..
+    let ipAddress = "171.0.10.1";
+    let entities = await getAllDetailsOfVisitor(username, assistantName,ipAddress);
+    for (let k = 0; k < entities.length; k++) {
+        for (let j = 0; j < entities.length; j++) {
+            if (
+                sqlQuery
+                    .slice(sqlQuery.indexOf("$") + 1)
+                    .split("\"")[0] ===
+                entities[j].entityName
+            ) {
+                //   Replace the message containing $entityName with the entityValue we stored in the table above.
+                sqlQuery = sqlQuery.replace(
+                    sqlQuery
+                        .slice(sqlQuery.indexOf("$"))
+                        .split("\"")[0],
+                    entities[j].entityValue
+                );
+                break;
+            }
+        }
+    }
 
     //Soft code knowledge Store, Please <3 ^_^
     let databaseDetails = await getDatabaseDetails(username, assistantName);

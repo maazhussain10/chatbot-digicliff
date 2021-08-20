@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import URL from '../../websiteURL';
+import Integration from './integration';
+import Stats from './stats';
 
 class Profile extends Component {
     state = {
@@ -179,12 +181,12 @@ class Profile extends Component {
                         </div>
                         <div className="tab-pane fade" id="pills-integs" role="tabpanel" aria-labelledby="pills-integs-tab">
                             <div className="mt-5 text-center container">
-                                <h1>UNDER CONSTRUCTION</h1>
+                                <Integration/>
                             </div>
                         </div>
                         <div className="tab-pane fade" id="pills-stats" role="tabpanel" aria-labelledby="pills-stats-tab">
                             <div className="mt-5 text-center container">
-                                <h1>UNDER CONSTRUCTION</h1>
+                                <Stats/>
                             </div>
                         </div>
                     </div>

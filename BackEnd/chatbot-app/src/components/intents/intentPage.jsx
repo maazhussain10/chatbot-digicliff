@@ -7,6 +7,7 @@ import './css/intent.css';
 
 
 
+
 class IntentPage extends Component {
     state = {
         displayComponent: "intents",

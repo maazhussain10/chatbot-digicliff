@@ -1,4 +1,4 @@
-const { createEntity, getEntities, updateEntity, deleteEntity } = require("../files/SQL-entity");
+const { createEntity, getEntities, updateEntity, deleteEntity, visitorDetails } = require("../files/SQL-entity");
 
 class Entity {
   constructor(app) {
@@ -29,6 +29,13 @@ class Entity {
       const { username, assistantName, intentName } = req.query;
       let entities = await getEntities(username, assistantName, intentName);
       res.send(entities);
+    });
+
+    //  Get Visitor Details.
+    app.get("/visitor-details", async (req, res) => {
+      const { username, assistant } = req.query;
+      let visitorDetail = await visitorDetails(username, assistant);
+      res.send(visitorDetail);
     });
 
 //  Delete Entity.
