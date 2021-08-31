@@ -1,0 +1,276 @@
+POST {{$dotenv API_URL}}/api/auth/login
+Content-Type: application/json 
+
+{
+    "username": "Dwabzette",
+    "password": "Dwabzy123"
+}
+
+###
+GET {{$dotenv API_URL}}/api/auth/verify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlNmNhMWU2LTg5ZTMtNDJlMi1hMThkLTlmMmE3OTkwOGFlZiIsImlhdCI6MTYzMDIzOTIzMSwiZXhwIjoxNjMwMjM5NTMxfQ.sVXSFQvOkNlrrVlTQka_o5eCLkzWFVG7ofghVVFKso8
+Content-Type: application/json 
+
+{
+    "username": "Dwabzette",
+    "password": "Dwabzy123"
+}
+
+###
+
+POST {{$dotenv API_URL}}/api/auth/signup
+Content-Type: application/json 
+
+{
+    "firstName": "Pragadeesh",
+    "lastName": "J S",
+    "email": "dwabzy@gmail.com",
+    "username": "Dwabzy",
+    "password": "Dwabzy123"
+}
+
+###
+
+POST {{$dotenv API_URL}}/auth/logout
+Content-Type: application/json 
+
+{
+    "usernameEmail": "Dwabzy",
+    "password": "Dwabzy123"
+}
+
+###
+GET {{$dotenv API_URL}}/api/user/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhkZjgzMmEwLTFiZWMtNDE1Zi1hNmJhLWE1M2U1NzY2ZTgwOSIsImlhdCI6MTYyOTk5Nzg3OCwiZXhwIjoxNjI5OTk4MTc4fQ.80Woj7y9nr2TUwclHp7PwZV5B6F5meUEIOJMkM_FQTA
+Content-Type: application/json 
+
+{
+    "userId": "8df832a0-1bec-415f-a6ba-a53e5766e809"
+}
+
+###
+PUT {{$dotenv API_URL}}/api/user/profile
+Content-Type: application/json 
+
+{
+    "userId": "82fea9d4-2400-42d7-956c-eda06d79d8fd",
+    "firstName": "Pragadeesh",
+    "lastName": "J S"
+}
+
+
+###
+DELETE {{$dotenv API_URL}}/api/user/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlMTUzMGRkLTczZDQtNGI1OC05MmZlLTAzZTUyMjRhOTJmYyIsImlhdCI6MTYzMDIzNjA3MywiZXhwIjoxNjMwMjM2MzczfQ.Zx1iWLPKVc3Wk0eWRY8vfZPWaEE8vi0iIDvOLMg212A
+Content-Type: application/json 
+
+{
+    "userId": "6e1530dd-73d4-4b58-92fe-03e5224a92fc"
+}
+
+###
+GET {{$dotenv API_URL}}/api/chatbot/
+Content-Type: application/json 
+
+{
+    "userId": "8df832a0-1bec-415f-a6ba-a53e5766e809"
+}
+
+###
+POST {{$dotenv API_URL}}/api/chatbot/
+Content-Type: application/json 
+
+{
+    "userId": "8df832a0-1bec-415f-a6ba-a53e5766e809",
+    "chatbotName": "Test",
+    "description": "This is a chatbot"
+}
+
+###
+PUT {{$dotenv API_URL}}/api/chatbot/
+Content-Type: application/json 
+
+{
+    "chatbotId": "47d10aa1-4f10-46e6-a818-ab7dcb3c5d75",
+    "chatbotName": "Test",
+    "description": "This is not a chatbot"
+}
+
+###
+DELETE  {{$dotenv API_URL}}/api/chatbot/
+Content-Type: application/json 
+
+{
+    "chatbotId": "47d10aa1-4f10-46e6-a818-ab7dcb3c5d75",
+}
+
+###
+GET {{$dotenv API_URL}}/api/chatbot/intent
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb"
+}
+
+###
+POST {{$dotenv API_URL}}/api/chatbot/intent
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb",
+    "intentName": "I follow Greeting",
+    "description": "follow",
+    "previousIntent": "0b5db577-8252-4407-b5b9-7d771de1350f"
+}
+
+
+###
+PUT {{$dotenv API_URL}}/api/chatbot/intent
+Content-Type: application/json 
+
+{
+    "intentId": "d8fca78e-bf41-4ffd-b82b-9bbe7b236184",
+    "intentName": "I follow greeting",
+    "description": "This is not a chatbot",
+    "previousIntent": "1e5bd020-5127-487b-ae4f-d77d5ce1ed18"
+}
+
+###
+DELETE  {{$dotenv API_URL}}/api/chatbot/intent
+Content-Type: application/json 
+
+{
+    "intentId": "1e5bd020-5127-487b-ae4f-d77d5ce1ed18"
+}
+
+###
+Get {{$dotenv API_URL}}/api/chatbot/intent/multiple-reply
+Content-Type: application/json 
+
+{
+    "intentId": "1e5bd020-5127-487b-ae4f-d77d5ce1ed18"
+}
+
+###
+PUT {{$dotenv API_URL}}/api/chatbot/intent/multiple-reply
+Content-Type: application/json 
+
+{
+    "intentId": "1e5bd020-5127-487b-ae4f-d77d5ce1ed18",
+    "multipleReply": true
+}
+
+###
+POST {{$dotenv API_URL}}/api/chatbot/database-connection
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb",
+    "hostName": "localhost",
+    "dbUsername": "root",
+    "dbPassword": "Dwabzy",
+    "dbName": "assistantapi"
+}
+###
+DELETE {{$dotenv API_URL}}/api/chatbot/database-connection
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb"
+}
+
+###
+GET {{$dotenv API_URL}}/api/chatbot/settings       
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb"
+}
+
+
+###
+POST {{$dotenv API_URL}}/api/chatbot/settings
+Content-Type: application/json 
+
+{
+    "chatbotId": "6c63b1b3-a299-49b2-be00-7d765729fefb",
+    "cardTheme": {
+        "cardBgColor": "#a2a399",
+        "cardTextColor": "#ffffff",
+        "cardBorder": "#523c3c",
+        "cardFont": "verdana"
+    },  
+    "chipTheme": {
+        "chipBgColor": "#4bd9de",
+        "chipTextColor": "#064a04",
+        "chipBorder": "#4249db",
+        "chipShape": "12",
+        "chipFont": "verdana"
+    },
+    "messageTheme": {
+        "userBg": "#4278db",
+        "userFont": "verdana",
+        "userColor": "#ffffff",
+        "assistantBg": "#5d2ad4",
+        "assistantFont": "verdana",
+        "assistantColor": "#000000"
+    },
+    "chatboxTheme": {
+        "chatBoxColor": "#06badf",
+        "chatboxFont": "Arial",
+        "chatboxFontColor": "#ffffff",
+        "sendMessageColor": "#000000"
+    }
+}
+
+###
+GET {{$dotenv API_URL}}/api/chatbot/intent/message
+Content-Type: application/json 
+
+{
+    "intentId": "0b5db577-8252-4407-b5b9-7d771de1350f"
+}
+
+###
+POST {{$dotenv API_URL}}/api/chatbot/intent/message
+Content-Type: application/json 
+
+{
+    "intentId": "0b5db577-8252-4407-b5b9-7d771de1350f",
+    "messageType": "bot",
+    "message": "Hola",
+    "previousMessage": "Hey"
+}
+
+
+###
+PUT {{$dotenv API_URL}}/api/chatbot/intent/message
+Content-Type: application/json 
+
+{
+    "intentId": "0b5db577-8252-4407-b5b9-7d771de1350f",
+    "messageType": "bot",
+    "message": "Hola",
+    "previousMessage": "Hey"
+}
+
+###
+DELETE  {{$dotenv API_URL}}/api/chatbot/intent/message
+Content-Type: application/json 
+
+{
+    "intentId": "0b5db577-8252-4407-b5b9-7d771de1350f",
+    "messageType": "bot",
+    "message": "Hola"
+}
+
+
+###
+GET  {{$dotenv API_URL}}/api/chatbot/intent/query/column-names
+Content-Type: application/json 
+
+{
+    "tableName": "useraeuth"
+}
+
+

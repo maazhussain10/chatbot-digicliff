@@ -162,8 +162,8 @@
     "made-by": "Maaz",
     "date": "18/08/21",
     "changes": [
-        "Blocked the runqueries tab if databaseConnection is empty",
-        "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour"
+      "Blocked the runqueries tab if databaseConnection is empty",
+      "Settings Page add chatbox styling seperately and messages styling seperately and add chatbox background colour, chatboxtop text font color send message button colour"
     ],
     "to-do": [
       "Design the Stats Page",
@@ -236,16 +236,36 @@
   {
     "made-by": "Prajeshwar",
     "date": "20/08/21",
-    "changes": [
-      "Designed integration and stats page"
-    ],
+    "changes": ["Designed integration and stats page"],
     "to-do": [
-      "While chating with the bot- user message input field if one line is full make it go to next line",
+      "While chatting with the bot- user message input field if one line is full make it go to next line",
       "Add a back button once you click on profile",
       "Assistant time not working",
       "Add assistant name in session for profile redirection",
       "Create Card Update",
-      "Handle all console.log(err) from backend"
+      "Handle all console.log(err) from backend",
+      "Validation",
+      "Chip Order",
+      "Stats page backend",
+      "Integration page backend"
+    ]
+  },
+  {
+    "made-by": "Dwabzy",
+    "date": "20/08/21",
+    "changes": [""],
+    "to-do": [
+      "While chatting with the bot- user message input field if one line is full make it go to next line",
+      "Add a back button once you click on profile",
+      "Assistant time not working",
+      "Add assistant name in session for profile redirection",
+      "Create Card Update",
+      "Handle all console.log(err) from backend",
+      "Validation",
+      "Chip Order",
+      "Stats page backend",
+      "Integration page backend",
+      "Check if getColumnNamesRoute supports databases other than MySQL"
     ]
   }
 ]
