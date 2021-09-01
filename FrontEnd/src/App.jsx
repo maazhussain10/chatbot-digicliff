@@ -6,6 +6,7 @@ import Dashboard from './components/pages/Dashboard';
 import Intents from './components/pages/Intents';
 import Profile from './components/pages/Profile';
 import Messages from './components/pages/Messages';
+import RichResponses from './components/message/RichResponses';
 import Settings from './components/pages/Settings';
 import PrivateRoute from './components/common/PrivateRoute';
 
@@ -29,6 +30,7 @@ const App = () => {
                     <PrivateRoute exact path="/dashboard/settings" component={Settings} />
                     <PrivateRoute exact path="/dashboard/intent" component={Intents} />
                     <PrivateRoute exact path="/dashboard/intent/messages" component={Messages} />
+                    <PrivateRoute exact path="/dashboard/intent/rich-responses" component={RichResponses} />
                 </Switch>
             </AccessTokenContext.Provider>
         </Router>

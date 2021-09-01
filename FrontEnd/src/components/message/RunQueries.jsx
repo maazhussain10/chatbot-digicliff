@@ -56,8 +56,18 @@ const RunQueries = (props) => {
         }
     }
 
-    const deleteQuery = () => {
-
+    const deleteQuery = async () => {
+        let intentId = sessionStorage.getItem('intent');
+        try {
+            const response = await queryService.delete(intentId, accessToken, setAccessToken);
+            if (response.status === 202) {
+                setColumns([]);
+                setRowState({ rows: [] });
+                setTableName("");
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     const saveQuery = async () => {

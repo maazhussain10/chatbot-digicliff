@@ -5,15 +5,12 @@ const db = require('../../../models');
 
 chatbotRoute.get('/', async (req, res) => {
     let { userId } = req.body;
-    let { chatbotId, type } = req.query;
+    let { chatbotId } = req.query;
     let chatbots;
     try {
-        if (type === "single") {
-            chatbots = await db.Chatbot.findOne({
+        if (chatbotId) {
+            chatbots = await db.Chatbot.findByPk(chatbotId, {
                 attributes: [['id', 'chatbotId'], 'chatbotName', 'description', 'createdAt'],
-                where: {
-                    id: chatbotId
-                }
             })
         }
         else {
@@ -21,11 +18,13 @@ chatbotRoute.get('/', async (req, res) => {
                 attributes: [['id', 'chatbotId'], 'chatbotName', 'description', 'createdAt'],
                 where: {
                     userId: userId
-                }
+                },
+                order: ['createdAt']
             })
         }
         res.status(200).json(chatbots);
     } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 });

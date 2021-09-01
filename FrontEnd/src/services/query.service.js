@@ -45,7 +45,7 @@ class QueryService {
 
     async delete(intentId, accessToken, setAccessToken) {
         let authInterceptor = createInterceptor(setAccessToken);
-        let response = await authInterceptor.delete(API_URL + "chatbot/intent", { headers: authHeader(accessToken), data: { intentId } });
+        let response = await authInterceptor.delete(API_URL + "chatbot/query/query-rows", { headers: authHeader(accessToken), data: { intentId } });
         return response;
     }
 
@@ -55,11 +55,9 @@ class QueryService {
             let response = await authInterceptor.get(API_URL + "chatbot/query/query-rows", { headers: authHeader(accessToken), params: { intentId } });
             return response;
         } catch (err) {
-            return response;
+            return err;
         }
     }
-
-
 }
 
 export default new QueryService();

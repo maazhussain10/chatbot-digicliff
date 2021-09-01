@@ -2,7 +2,7 @@ import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import Navbar from '../common/Navbar';
 import settingsService from '../../services/settings.service.js';
-import ChatBoxTop from '../chatbox/ChatboxTop';
+import ChatboxTop from '../chatbox/ChatboxTop';
 import Messages from '../chatbox/Messages';
 
 const Settings = (props) => {
@@ -83,7 +83,7 @@ const Settings = (props) => {
   let sampleBotMessage = {
     from: 'bot',
     type: 'text',
-    messages: ['Sample Bot Reply', 'Another sample bot reply1'],
+    messages: ['Sample Bot Reply', 'Another sample bot reply1 \n ffgf'],
     hasRichResponse: true,
     cardMessage: '',
     chipMessage: '',
@@ -597,76 +597,75 @@ const Settings = (props) => {
                   </div>
                 </div>
                 {/* <div className="col-4" style={{ float: 'right' }}> */}
-                <div>
-                  <div className="chats-box" style={{ bottom: '4px' }}>
-                    <ChatBoxTop
-                      name={'Testbot'}
-                      description={'Check your theme settings here.'}
-                      chatBoxColor={theme.chatBoxColor}
-                      chatboxFont={theme.chatboxFont}
-                      chatboxFontColor={theme.chatboxFontColor}
-                    />
-                    <div className="chatbox-body">
-                      <div className="chat-conversion">
+                <div className="chats-box" style={{ bottom: '4px' }}>
+                  <ChatboxTop
+                    name={'Testbot'}
+                    description={'Check your theme settings here.'}
+                    chatboxColor={theme.chatboxColor}
+                    chatboxFont={theme.chatboxFont}
+                    chatboxFontColor={theme.chatboxFontColor}
+                  />
+                  <div className="chatbox-body">
+                    <div className="chat-conversion">
+                      <Messages
+                        messageObject={sampleUserMessage}
+                        theme={theme}
+                      />
+                      {selectedPane === 'message' ? (
                         <Messages
-                          messageObject={sampleUserMessage}
+                          messageObject={sampleBotMessage}
+                          duration={0}
                           theme={theme}
                         />
-                        {selectedPane === 'message' ? (
-                          <Messages
-                            messageObject={sampleBotMessage}
-                            duration={0}
-                            theme={theme}
-                          />
-                        ) : null}
+                      ) : null}
 
-                        {selectedPane === 'card' ? (
-                          <Messages
-                            messageObject={sampleCardMessage}
-                            duration={0}
-                            theme={theme}
-                          />
-                        ) : null}
-                        {selectedPane === 'chip' ? (
-                          <Messages
-                            messageObject={sampleChipMessage}
-                            duration={0}
-                            theme={theme}
-                          />
-                        ) : null}
-                      </div>
-                      <div className="clearfix"></div>
-                    </div>
-                    <div className="chatbox-chat">
-                      <div className="form-group">
-                        <input
-                          disabled
-                          // onKeyDown={keyPress}
-                          type="text"
-                          className="form-control"
-                          id="sendMessage"
-                          placeholder="Type your message"
+                      {selectedPane === 'card' ? (
+                        <Messages
+                          messageObject={sampleCardMessage}
+                          duration={0}
+                          theme={theme}
                         />
-                        <i
-                          className="fas fa-paper-plane"
-                          style={{ color: theme.sendMessageColor }}
-                        ></i>
-                      </div>
+                      ) : null}
+                      {selectedPane === 'chip' ? (
+                        <Messages
+                          messageObject={sampleChipMessage}
+                          duration={0}
+                          theme={theme}
+                        />
+                      ) : null}
+                    </div>
+                    <div className="clearfix"></div>
+                  </div>
+                  <div className="chatbox-chat">
+                    <div className="form-group">
+                      <input
+                        disabled
+                        // onKeyDown={keyPress}
+                        type="text"
+                        className="form-control"
+                        id="sendMessage"
+                        placeholder="Type your message"
+                      />
+                      <i
+                        className="fas fa-paper-plane"
+                        style={{ color: theme.sendMessageColor }}
+                      ></i>
                     </div>
                   </div>
                 </div>
-                <div style={{ paddingTop: '12%', paddingLeft: '35%' }}>
-                  {' '}
-                  <button
-                    onClick={() => saveChanges()}
-                    className="btn btn-sm btn-primary my-2 my-sm-0 mr-2"
-                  >
-                    {' '}
-                    Save Changes{' '}
-                  </button>
-                </div>
-                {/* </div> */}
               </div>
+              <div style={{ paddingTop: '12%', paddingLeft: '35%' }}>
+                {' '}
+                <button
+                  onClick={() => saveChanges()}
+                  className="btn btn-sm btn-primary my-2 my-sm-0 mr-2"
+                >
+                  {' '}
+                  Save Changes{' '}
+                </button>
+
+              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>

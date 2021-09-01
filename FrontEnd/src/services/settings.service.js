@@ -23,7 +23,7 @@ class SettingsService {
             let response = await authInterceptor.get(API_URL + "chatbot/settings", { headers: authHeader(accessToken), params: { chatbotId } });
             return response;
         } catch (err) {
-            return response;
+            return err;
         }
     }
 }

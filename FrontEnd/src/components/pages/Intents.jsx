@@ -100,7 +100,7 @@ const Intents = (props) => {
         <React.Fragment>
             <Navbar isAuthenticated={props.isAuthenticated} >
                 <li className="nav-item">
-                    <a id="creat" type="button" className=" navlinks" data-toggle="modal" data-target="#databaseModal">
+                    <a id="creat" type="button" className=" nav-link" data-toggle="modal" data-target="#databaseModal">
                         Connect DB
                     </a>
                 </li>

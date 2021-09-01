@@ -90,7 +90,7 @@ const Home = () => {
         <React.Fragment>
             <Navbar isAuthenticated={isAuthenticated}>
                 <li className="nav-item">
-                    <a href="/explore" className="navlinks" style={{ marginRight: "50px" }}>Explore</a>
+                    <a href="/explore" className="nav-link" style={{ marginRight: "50px" }}>Explore</a>
                 </li>
             </Navbar >
             {/* Welcome Section */}

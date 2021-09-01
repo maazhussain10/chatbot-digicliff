@@ -32,7 +32,7 @@ const Dashboard = (props) => {
 
     useEffect(async () => {
         try {
-            const response = await chatbotService.get(accessToken, setAccessToken);
+            const response = await chatbotService.get(undefined, accessToken, setAccessToken);
             setChatbots(response.data)
         } catch (err) {
             console.log(err);
@@ -140,8 +140,8 @@ const Dashboard = (props) => {
                 :
                 <React.Fragment>
                     {
-                        chatbots.slice(0, chatbots.length / 2 + 1).map((chatbot, index) => (
-                            <div className="container" style={{ fontFamily: 'Tinos' }} key={chatbot.chatbotId || "1"}>
+                        chatbots.slice(0, chatbots.length / 2 + 1).map((_, index) => (
+                            <div className="container m-4" style={{ fontFamily: 'Tinos' }} key={Math.random()}>
                                 <div className="row text-center">
                                     {chatbots[2 * index] ?
                                         <div className="col-sm-6">

@@ -1,7 +1,7 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import MessageIcon from './MessageIcon';
-import Card from'./richResponses/Card'
-import Chip from'./richResponses/Chip'
+import Card from './richResponses/Card'
+import Chip from './richResponses/Chip'
 function RichResponse(props) {
   const { cardMessage, chipMessage, sendMessage, theme } = props;
 
@@ -53,7 +53,7 @@ const Messages = (props) => {
     botTextBgcolor,
     botFont,
     botTextColor
-    } = props.theme;
+  } = props.theme;
 
   if (from === 'user') {
     return (

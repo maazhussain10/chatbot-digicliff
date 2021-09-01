@@ -67,7 +67,7 @@ queryRowsRoute.get("/", async (req, res) => {
             }
         }
 
-        // res.status(200).json({ tableName: tableNameResults?.tableName, rows, distinctColumn, selectedColumns, distinctColumn });
+        res.status(200).json({ tableName: tableNameResults?.tableName, rows, distinctColumn, selectedColumns, distinctColumn });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
@@ -105,11 +105,74 @@ queryRowsRoute.post("/", async (req, res) => {
         if (distinctColumn) {
             await db.QueryTable.create({ intentId, tableName, distinctColumn });
         }
+
+        // Convert Query rows to a string that can run in Sequelize.query();
+
+
+        // Create a string for the selected columns
+        let selectedColumnsString = "";
+        if (distinctColumn) {
+            selectedColumnsString += "distinct(" + distinctColumn + ")";
+        } else {
+            for (let i = 0; i < selectedColumns.length; i++) {
+                selectedColumnsString += selectedColumns[i];
+                if (i !== selectedColumns.length - 1) {
+                    selectedColumnsString += ", ";
+                }
+            }
+        }
+        // Create a string for the condition
+        let conditionString = "";
+        if (rows) {
+            for (let i = 0; i < rows.length; i++) {
+                let { column, operator, value, logic } = rows[i];
+                conditionString += [column, operator, `"${value}"`].join(' ');
+                if (logic === "And") {
+                    conditionString += " and ";
+                }
+                if (logic === "Or") {
+                    conditionString += " or ";
+                }
+            }
+        }
+
+        // Construct the query using selectedColumns and Conditions
+        let query = `select ${selectedColumnsString} from ${tableName}`;
+        if (conditionString.length !== 0) {
+            query += " where " + conditionString;
+        }
+        query += ";";
+
+        // Add Query to Database.
+        db.Query.upsert({ intentId, query });
         res.sendStatus(202);
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
     }
 });
+
+
+queryRowsRoute.delete('/', (req, res) => {
+    try {
+        let { intentId } = req.body;
+
+        db.Query.destroy({
+            where: {
+                intentId
+            }
+        })
+
+        db.QueryTable.destroy({
+            where: {
+                intentId
+            }
+        })
+
+        res.sendStatus(202);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
 
 module.exports = queryRowsRoute;

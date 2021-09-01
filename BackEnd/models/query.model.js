@@ -9,7 +9,6 @@ module.exports = (sequelize) => {
         query: {
             type: DataTypes.STRING,
             allowNull: false,
-            primaryKey: true
         },
     })
 

@@ -7,6 +7,7 @@ import DisplayMessage from '../message/DisplayMessage';
 import CreateMessage from '../message/CreateMessage';
 import Entities from '../message/Entities';
 import RunQueries from '../message/RunQueries';
+import RichResponses from '../message/RichResponses';
 import ChatBox from '../chatbox/Chatbox';
 
 const Messages = (props) => {
@@ -60,15 +61,16 @@ const Messages = (props) => {
         <React.Fragment>
             <Navbar isAuthenticated={props.isAuthenticated}>
                 <li className="nav-item">
-                    <a className="navlinks" data-toggle="modal" data-target="#entity" href="/explore" style={{ marginRight: "50px" }}>Entity</a>
+                    <a className="nav-link" data-toggle="modal" data-target="#entity">Entity</a>
                     <Entities />
                 </li>
                 <li className="nav-item">
-                    <a className="navlinks" data-toggle="modal" data-target="#run-query" href="/explore" style={{ marginRight: "50px" }}>Run Queries</a>
+                    <a className="nav-link" data-toggle="modal" data-target="#run-query">Run Queries</a>
                     <RunQueries />
                 </li>
                 <li className="nav-item">
-                    <a className="navlinks" data-toggle="modal" data-target="#richResponses" href="/explore" style={{ marginRight: "50px" }}>Rich Responses</a>
+                    <a className="nav-link" href="/dashboard/intent/rich-responses">Rich Responses</a>
+
                 </li>
             </Navbar>
             <div className="container text-center">

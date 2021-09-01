@@ -12,7 +12,7 @@ multipleReplyRoute.get('/', async (req, res) => {
             }
         })
         if (!intent)
-            res.sendStatus(404);
+            return res.sendStatus(404);
 
         res.status(200).json(intent.multipleReply);;
     }

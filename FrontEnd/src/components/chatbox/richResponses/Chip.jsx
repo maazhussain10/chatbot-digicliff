@@ -4,7 +4,7 @@ const Chip = (props) => {
   const [hover, setHover] = useState(false);
 
   const handleClick = () => {
-    let { chip } = this.props;
+    let { chip } = props;
     if (!chip.clickable) props.sendMessage(chip.chipValue);
   };
 
@@ -15,7 +15,7 @@ const Chip = (props) => {
   const backgroundColor = () => {
     let { chipBorder, chipBgColor } = props.theme;
     let chipBg;
-    if (this.state.hover) {
+    if (hover) {
       chipBg = chipBorder;
     } else {
       chipBg = chipBgColor;

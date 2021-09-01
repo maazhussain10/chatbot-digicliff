@@ -1,25 +1,31 @@
-const card = require("express").Router();
+const cardRoute = require("express").Router();
 const db = require("../../../../models");
 
-card.post("/", async (req, res) => {
+cardRoute.post("/", async (req, res) => {
     let { intentId, cardDetails, useQuery } = req.body;
-    let { cardType, cardFields, cardValues } = cardDetails;
+    let { option, cardValues } = cardDetails;
+    let cardFields = Object.keys(cardValues).slice(0, option).join(",");
+    let cardData = Object.values(cardValues).slice(0, option).join(",");
+    console.log(cardData, cardValues, cardFields)
     try {
-        db.Entity.create({
+        let card = await db.Card.create({
             intentId,
             useQuery,
-            cardType,
-            cardFields,
-            cardValues,
+            cardType: option,
+            cardFields: cardFields,
+            cardValues: cardData,
+            cardOrder: option
         });
-        res.sendStatus(201);
+        res.status(201).json(card);
     } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 });
 
-card.get("/", async (req, res) => {
+cardRoute.get("/", async (req, res) => {
     let { intentId } = req.query;
+    console.log("GetExistingCards");
     try {
         let existingCards = await db.Card.findAll({
             attributes: [
@@ -41,7 +47,7 @@ card.get("/", async (req, res) => {
     }
 });
 
-card.put("/", async (req, res) => {
+cardRoute.put("/", async (req, res) => {
     let { intentId, cardFields, cardValues } = req.body;
     try {
         await db.Card.update(
@@ -59,15 +65,14 @@ card.put("/", async (req, res) => {
     }
 });
 
-card.delete("/", async (req, res) => {
-    let { intentId, cardValue } = req.body;
+cardRoute.delete("/", async (req, res) => {
+    let { intentId, cardValues } = req.body;
     try {
         await db.Card.destroy(
-            {},
             {
                 where: {
                     intentId,
-                    cardValue,
+                    cardValues
                 },
             }
         );
@@ -78,4 +83,4 @@ card.delete("/", async (req, res) => {
     }
 });
 
-module.exports = card;
+module.exports = cardRoute;

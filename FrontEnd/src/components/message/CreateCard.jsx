@@ -1,26 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useReducer } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
-import cardService from '../../services/card.service';
+import cardService from '../../services/card.service.js';
 
 function CardCreation(props) {
-  let { setCardDetails, option, inputCard } = props;
-  const [cardValues, setCard] = useReducer(
-    (state, newState) => ({ ...state, ...newState }),
-    { header: '', subHeader: '', details: '', link: '', linkButton: '' }
-  );
-  const cardName = ['header', 'subHeader', 'details', 'link', 'linkButton'];
+  let { inputCard, card } = props;
 
-  const setCardValue = (e) => {
-      setCard({ [e.target.name]: [e.target.value] });
-      setCardDetails(option, cardName, cardValues);
+  const handleChange = (e) => {
+    props.setCardValues({ [e.target.name]: [e.target.value] });
   };
 
   return (
     <React.Fragment>
       {inputCard ? (
         <div
-          className="tab-pane fade show active"
-          id="v-pills-card1"
+          className={"tab-pane fade " + (props.active ? "show active" : "")}
+          id={card}
           role="tabpanel"
           aria-labelledby="v-pills-card1-tab"
         >
@@ -31,11 +25,10 @@ function CardCreation(props) {
             <div className="card-header">
               <input
                 style={{ color: '#000000' }}
-                onChange={setCardValue}
+                onChange={handleChange}
                 name="header"
-                value={cardValues.header}
+                value={props.cardValues.header}
                 className="input-card"
-                defaultValue="Header"
                 type="text"
               />
             </div>
@@ -43,43 +36,39 @@ function CardCreation(props) {
               <h5 className="card-title">
                 <input
                   style={{ color: '#000000' }}
-                  onChange={setCardValue}
+                  onChange={handleChange}
                   name="subHeader"
-                  value={cardValues.subHeader}
+                  value={props.cardValues.subHeader}
                   className="input-card"
-                  defaultValue="Dark Card Title"
                   type="text"
                 />
               </h5>
               <textarea
                 style={{ color: '#000000' }}
-                onChange={setCardValue}
+                onChange={handleChange}
                 name="details"
-                value={cardValues.details}
+                value={props.cardValues.details}
                 className="card-text input-card cardTextArea"
-                defaultValue="Some quick example text to build on the card title and make up the bulk of the card's content."
               />
-              {option === '4' ? (
+              {props.option === '5' ? (
                 <div>
                   <h5 className="card-title">
                     <input
                       style={{ color: '#000000' }}
-                      onChange={setCardValue}
+                      onChange={handleChange}
                       name="link"
-                      value={cardValues.link}
+                      value={props.cardValues.link}
                       className="input-card"
-                      defaultValue="Add Link Here"
                       type="text"
                     />
                   </h5>
                   <h5 className="card-title">
                     <input
                       style={{ color: '#000000' }}
-                      onChange={setCardValue}
+                      onChange={handleChange}
                       name="linkButton"
-                      value={cardValues.linkButton}
+                      value={props.cardValues.linkButton}
                       className="input-card"
-                      defaultValue="Give the Link Button"
                       type="text"
                     />
                   </h5>
@@ -110,7 +99,7 @@ function CardCreation(props) {
                 Some quick example text to build on the card title and make up
                 the bulk of the card's content.
               </p>
-              {option === '4' ? <a href="/">This is a Link</a> : null}
+              {props.option === '5' ? <a href="/">This is a Link</a> : null}
             </div>
           </div>
         </div>
@@ -120,41 +109,41 @@ function CardCreation(props) {
 }
 
 const CreateCard = (props) => {
-  const [inputCard, setInputCard] = useState(false);
-  const [cardDetails, setCard] = useState([]);
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
+  const [inputCard, setInputCard] = useState(false);
+  const [option, setOption] = useState("3");
 
-  useEffect(() => {
-    props.getExistingCards;
-  }, [input]);
 
-  const insertCard = () => {
-    setInputCard(true);
-  };
+  const [cardValues, setCardValues] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    { header: '', subHeader: '', details: '', link: '', linkButton: '' }
+  );
 
-  const setCardDetails = (cardDetails) => {
-    setCard(cardDetails);
-  };
-
-  const createCard = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let intentId = sessionStorage.getItem('intent');
-    let { cardType, cardFields, cardValues } = cardDetails;
     let useQuery = document.getElementById('useQueryCard').checked;
 
     try {
-      await cardService.create(
+      let response = await cardService.create(
         intentId,
-        cardDetails,
+        { option, cardValues },
         useQuery,
         accessToken,
         setAccessToken
       );
-      props.getExistingCards;
-      props.disable;
+      if (response.status === 201) {
+        props.setCards([...props.cards, response.data])
+        setCardValues({ header: '', subHeader: '', details: '', link: '', linkButton: '' })
+        setInputCard(false);
+      }
+
+
     } catch (e) {
       console.log(e);
     }
-  };
+
+  }
   return (
     <React.Fragment>
       <button
@@ -174,7 +163,7 @@ const CreateCard = (props) => {
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-          <div className="modal-content">
+          <form onSubmit={handleSubmit} className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title " id="exampleModalLabel">
                 Card
@@ -198,6 +187,7 @@ const CreateCard = (props) => {
                         role="tab"
                         aria-controls="v-pills-card1"
                         aria-selected="true"
+                        onClick={() => setOption("3")}
                       >
                         Basic - 3 Fields
                       </a>
@@ -209,6 +199,8 @@ const CreateCard = (props) => {
                         role="tab"
                         aria-controls="v-pills-card2"
                         aria-selected="false"
+                        onClick={() => setOption("5")}
+
                       >
                         {' '}
                         Basic - 4 Fields
@@ -219,28 +211,28 @@ const CreateCard = (props) => {
                   <div className="col-9 d-flex justify-content-center">
                     {/* Start of Ternary operator */}
                     <div
-                      onClick={() => insertCard()}
+                      onClick={() => setInputCard(true)}
                       className="tab-content"
                       id="v-pills-tabContent"
                     >
+
+                      <CardCreation
+                        active={true}
+                        inputCard={inputCard}
+                        card="v-pills-card1"
+                        option={option}
+                        cardValues={cardValues}
+                        setCardValues={setCardValues}
+                        handleSubmit={handleSubmit}
+                      />
                       <div
-                        className="tab-pane fade"
+                        className="tab-pane fade s"
                         id="v-pills-card3"
                         role="tabpanel"
                         aria-labelledby="v-pills-card3-tab"
                       >
                         ...
                       </div>
-                      <CardCreation
-                        option="3"
-                        inputCard={inputCard}
-                        setCardDetails={setCardDetails}
-                      />
-                      <CardCreation
-                        option="4"
-                        inputCard={inputCard}
-                        setCardDetails={setCardDetails}
-                      />
                     </div>
                     {/* End of Ternary Operator */}
                   </div>
@@ -266,14 +258,13 @@ const CreateCard = (props) => {
                 Close
               </button>
               <button
-                onClick={() => createCard()}
-                type="button"
+                type="submit"
                 className="btn btn-primary"
               >
                 Create Card
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </React.Fragment>

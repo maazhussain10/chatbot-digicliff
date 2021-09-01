@@ -1,132 +1,141 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
-import cardService from '../../services/card.service';
-import chipService from '../../services/chip.service';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import cardService from '../../services/card.service.js';
+import chipService from '../../services/chip.service.js';
 import Navbar from '../common/Navbar';
+import CreateCard from './CreateCard';
+import CreateChip from './CreateChip';
+import ChatBox from '../chatbox/Chatbox';
 
-const RichResponses = () => {
+const RichResponses = (props) => {
   const [cards, setCards] = useState([]);
   const [chips, setChips] = useState([]);
   const [disableCard, setDisableCard] = useState(false);
-  const [disableChips, setDisableChip] = useState(false);
+  const [disableChip, setDisableChip] = useState(false);
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const intentId = sessionStorage.getItem('intent');
 
   useEffect(() => {
-    disable();
+    getExistingCards();
+    getExistingChips();
   }, []);
 
-  const disable = () => {
+  useEffect(() => {
     if (cards.length === 0 && chips.length !== 0) setDisableCard(true);
     else if (cards.length !== 0 && chips.length === 0) setDisableChip(true);
     else {
       setDisableCard(false);
       setDisableChip(false);
     }
-  };
+    console.log(disableChip)
+  }, [cards, chips]);
+
+
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
-    let items = Array.from(chips);
+    let items = [...chips];
     let [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    setDisableCard({ chips: items });
-    };
+    chipService.update(intentId, undefined, accessToken, setAccessToken, items);
+    setChips(items);
+  };
 
-    const getActiveClass = (classes, index) => {
-        if (index === 0) return classes + "active"
-        else return classes
+  const getActiveClass = (classes, index) => {
+    if (index === 0) return classes + "active"
+    else return classes
+  }
+
+  // GET/UPDATE/DELETE CARDS
+  const getExistingCards = async () => {
+    try {
+      let cardResponse = await cardService.get(intentId, accessToken, setAccessToken);
+      console.log(cardResponse.data);
+      setCards(cardResponse.data);
     }
-
-    // GET/UPDATE/DELETE CARDS
-    const getExistingCards = async() => {
-        try {
-            let cardResponse = await cardService.get(intentId, accessToken, setAccessToken);
-            setCards(cardResponse.data);
-        }
-        catch (e) {
-            console.log(e);
-        }
+    catch (e) {
+      console.log(e);
     }
+  }
 
-    const updateCard = async () => {
-        try {
-            await cardService.put(intentId, accessToken, setAccessToken);
-            getExistingCards();
-        }
-        catch (e) {
-            console.log(e);
-        }
+  const updateCard = async () => {
+    try {
+      await cardService.put(intentId, accessToken, setAccessToken);
+      getExistingCards();
     }
-
-    const deleteCard = async(cardValue) => {
-        try {
-            await cardService.delete(intentId,cardValue, accessToken, setAccessToken);
-            getExistingCards();
-        }
-        catch (e) {
-            console.log(e);
-        }
+    catch (e) {
+      console.log(e);
     }
+  }
 
-    // GET/UPDATE/DELETE CHIPS
-    const getExistingChips = async() => {
-        try {
-            let chipResponse = await chipServicer.get(intentId, accessToken, setAccessToken);
-            setChips(chipResponse.data);
-        }
-        catch (e) {
-            console.log(e);
-        }
+  const deleteCard = async (cardValues) => {
+    try {
+      await cardService.delete(intentId, cardValues, accessToken, setAccessToken);
+      getExistingCards();
     }
-
-    const updateChipValueKeyPress = (e) => {
-        if (e.keyCode === 13) {
-            if (!e.shiftKey) {
-                updateChip(e.target);
-                e.preventDefault();
-            }
-
-        }
+    catch (e) {
+      console.log(e);
     }
+  }
 
-    const updateChip = async (htmlElement) => {
-        try {
-            let chipValue = htmlElement.text
-            await chipServicer.put(intentId,chipValue, accessToken, setAccessToken);
-            getExistingChips();
-        }
-        catch (e) {
-            console.log(e);
-        }
+  // GET/UPDATE/DELETE CHIPS
+  const getExistingChips = async () => {
+    try {
+      let chipResponse = await chipService.get(intentId, accessToken, setAccessToken);
+      setChips(chipResponse.data);
     }
-
-    const deleteChip = async(chipValue) => {
-        try {
-            await chipServicer.delete(intentId,chipValue, accessToken, setAccessToken);
-            getExistingChips();
-        }
-        catch (e) {
-            console.log(e);
-        }
+    catch (e) {
+      console.log(e);
     }
+  }
 
+  const updateChipValueKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      if (!e.shiftKey) {
+        updateChip(e.target);
+        e.preventDefault();
+      }
+
+    }
+  }
+
+  const updateChip = async (htmlElement) => {
+    try {
+      let chipValue = htmlElement.text
+      await chipService.put(intentId, chipValue, accessToken, setAccessToken);
+      getExistingChips();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
+  const deleteChip = async (chipValue) => {
+    try {
+      await chipService.delete(intentId, chipValue, accessToken, setAccessToken);
+      getExistingChips();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <React.Fragment>
-      <Navbar />
+      <Navbar isAuthenticated={props.isAuthenticated} />
       <div className="container">
         <div className="row text-center">
           <div className="col-md-6">
-            <CreateCards
+            <CreateCard
+              cards={cards}
+              setCards={setCards}
               disableCard={disableCard}
-              disable={disable}
-              getExistingCards={getExistingCards}
             />
           </div>
           <div className="col-md-6">
             <CreateChip
-              getExistingChips={getExistingChips}
-              disable={disable}
+              chips={chips}
+              setChips={setChips}
               disableChip={disableChip}
             />
           </div>
@@ -166,7 +175,7 @@ const RichResponses = () => {
                         className="card-header"
                         style={{ position: 'relative' }}
                       >
-                        {card.cardValue[0]}
+                        {card.cardValues.split(',')[0]}
                         {/* Edit and Delete Buttons for each card*/}
                         <div
                           className="d-flex justify-content-end"
@@ -183,6 +192,7 @@ const RichResponses = () => {
                           >
                             {/* Edit */}
                             <button
+                              style={{ zIndex: "10" }}
                               type="button"
                               data-toggle="modal"
                               data-target="#updateCard"
@@ -207,7 +217,8 @@ const RichResponses = () => {
                             {/* Delete */}
                             <button
                               type="button"
-                              onClick={() => deleteCard(card.cardValue)}
+                              style={{ zIndex: "10" }}
+                              onClick={() => deleteCard(card.cardValues)}
                               className="btn btn-sm btn-outline-danger"
                             >
                               <svg
@@ -228,9 +239,9 @@ const RichResponses = () => {
                         </div>
                       </div>
                       <div className="card-body">
-                        <h5 className="card-title">{card.cardValue[1]}</h5>
-                        <p className="card-text">{card.cardValue[2]}</p>
-                        <a href={card.cardValue[3]}>{card.cardValue[4]}</a>
+                        <h5 className="card-title">{card.cardValues.split(',')[1]}</h5>
+                        <p className="card-text">{card.cardValues.split(',')[2]}</p>
+                        <a href={card.cardValues.split(',')[3]}>{card.cardValues.split(',')[4]}</a>
                       </div>
                     </div>
                   </div>
@@ -270,6 +281,7 @@ const RichResponses = () => {
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="drag-n-drop">
                 {(provided) => (
+
                   <ul
                     className="list-group drag-n-drop"
                     {...provided.droppableProps}
@@ -366,7 +378,7 @@ const RichResponses = () => {
           </div>
         </div>
       </div>
-      <ChatBox assistantName={assistantName} description={description} />
+      <ChatBox />
     </React.Fragment>
   );
 };
