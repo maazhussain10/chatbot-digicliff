@@ -8,23 +8,23 @@ module.exports = (sequelize) => {
         },
         cardTheme: {
             type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "#770205,#ffffff,#ff2025,Cursive"
+            defaultValue: "#770205,#ffffff,#ff2025,Cursive",
+            allowNull: false
         },
         chipTheme: {
             type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "#072b2c,#064a04,#ffffff,6,verdana"
+            defaultValue: "#072b2c,#064a04,#ffffff,6,verdana",
+            allowNull: false
         },
         messageTheme: {
             type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "#000000,Cursive,#ffffff,#e7dff9,Cursive,#000000"
+            defaultValue: "#000000,Cursive,#ffffff,#e7dff9,Cursive,#000000",
+            allowNull: false
         },
         chatboxTheme: {
             type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "#000000,Arial,#FFFFFF,#000000"
+            defaultValue: "#000000,Arial,#FFFFFF,#000000",
+            allowNull: false
         }
     });
 

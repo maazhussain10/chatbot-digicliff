@@ -8,7 +8,7 @@ import Navbar from '../common/Navbar';
 import TextField from '../common/TextField';
 import IntentCard from '../intent/intentCard';
 import $ from 'jquery';
-import ChatBox from '../chatbox/chatbox';
+import ChatBox from '../chatbox/Chatbox';
 
 const IntentCreationSchema = Yup.object().shape({
     intentName: Yup.string()

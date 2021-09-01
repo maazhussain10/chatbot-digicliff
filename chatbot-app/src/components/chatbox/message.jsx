@@ -61,27 +61,27 @@ class Message extends Component {
         }, duration);
     };
 
-    getSettings = () => {
+    // getSettings = () => {
         // Get the necessary details ( userId, assistantId )
-        let { userId } = JSON.parse(sessionStorage.getItem("userDetails"));
-        let { assistantId } = JSON.parse(
-            sessionStorage.getItem("assistantDetails")
-        );
-        try {
-            axios({
-                method: "get",
-                url: "http://" + URL + ":5000/settings",
-                params: {
-                    userId: userId,
-                    assistantId: assistantId,
-                },
-            }).then((response) => {
-                this.setState({ settings: response.data });
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
+    //     let { userId } = JSON.parse(sessionStorage.getItem("userDetails"));
+    //     let { assistantId } = JSON.parse(
+    //         sessionStorage.getItem("assistantDetails")
+    //     );
+    //     try {
+    //         axios({
+    //             method: "get",
+    //             url: "http://" + URL + ":5000/settings",
+    //             params: {
+    //                 userId: userId,
+    //                 assistantId: assistantId,
+    //             },
+    //         }).then((response) => {
+    //             this.setState({ settings: response.data });
+    //         });
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // };
 
     render() {
         const {

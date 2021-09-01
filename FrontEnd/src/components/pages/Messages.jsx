@@ -7,7 +7,7 @@ import DisplayMessage from '../message/DisplayMessage';
 import CreateMessage from '../message/CreateMessage';
 import Entities from '../message/Entities';
 import RunQueries from '../message/RunQueries';
-import ChatBox from '../chatbox/chatbox';
+import ChatBox from '../chatbox/Chatbox';
 
 const Messages = (props) => {
     const { accessToken, setAccessToken } = useContext(AccessTokenContext);

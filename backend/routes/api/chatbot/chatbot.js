@@ -43,6 +43,8 @@ chatbotRoute.post('/', async (req, res) => {
             description: chatbot.description,
             createdAt: chatbot.createdAt
         });
+        let chatbotId = chatbot.id;
+        await db.Settings.create({ chatbotId });
     } catch (err) {
         console.log(err.message);
         if (err instanceof UniqueConstraintError) {

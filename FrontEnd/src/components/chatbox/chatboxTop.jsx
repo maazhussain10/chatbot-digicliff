@@ -1,8 +1,9 @@
 import React from 'react';
 import chatboxLogo from '../../assets/images/chatlogo.png'
+
 const ChatBoxTop = (props) => {
 
-    const { description, name, chatboxColor, chatboxFont, chatboxFontColor, sendMessageColor } = props;
+    const { description, name, chatboxColor, chatboxFont, chatboxFontColor } = props;
     return (
         <div
             className="chatbox-top"
