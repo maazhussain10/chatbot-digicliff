@@ -1,0 +1,26 @@
+a {
+  text-decoration: none;
+}
+.login-btn {
+  background-color: rgb(255, 255, 255);
+  color: #000000;
+
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid black;
+  height: 40px;
+  margin-right: 20px;
+  padding: 3px 23px 5px 23px;
+  text-decoration: none;
+  text-align: center;
+}
+.login-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+.login-btn:focus {
+  outline: none;
+}

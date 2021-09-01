@@ -1,0 +1,42 @@
+.button1 {
+  margin: auto;
+  display: block;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+}
+
+/* @media (min-width: 768px) {
+    .style {
+        margin-left: 100px;
+        margin-right: 100px;
+
+    }
+} */
+
+@media (min-width: 1000px) {
+  .style {
+    margin-left: 250px;
+    margin-right: 250px;
+  }
+}
+
+@media (min-width: 992px) {
+  .style {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+}
+
+.intentCard {
+  color: black;
+  text-decoration: none;
+}
+
+.intentCard:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.follow {
+  border-left: 3px solid blue;
+}
