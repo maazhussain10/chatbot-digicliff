@@ -2,8 +2,6 @@ import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import Navbar from '../common/Navbar';
 import settingsService from '../../services/settings.service.js';
-import ChatboxTop from '../chatbox/ChatboxTop';
-import Messages from '../chatbox/Messages';
 
 const Settings = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
@@ -597,7 +595,7 @@ const Settings = (props) => {
                   </div>
                 </div>
                 {/* <div className="col-4" style={{ float: 'right' }}> */}
-                <div className="chats-box" style={{ bottom: '4px' }}>
+                {/* <div className="chats-box" style={{ bottom: '4px' }}>
                   <ChatboxTop
                     name={'Testbot'}
                     description={'Check your theme settings here.'}
@@ -652,7 +650,7 @@ const Settings = (props) => {
                       ></i>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div style={{ paddingTop: '12%', paddingLeft: '35%' }}>
                 {' '}

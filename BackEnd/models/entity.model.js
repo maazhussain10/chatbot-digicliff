@@ -19,6 +19,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             primaryKey: true
         },
+        order: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        }
     })
 
     return Entity;

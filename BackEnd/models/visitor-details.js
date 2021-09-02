@@ -1,13 +1,13 @@
 const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
-    const VisitorDetail = sequelize.define('VisitorDetail', {
+    const VisitorDetails = sequelize.define('VisitorDetails', {
         chatbotId: {
             type: DataTypes.UUID,
             allowNull: false,
             primaryKey: true
         },
         entityType: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(20),
             allowNull: false,
         },
         entityName: {
@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
             primaryKey: true
         },
         entityValue: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(100),
         },
         ipAddress: {
             type: DataTypes.STRING(15),
@@ -24,5 +24,5 @@ module.exports = (sequelize) => {
         }
     })
 
-    return VisitorDetail;
+    return VisitorDetails;
 }

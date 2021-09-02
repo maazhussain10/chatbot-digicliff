@@ -7,6 +7,16 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{$dotenv API_URL}}/api/chat-window
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlNmNhMWU2LTg5ZTMtNDJlMi1hMThkLTlmMmE3OTkwOGFlZiIsImlhdCI6MTYzMDIzOTIzMSwiZXhwIjoxNjMwMjM5NTMxfQ.sVXSFQvOkNlrrVlTQka_o5eCLkzWFVG7ofghVVFKso8
+Content-Type: application/json 
+
+{
+    "username": "Dwabzette",
+    "password": "Dwabzy123"
+}
+###  
 GET {{$dotenv API_URL}}/api/auth/verify
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlNmNhMWU2LTg5ZTMtNDJlMi1hMThkLTlmMmE3OTkwOGFlZiIsImlhdCI6MTYzMDIzOTIzMSwiZXhwIjoxNjMwMjM5NTMxfQ.sVXSFQvOkNlrrVlTQka_o5eCLkzWFVG7ofghVVFKso8
 Content-Type: application/json 
@@ -51,7 +61,7 @@ Content-Type: application/json
 ###
 PUT {{$dotenv API_URL}}/api/user/profile
 Content-Type: application/json 
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlMTUzMGRkLTczZDQtNGI1OC05MmZlLTAzZTUyMjRhOTJmYyIsImlhdCI6MTYzMDIzNjA3MywiZXhwIjoxNjMwMjM2MzczfQ.Zx1iWLPKVc3Wk0eWRY8vfZPWaEE8vi0iIDvOLMg212A
 {
     "userId": "82fea9d4-2400-42d7-956c-eda06d79d8fd",
     "firstName": "Pragadeesh",

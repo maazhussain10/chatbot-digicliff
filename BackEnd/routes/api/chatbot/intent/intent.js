@@ -24,9 +24,17 @@ intentRoute.post('/', async (req, res) => {
     let { chatbotId, intentName, description, previousIntent } = req.body;
     try {
         let intent = await db.Intent.create({
+            id: previousIntent ? previousIntent + Math.floor(1000 + Math.random() * 9000) : undefined,
             chatbotId, intentName, description, previousIntent
         })
-        res.status(201).json(intent);
+        res.status(201).json({
+            intentId: intent.id,
+            intentName: intent.intentName,
+            description: intent.description,
+            multipleReply: intent.multipleReply,
+            previousIntent: intent.previousIntent,
+            createdAt: intent.createdAt
+        });
     } catch (err) {
         console.log(err);
 

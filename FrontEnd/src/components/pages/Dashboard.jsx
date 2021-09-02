@@ -32,8 +32,9 @@ const Dashboard = (props) => {
 
     useEffect(async () => {
         try {
-            const response = await chatbotService.get(undefined, accessToken, setAccessToken);
+            const response = await chatbotService.get(accessToken, setAccessToken);
             setChatbots(response.data)
+            console.log(chatbots);
         } catch (err) {
             console.log(err);
         }
@@ -132,7 +133,6 @@ const Dashboard = (props) => {
                     )}
                 </Formik>
             </div>
-
             {chatbots.length === 0 ?
                 <div className="container">
                     <img src={noBot} className="rounded mx-auto d-block no-bot" alt="No bot image" />
@@ -141,7 +141,7 @@ const Dashboard = (props) => {
                 <React.Fragment>
                     {
                         chatbots.slice(0, chatbots.length / 2 + 1).map((_, index) => (
-                            <div className="container m-4" style={{ fontFamily: 'Tinos' }} key={Math.random()}>
+                            <div className="container" style={{ fontFamily: 'Tinos' }} key={Math.random()}>
                                 <div className="row text-center">
                                     {chatbots[2 * index] ?
                                         <div className="col-sm-6">

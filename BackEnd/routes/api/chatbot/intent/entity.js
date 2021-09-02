@@ -11,7 +11,7 @@ entityRoute.get('/', async (req, res) => {
             attributes: [['entityType', 'type'], ['entityName', 'name']],
             where: {
                 intentId
-            }
+            },
         })
         res.status(200).json(entities);
     } catch (err) {
@@ -19,6 +19,7 @@ entityRoute.get('/', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
 
 entityRoute.post('/', async (req, res) => {
     let { chatbotId, intentId, entities } = req.body;
@@ -29,10 +30,10 @@ entityRoute.post('/', async (req, res) => {
                 intentId
             }
         })
-
+        console.log(entities);
         for (let i = 0; i < entities.length; i++) {
             db.Entity.create({
-                chatbotId, intentId, entityType: entities[i].type, entityName: entities[i].name
+                chatbotId, intentId, entityType: entities[i].type, entityName: entities[i].name, order: entities[i].order
             })
         }
         res.sendStatus(201);

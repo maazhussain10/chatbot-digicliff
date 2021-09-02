@@ -1,0 +1,228 @@
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "email,hello": {
+            "intent": "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d",
+            "domain": "default"
+          },
+          "test": {
+            "intent": "7d9bb6d4-f918-40a8-b142-fc607b59da77",
+            "domain": "default"
+          },
+          "train": {
+            "intent": "646abafe-962f-4e5a-9d3f-19d9c054a0b3",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": "default",
+          "7d9bb6d4-f918-40a8-b142-fc607b59da77": "default",
+          "646abafe-962f-4e5a-9d3f-19d9c054a0b3": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "Hello email",
+            "intent": "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
+          },
+          {
+            "domain": "default",
+            "utterance": "Test",
+            "intent": "7d9bb6d4-f918-40a8-b142-fc607b59da77"
+          },
+          {
+            "domain": "default",
+            "utterance": "Train",
+            "intent": "646abafe-962f-4e5a-9d3f-19d9c054a0b3"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "hello": 1,
+              "email": 1,
+              "test": 1,
+              "train": 1
+            },
+            "intents": {
+              "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": 1,
+              "7d9bb6d4-f918-40a8-b142-fc607b59da77": 1,
+              "646abafe-962f-4e5a-9d3f-19d9c054a0b3": 1
+            },
+            "intentFeatures": {
+              "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": {
+                "hello": 1,
+                "email": 1
+              },
+              "7d9bb6d4-f918-40a8-b142-fc607b59da77": {
+                "test": 1
+              },
+              "646abafe-962f-4e5a-9d3f-19d9c054a0b3": {
+                "train": 1
+              }
+            },
+            "featuresToIntent": {
+              "hello": [
+                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
+              ],
+              "email": [
+                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
+              ],
+              "test": [
+                "7d9bb6d4-f918-40a8-b142-fc607b59da77"
+              ],
+              "train": [
+                "646abafe-962f-4e5a-9d3f-19d9c054a0b3"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "hello",
+                "email",
+                "test",
+                "train"
+              ],
+              "intents": [
+                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d",
+                "7d9bb6d4-f918-40a8-b142-fc607b59da77",
+                "646abafe-962f-4e5a-9d3f-19d9c054a0b3"
+              ],
+              "perceptrons": [
+                [
+                  6.34545373916626,
+                  6.34545373916626,
+                  -1.5854439735412598,
+                  -1.580780029296875,
+                  1.5892217535718303
+                ],
+                [
+                  -1.579801082611084,
+                  -1.579801082611084,
+                  10.974820137023926,
+                  -3.0577139854431152,
+                  3.1694547365381345
+                ],
+                [
+                  -1.584875226020813,
+                  -1.584875226020813,
+                  -3.0408775806427,
+                  10.9746675491333,
+                  3.1746962999778847
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "Hello email"
+      ],
+      [
+        "en",
+        "Test"
+      ],
+      [
+        "en",
+        "Train"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {
+      "en": {
+        "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": [
+          {
+            "answer": "Hello email"
+          }
+        ],
+        "7d9bb6d4-f918-40a8-b142-fc607b59da77": [
+          {
+            "answer": "Test"
+          }
+        ],
+        "646abafe-962f-4e5a-9d3f-19d9c054a0b3": [
+          {
+            "answer": "Train"
+          }
+        ]
+      }
+    }
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}

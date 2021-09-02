@@ -18,12 +18,15 @@ const Entity = (props) => {
 
     return (
         <React.Fragment>
-            <div className="row">
+            <div className="row container">
+                <div className="col-md-1">
+                    <img className="" src="https://img.icons8.com/ios-filled/20/4a90e2/info.png" aria-hidden="true" data-toggle="tooltip" data-placement="right" title={props.info} />
+                </div>
                 <div className="col-md-5">
                     <div className="custom-control custom-switch">
                         <input type="checkbox" onChange={handleChange} className="custom-control-input" name={props.type} id={props.type} checked={props.selected} />
                         <label className="custom-control-label" htmlFor={props.type} >{props.type}</label>
-                        <img className="ml-1" src="https://img.icons8.com/ios-filled/20/4a90e2/info.png" aria-hidden="true" data-toggle="tooltip" data-placement="right" title={props.info} />
+
                     </div>
                 </div>
                 <input onChange={handleChange} defaultValue={props.name} name={props.type} className={"col-md-6 form-control " + (props.selected ? "" : "invisible")} />
@@ -62,42 +65,49 @@ const Entities = (props) => {
         info: "Use in a seperate Intent",
         selected: false,
         name: "",
+        order: 7
     },
     {
-        type: 'number',
-        info: 'It finds numbers like 1,2,3 and one, two, three',
+        type: 'phonenumber',
+        info: 'It takes the phone Number from the user message',
         selected: false,
-        name: "",
-    },
-    {
-        type: 'ordinal',
-        info: 'It gets the ordinal numbers as 1st, 2nd, 3rd, 4th',
-        selected: false,
-        name: "",
+        name: "phonenumber",
+        order: 2
     },
     {
         type: 'email',
         info: 'It gets the email from the user message',
         selected: false,
         name: "",
-    },
-    {
-        type: 'phoneNumber',
-        info: 'It takes the phone Number from the user message',
-        selected: false,
-        name: "",
+        order: 3
     },
     {
         type: 'date',
         info: 'It gets the date which the user gives in various formats',
         selected: false,
         name: "",
+        order: 4
+    },
+    {
+        type: 'number',
+        info: 'It finds numbers like 1,2,3 and one, two, three',
+        selected: false,
+        name: "",
+        order: 5
+    },
+    {
+        type: 'ordinal',
+        info: 'It gets the ordinal numbers as 1st, 2nd, 3rd, 4th',
+        selected: false,
+        name: "",
+        order: 6
     },
     {
         type: 'other',
         info: 'Create your own Entity Name and use it anywhere.',
         selected: false,
         name: "",
+        order: 1
     }]);
 
 
@@ -105,8 +115,9 @@ const Entities = (props) => {
         e?.preventDefault();
         let intentId = sessionStorage.getItem('intent');
         let chatbotId = sessionStorage.getItem('chatbot');
-        let selectedEntities = [...entities].filter(entity => entity.selected).map(entity => { return { type: entity.type, name: entity.name } })
+        let selectedEntities = [...entities].filter(entity => entity.selected).map(entity => { return { type: entity.type, name: entity.name, order: entity.order } })
         try {
+            console.log(selectedEntities);
             await entityService.create(chatbotId, intentId, selectedEntities, accessToken, setAccessToken)
         } catch (err) {
             console.log(err);

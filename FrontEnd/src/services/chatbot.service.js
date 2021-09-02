@@ -35,20 +35,10 @@ class ChatbotService {
         return response;
     }
 
-    async get(chatbotId, accessToken, setAccessToken) {
+    async get(accessToken, setAccessToken) {
         try {
             let authInterceptor = createInterceptor(setAccessToken);
-            let response = await authInterceptor.get(API_URL + "chatbot", { headers: authHeader(accessToken), params: { chatbotId } });
-            return response;
-        } catch (err) {
-            return err;
-        }
-    }
-
-    async getSingleBot(chatbotId, accessToken, setAccessToken) {
-        try {
-            let authInterceptor = createInterceptor(setAccessToken);
-            let response = await authInterceptor.get(API_URL + "chatbot", { headers: authHeader(accessToken), params: { chatbotId } });
+            let response = await authInterceptor.get(API_URL + "chatbot", { headers: authHeader(accessToken) });
             return response;
         } catch (err) {
             return err;

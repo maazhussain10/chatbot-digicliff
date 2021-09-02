@@ -16,16 +16,6 @@ class SettingsService {
         });
         return response;
     }
-
-    async get(chatbotId, accessToken, setAccessToken) {
-        try {
-            let authInterceptor = createInterceptor(setAccessToken);
-            let response = await authInterceptor.get(API_URL + "chatbot/settings", { headers: authHeader(accessToken), params: { chatbotId } });
-            return response;
-        } catch (err) {
-            return err;
-        }
-    }
 }
 
 export default new SettingsService();

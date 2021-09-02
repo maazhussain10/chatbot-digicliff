@@ -17,8 +17,8 @@ const RichResponses = (props) => {
   const intentId = sessionStorage.getItem('intent');
 
   useEffect(() => {
-    getExistingCards();
-    getExistingChips();
+    getCards();
+    getChips();
   }, []);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const RichResponses = (props) => {
   }
 
   // GET/UPDATE/DELETE CARDS
-  const getExistingCards = async () => {
+  const getCards = async () => {
     try {
       let cardResponse = await cardService.get(intentId, accessToken, setAccessToken);
       console.log(cardResponse.data);
@@ -62,7 +62,7 @@ const RichResponses = (props) => {
   const updateCard = async () => {
     try {
       await cardService.put(intentId, accessToken, setAccessToken);
-      getExistingCards();
+      getCards();
     }
     catch (e) {
       console.log(e);
@@ -72,7 +72,7 @@ const RichResponses = (props) => {
   const deleteCard = async (cardValues) => {
     try {
       await cardService.delete(intentId, cardValues, accessToken, setAccessToken);
-      getExistingCards();
+      getCards();
     }
     catch (e) {
       console.log(e);
@@ -80,7 +80,7 @@ const RichResponses = (props) => {
   }
 
   // GET/UPDATE/DELETE CHIPS
-  const getExistingChips = async () => {
+  const getChips = async () => {
     try {
       let chipResponse = await chipService.get(intentId, accessToken, setAccessToken);
       setChips(chipResponse.data);
@@ -104,7 +104,7 @@ const RichResponses = (props) => {
     try {
       let chipValue = htmlElement.text
       await chipService.put(intentId, chipValue, accessToken, setAccessToken);
-      getExistingChips();
+      getChips();
     }
     catch (e) {
       console.log(e);
@@ -114,7 +114,7 @@ const RichResponses = (props) => {
   const deleteChip = async (chipValue) => {
     try {
       await chipService.delete(intentId, chipValue, accessToken, setAccessToken);
-      getExistingChips();
+      getChips();
     }
     catch (e) {
       console.log(e);

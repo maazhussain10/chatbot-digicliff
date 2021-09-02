@@ -3,7 +3,6 @@ const db = require('../../../models');
 
 settingsRoute.get('/', async (req, res) => {
     let { chatbotId } = req.query;
-    console.log(chatbotId);
     try {
         let settings = await db.Settings.findOne({
             attributes: ['cardTheme', 'chipTheme', 'messageTheme', 'chatboxTheme'],

@@ -114,11 +114,11 @@ const Intents = (props) => {
             <div className="container">
                 {intents.map((intent, index) => (
                     <IntentCard
+                        key={Math.random()}
                         previousIntent={previousIntent}
                         setPreviousIntent={setPreviousIntent}
                         setSelectedIntent={setSelectedIntent}
                         onDelete={onDelete}
-                        key={intent.intentId}
                         intent={intent}
                     />
                 ))}
