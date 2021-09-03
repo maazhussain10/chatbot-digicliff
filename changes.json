@@ -257,12 +257,7 @@
     "to-do": [
       "While chatting with the bot- user message input field if one line is full make it go to next line",
       "Add a back button once you click on profile",
-      "Assistant time not working",
-      "Add assistant name in session for profile redirection",
       "Create Card Update",
-      "Handle all console.log(err) from backend",
-      "Validation",
-      "Chip Order",
       "Stats page backend",
       "Integration page backend",
       "Check if getColumnNamesRoute supports databases other than MySQL"
