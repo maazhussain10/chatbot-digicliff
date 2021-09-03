@@ -76,7 +76,7 @@ const Carousel = (props) => {
     )
 }
 
-const Home = () => {
+const Home = (props) => {
     const { accessToken, setAccessToken } = useContext(AccessTokenContext);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     useEffect(async () => {
@@ -88,7 +88,7 @@ const Home = () => {
     }, []);
     return (
         <React.Fragment>
-            <Navbar isAuthenticated={isAuthenticated}>
+            <Navbar isAuthenticated={isAuthenticated} {...props}>
                 <li className="nav-item">
                     <a href="/explore" className="nav-link" style={{ marginRight: "50px" }}>Explore</a>
                 </li>

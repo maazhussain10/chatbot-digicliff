@@ -7,12 +7,6 @@ import ChatWindow from './ChatWindow';
 
 const ChatBox = (props) => {
 
-  const keyPress = (e) => {
-    if (e.keyCode === 13) {
-      this.sendMessage();
-    }
-  };
-
   const sendMessage = async () => {
     let message;
     if (chipMessage) {
@@ -80,8 +74,6 @@ const ChatBox = (props) => {
         $('.chats-box').toggle(1000);
       });
     });
-
-
   }, []);
 
   return (

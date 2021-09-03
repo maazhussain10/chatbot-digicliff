@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import cardService from '../../services/card.service.js';
+import './css/card.css';
 
 function CardCreation(props) {
   let { inputCard, card } = props;

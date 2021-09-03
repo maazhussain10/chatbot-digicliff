@@ -1,0 +1,10 @@
+.input-card {
+  border: none;
+  border-radius: 2px;
+  border-bottom: 1px solid black;
+  width: 100%;
+}
+.input-card:focus {
+  outline: none;
+  border-bottom: 1px solid black;
+}

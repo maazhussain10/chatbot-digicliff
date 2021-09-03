@@ -2,9 +2,11 @@ import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import Navbar from '../common/Navbar';
 import settingsService from '../../services/settings.service.js';
+import ChatWindow from '../chatbox/ChatWindow';
 
 const Settings = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
+  const [messageStorage, setMessageStorage] = useState([]);
   const [theme, setTheme] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -29,10 +31,17 @@ const Settings = (props) => {
       sendMessageColor: '',
     }
   );
-  const [selectedPane, setSelectedPane] = useState('chatbox');
+
 
   const handleSelectedPane = (selected) => {
-    setSelectedPane(selected);
+    if (selected === 'card')
+      setMessageStorage(sampleCardMessage)
+    else if (selected === 'chip')
+      setMessageStorage(sampleChipMessage)
+    else if (selected == 'message')
+      setMessageStorage(sampleMessages)
+    else
+      setMessageStorage([]);
   };
 
   const setColorTheme = (e) => {
@@ -67,59 +76,49 @@ const Settings = (props) => {
     }
   }, []);
 
-  // Sample Messages to be displayed
-  let sampleUserMessage = {
+
+  let sampleMessages = [{
     from: 'user',
-    type: 'text',
     messages: ['Sample User Message'],
-    time: new Date()
-      .toLocaleString()
-      .split(',')[1]
-      .replace(/(.*)\D\d+/, '$1'),
-  };
-
-  let sampleBotMessage = {
+    time: new Date().toLocaleString()
+      .split(",")[1]
+      .replace(/(.*)\D\d+/, "$1").trim(),
+  }, {
     from: 'bot',
-    type: 'text',
     messages: ['Sample Bot Reply', 'Another sample bot reply1 \n ffgf'],
-    hasRichResponse: true,
-    cardMessage: '',
-    chipMessage: '',
+    richResponses: [],
     time: new Date()
       .toLocaleString()
       .split(',')[1]
       .replace(/(.*)\D\d+/, '$1'),
-  };
-  let sampleCardMessage = {
-    from: 'bot',
-    type: 'text',
-    messages: ['Sample Card Reply'],
-    hasRichResponse: true,
-    cardMessage: [
-      { cardValue: ['Sample Header', 'Sample SubHeader', 'Sample Paragraph'] },
-    ],
-    chipMessage: '',
-    time: new Date()
-      .toLocaleString()
-      .split(',')[1]
-      .replace(/(.*)\D\d+/, '$1'),
-  };
+  }
+  ]
 
-  let sampleChipMessage = {
+  let sampleCardMessage = [{
     from: 'bot',
-    type: 'text',
-    messages: ['Sample Chip Reply'],
-    hasRichResponse: true,
-    cardMessage: '',
-    chipMessage: [
-      { chipValue: 'Chip 1', clickable: 'false' },
-      { chipValue: 'Chip 2', clickable: 'false' },
-    ],
+    messages: ['Sample Card Reply'],
+    richResponses: {
+      cards: ['Sample Header|||Sample SubHeader|||Sample Paragraph', 'Sample Header|||Sample SubHeader|||Sample Paragraph|||https://www.google.com|||Link Button'],
+      type: "cards"
+    },
     time: new Date()
       .toLocaleString()
       .split(',')[1]
       .replace(/(.*)\D\d+/, '$1'),
-  };
+  }];
+
+  let sampleChipMessage = [{
+    from: 'bot',
+    messages: ['Sample Chip Reply'],
+    richResponses: {
+      chips: ['Sample Chip 1', 'Sample Chip 2'],
+      type: "chips"
+    },
+    time: new Date()
+      .toLocaleString()
+      .split(',')[1]
+      .replace(/(.*)\D\d+/, '$1'),
+  }];
 
   const fonts = [
     'Verdana',
@@ -594,7 +593,12 @@ const Settings = (props) => {
                     </div>
                   </div>
                 </div>
-                {/* <div className="col-4" style={{ float: 'right' }}> */}
+
+                <ChatWindow
+                  theme={theme}
+                  messageStorage={messageStorage}
+                />
+
                 {/* <div className="chats-box" style={{ bottom: '4px' }}>
                   <ChatboxTop
                     name={'Testbot'}

@@ -9,6 +9,7 @@ import TextField from '../common/TextField';
 import IntentCard from '../intent/intentCard';
 import $ from 'jquery';
 import ChatBox from '../chatbox/Chatbox';
+import emptyImg from '../../assets/images/Empty.png';
 
 const IntentCreationSchema = Yup.object().shape({
     intentName: Yup.string()
@@ -106,99 +107,115 @@ const Intents = (props) => {
                 </li>
             </Navbar>
 
-            <div className="text-center mt-5 mb-5">
+            <div className="text-center mt-5 ">
                 <button id="createI" type="button" className="btn btn-primary button1" data-toggle="modal" data-target="#createIntent">
                     Create an intent
                 </button>
+                {/* Create Modal */}
+                <Formik
+                    initialValues={{
+                        intentName: '',
+                        description: '',
+                    }}
+                    validationSchema={IntentCreationSchema}
+                    onSubmit={onCreate}
+                >
+                    {({ errors, touched }) => (
+
+                        <Form>
+                            <ModalTemplate
+                                id="createIntent"
+                                title="Create Intent"
+                                buttonName="Create"
+                                status={status}
+                                message={message}
+                                handleCloseButton={clearState}
+                            >
+                                <TextField
+                                    label="Intent's Name"
+                                    name="intentName"
+                                    type="text"
+                                    errorMessage={touched.intentName ? errors.intentName : null}
+                                />
+                                <TextField
+                                    as="textarea"
+                                    rows={3}
+                                    label="Description"
+                                    name="description"
+                                    type="password"
+                                    errorMessage={touched.description ? errors.description : null}
+                                /></ModalTemplate>
+                        </Form>
+                    )}
+                </Formik>
             </div>
-            <div className="container">
-                {intents.map((intent, index) => (
-                    <IntentCard
-                        key={Math.random()}
-                        previousIntent={previousIntent}
-                        setPreviousIntent={setPreviousIntent}
-                        setSelectedIntent={setSelectedIntent}
-                        onDelete={onDelete}
-                        intent={intent}
-                    />
-                ))}
-            </div>
-            {/* Create Modal */}
-            <Formik
-                initialValues={{
-                    intentName: '',
-                    description: '',
-                }}
-                validationSchema={IntentCreationSchema}
-                onSubmit={onCreate}
-            >
-                {({ errors, touched }) => (
+            {intents.length === 0 ?
+                <div className="container">
+                    <div className="row">
+                        <div className="col-6 offset-3">
+                            <img src={emptyImg} className="rounded img-fluid mx-auto d-block" alt="No intent image" />
+                        </div>
+                    </div>
 
-                    <Form>
-                        <ModalTemplate
-                            id="createIntent"
-                            title="Create Assistant"
-                            buttonName="Create"
-                            status={status}
-                            message={message}
-                            handleCloseButton={clearState}
-                        >
-                            <TextField
-                                label="Intent's Name"
-                                name="intentName"
-                                type="text"
-                                errorMessage={touched.intentName ? errors.intentName : null}
+
+                </div>
+                :
+                <React.Fragment>
+                    <div className="container">
+                        {intents.map((intent, index) => (
+                            <IntentCard
+                                key={Math.random()}
+                                previousIntent={previousIntent}
+                                setPreviousIntent={setPreviousIntent}
+                                setSelectedIntent={setSelectedIntent}
+                                onDelete={onDelete}
+                                intent={intent}
                             />
-                            <TextField
-                                as="textarea"
-                                rows={3}
-                                label="Description"
-                                name="description"
-                                type="password"
-                                errorMessage={touched.description ? errors.description : null}
-                            /></ModalTemplate>
-                    </Form>
-                )}
-            </Formik>
+                        ))}
+                    </div>
 
-            {/* Update Modal */}
-            <Formik
-                initialValues={{
-                    intentName: selectedIntent?.intentName || '',
-                    description: selectedIntent?.description || '',
-                }}
-                enableReinitialize
-                validationSchema={IntentCreationSchema}
-                onSubmit={onUpdate}
-            >
 
-                {({ errors, touched }) => (
-                    <Form>
-                        <ModalTemplate
-                            id="updateIntent"
-                            title="Update Intent"
-                            buttonName="Update"
-                            status={status}
-                            message={message}
-                            handleCloseButton={clearState}
-                        >
-                            <TextField
-                                label="Intent's Name"
-                                name="intentName"
-                                type="text"
-                                errorMessage={touched.intentName ? errors.intentName : null}
-                            />
-                            <TextField
-                                as="textarea"
-                                rows={3}
-                                label="Description"
-                                name="description"
-                                type="password"
-                                errorMessage={touched.description ? errors.description : null}
-                            /></ModalTemplate>
-                    </Form>
-                )}
-            </Formik>
+                    {/* Update Modal */}
+                    <Formik
+                        initialValues={{
+                            intentName: selectedIntent?.intentName || '',
+                            description: selectedIntent?.description || '',
+                        }}
+                        enableReinitialize
+                        validationSchema={IntentCreationSchema}
+                        onSubmit={onUpdate}
+                    >
+
+                        {({ errors, touched }) => (
+                            <Form>
+                                <ModalTemplate
+                                    id="updateIntent"
+                                    title="Update Intent"
+                                    buttonName="Update"
+                                    status={status}
+                                    message={message}
+                                    handleCloseButton={clearState}
+                                >
+                                    <TextField
+                                        label="Intent's Name"
+                                        name="intentName"
+                                        type="text"
+                                        errorMessage={touched.intentName ? errors.intentName : null}
+                                    />
+                                    <TextField
+                                        as="textarea"
+                                        rows={3}
+                                        label="Description"
+                                        name="description"
+                                        type="password"
+                                        errorMessage={touched.description ? errors.description : null}
+                                    /></ModalTemplate>
+                            </Form>
+                        )}
+                    </Formik>
+                </React.Fragment>
+            }
+
             <ChatBox />
         </React.Fragment>
     );

@@ -86,6 +86,18 @@ const Messages = (props) => {
                             messageType="user"
                             intentId={intentId}
                         />
+                        <br />
+                        <h5 className="pb-3"> User Message </h5>
+                        <br />
+                        {messageGroup.messages.map((_, index) => (
+                            <React.Fragment key={index}>
+                                <DisplayMessage message={
+                                    messageGroup.userMessages[index]}
+                                    getMessages={getMessages}
+                                    intentId={intentId} />
+                            </React.Fragment>
+                        ))}
+                        <br />
                     </div>
                     <div className="col-md-6">
                         <CreateMessage
@@ -95,23 +107,34 @@ const Messages = (props) => {
                             intentId={intentId}
                             getMessages={getMessages}
                         />
+                        <br />
+                        <h5> Bot Reply </h5>
+                        <div className="custom-control custom-switch pb-3">
+                            <input type="checkbox" onChange={handleMultipleReply} className="custom-control-input" id="multipleBotReply" checked={multipleReply} />
+                            <label className="custom-control-label" htmlFor="multipleBotReply" >Multiple replies</label>
+                        </div>
+                        {messageGroup.messages.map((_, index) => (
+                            <React.Fragment key={index}>
+                                <DisplayMessage
+                                    message={messageGroup.botReplies[index]}
+                                    getMessages={getMessages}
+                                    intentId={intentId} />
+                            </React.Fragment>
+                        ))}
+
                     </div>
                 </div>
-                < div className="row text-center">
+                {/* < div className="row text-center">
                     <div className="col-md-6">
                         <h5> User Message </h5>
                     </div>
                     <div className="col-md-6">
-                        <h5> Bot Reply </h5>
-                        <div className="custom-control custom-switch">
-                            <input type="checkbox" onChange={handleMultipleReply} className="custom-control-input" id="multipleBotReply" checked={multipleReply} />
-                            <label className="custom-control-label" htmlFor="multipleBotReply" >Multiple replies</label>
-                        </div>
+
                     </div>
                 </div>
-                <br />
+                <br /> */}
                 {/* Implement map func here */}
-                {messageGroup.messages.map((_, index) => (
+                {/* {messageGroup.messages.map((_, index) => (
                     <React.Fragment key={index}>
                         < div className="row text-center">
                             <div className="col-md-6">
@@ -128,11 +151,11 @@ const Messages = (props) => {
                             </div>
                         </div>
                     </React.Fragment>
-                ))}
+                ))} */}
 
             </div>
             <ChatBox />
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

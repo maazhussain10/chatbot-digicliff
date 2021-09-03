@@ -50,6 +50,7 @@ chatWindowRoute.post('/', async (req, res) => {
         let intentId = identifiedIntent.intent;
         // If theres no matching intent for the given message
         if (intentId === "None") {
+            console.log("No Intent");
             let data = {
                 messages: ["Sorry, I couldn't understand ^_^"],
                 cardResponse: [],
@@ -73,11 +74,12 @@ chatWindowRoute.post('/', async (req, res) => {
         }
 
         let nextIntent = {}
-
+        console.log("1", hasFollowUp, previousIntent)
         // Check if the intent triggered has a follow up.
-        nextIntent.hasFollowUp = await db.Intent.findAll({ where: { previousIntent: intentId } });
+        let hasFollowUpResponse = await db.Intent.findAll({ where: { previousIntent: intentId } });
+        console.log("hasFollowUpResponse", hasFollowUpResponse);
+        nextIntent.hasFollowUp = (hasFollowUpResponse.length !== 0);
         nextIntent.previousIntent = intentId;
-
         //   Get All the Bot Messages for the particular intent triggered.
         let botMessages = await db.Message.findAll({
             attributes: ['message'],
@@ -85,7 +87,8 @@ chatWindowRoute.post('/', async (req, res) => {
             where: {
                 intentId,
                 messageType: 'bot'
-            }
+            },
+            order: ['createdAt']
         });
 
         // Get all values available related to the user.
@@ -99,12 +102,12 @@ chatWindowRoute.post('/', async (req, res) => {
         });
 
         //   Check if the multiple replies option is enabled for the intent.
-        let hasMultipleReply = db.Intent.findOne({
+        let { multipleReply: hasMultipleReply } = await db.Intent.findOne({
+            raw: true,
             where: {
                 id: intentId
             }
         })
-
         let messages = [];
         //   If Multiple replies is true then add all the responses. Else pick a random message from the set of messages.
         if (hasMultipleReply) {
@@ -131,9 +134,8 @@ chatWindowRoute.post('/', async (req, res) => {
         console.log(messages);
 
         console.log("Query:", query);
-        let queryCards, queryChips;
+        let queryCards = [], queryChips = [];
         if (query) {
-            console.log("available")
             queryCards = await db.Card.findAll({
                 raw: true,
                 where: {
@@ -151,35 +153,13 @@ chatWindowRoute.post('/', async (req, res) => {
         }
 
         let richResponses = await getRichResponses(intentId, queryCards[0], queryChips[0], query, entities);
-
-        // let cardDummy = [
-        //     {
-        //         cardType: 3,
-        //         cardFields: "aaa,bbb,cc",
-        //         cardValues: "sss,sss,sss"
-        //     },
-        //     {
-        //         cardType: 5,
-        //         cardFields: "aaa,bbb,cc",
-        //         cardValues: "sss,sss,sss"
-        //     },
-        //     {
-        //         cardType: 3,
-        //         cardFields: "aaa,bbb,cc",
-        //         cardValues: "sss,sss,sss"
-        //     }
-        // ]
-        // let chipDummy = [
-        //     {
-        //         chipValue: "sss,sss,sss"
-        //     },
-        //     {
-        //         chipValue: "sss,sss,sss"
-        //     },
-        //     {
-        //         chipValue: "sss,sss,sss"
-        //     }
-        // ]
+        res.status(200).json(
+            {
+                messages,
+                richResponses,
+                nextIntent
+            }
+        )
     } catch (err) {
         console.log(err);
     }

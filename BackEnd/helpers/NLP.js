@@ -1,6 +1,6 @@
 const { NlpManager } = require("node-nlp");
 const db = require('../models');
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, Op } = require('sequelize');
 const WordPOS = require('wordpos')
 const wordpos = new WordPOS();
 
@@ -9,7 +9,7 @@ const wordpos = new WordPOS();
 module.exports = {
     identifyIntent: async (chatbotId, message, hasFollowUp, previousIntent) => {
         const manager = new NlpManager({ languages: ["en"], forceNER: true, });
-
+        // console.log(hasFollowUp, previousIntent);
         // Get the intents that doesnt have a follow up.
         let intents;
         if (!hasFollowUp) {
@@ -17,7 +17,8 @@ module.exports = {
                 attributes: [['id', 'intentId']],
                 raw: true,
                 where: {
-                    chatbotId
+                    chatbotId,
+                    previousIntent: null
                 }
             });
         }
@@ -28,9 +29,7 @@ module.exports = {
                 raw: true,
                 where: {
                     chatbotId,
-                    previousIntent: {
-                        [Op.not]: null
-                    }
+                    previousIntent,
                 }
             });
         }
@@ -40,12 +39,12 @@ module.exports = {
             // Get the user messages for each intent.
             let userMessages = await db.Message.findAll({
                 attributes: ['message'],
+                raw: true,
                 where: {
                     intentId,
                     messageType: 'user'
                 }
             });
-
             // Train the model with every user message present inside that intent.
             for (let j = 0; j < userMessages.length; j++) {
                 manager.addDocument(
@@ -63,6 +62,7 @@ module.exports = {
 
         await manager.train();
         manager.save()
+
         // Pass the users message as a parameter and process the model to find which intent it classified.
         let identifiedIntent = await manager.process("en", message);
 
@@ -94,54 +94,61 @@ module.exports = {
 
     getRichResponses: async (intentId, queryCards, queryChips, query, entities) => {
         try {
-            let queryResults = await db.sequelize.query(query,
-                {
-                    raw: true,
-                    type: QueryTypes.SELECT,
-                })
+            let queryResults = [];
+            if (query)
+                queryResults = await db.sequelize.query(query,
+                    {
+                        raw: true,
+                        type: QueryTypes.SELECT,
+                    })
+
+            // Declare non Query Cards
+            let cards = await db.Card.findAll({
+                raw: true,
+                where: {
+                    intentId,
+                    useQuery: false
+                }
+            })
+
+            cards = cards.length !== 0 ? cards.map((card) => card.cardValues) : [];
+            // Declare Non - Query Chips
+            let chips = await db.Chip.findAll({
+                raw: true,
+                where: {
+                    intentId,
+                    useQuery: false
+                },
+                order: ['chipOrder']
+            })
+
+            chips = chips.length !== 0 ? chips.map((chip) => chip.chipValue) : [];
 
             if (queryResults?.length === 0)
-                return;
+                return (cards.length !== 0 ? cards : (chips.length !== 0 ? chips : []));
 
             let queryFields = Object.keys(queryResults[0]);
 
-            let cards = [];
             if (queryCards) {
                 // Run the Query here
                 for (let i = 0; i < queryResults.length; i++) {
                     let queryValues = Object.values(queryResults[i]);
                     let card = { ...queryCards };
-                    // console.log(queryValues);
                     for (let j = 0; j < queryFields.length; j++) {
                         let regex = new RegExp(`{${queryFields[j]}}`, "gi");
                         card.cardValues = card.cardValues.replace(regex, queryValues[j]);
                     }
 
-                    cards.push(card)
-
                     for (let j = 0; j < entities.length; j++) {
                         let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
                         card.cardValues = card.cardValues.replace(regex, entities[j].entityValue)
                     }
-                    // let data = { cardFields: "", cardValues: "" }
+                    cards.push(card.cardValues)
                 }
-
-                let nonQueryCards = await db.Card.findAll({
-                    raw: true,
-                    where: {
-                        intentId,
-                        useQuery: false
-                    }
-                })
-                for (let i = 0; i < nonQueryCards.length; i++)
-                    cards.push(nonQueryCards[i]);
-
-                cards = cards.map((card) => card.cardValues.split(','));
             }
-            let chips = [];
-            if (queryChips) {
 
-                console.log(queryChips);
+            // Query Chips
+            if (queryChips) {
                 // Run the Query here
                 for (let i = 0; i < queryResults.length; i++) {
                     let queryValues = Object.values(queryResults[i]);
@@ -152,31 +159,17 @@ module.exports = {
                         chip.chipValue = chip.chipValue.replace(regex, queryValues[j]);
                     }
 
-                    chips.push(chip)
-
                     for (let j = 0; j < entities.length; j++) {
                         let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
                         chip.chipValue = chip.chipValue.replace(regex, entities[j].entityValue)
                     }
+                    chips.push(chip.chipValue)
                 }
-                let nonQueryChips = await db.Chip.findAll({
-                    raw: true,
-                    where: {
-                        intentId,
-                        useQuery: false
-                    },
-                    order: ['chipOrder']
-                })
-                for (let i = 0; i < nonQueryChips.length; i++)
-                    chips.push(nonQueryChips[i]);
-
-                chips = chips.map(chip => chip.chipValue);
-                console.log(chips);
             }
+
+            return (cards.length !== 0 ? { cards, type: "cards" } : (chips.length !== 0 ? { chips, type: "chips" } : []));
         } catch (err) {
             console.log(err);
         }
     }
 }
-
-// messages[i] = messages[i].replace(regex, entities[j].entityValue)

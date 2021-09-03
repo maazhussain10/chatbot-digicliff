@@ -1,54 +1,45 @@
 import React, { useState } from 'react';
 
 const Chip = (props) => {
-  const [hover, setHover] = useState(false);
-
-  const handleClick = () => {
-    let { chip } = props;
-    if (!chip.clickable) props.sendMessage(chip.chipValue);
-  };
-
-  const handleHover = () => {
-    setHover(!hover);
-  };
-
-  const backgroundColor = () => {
-    let { chipBorder, chipBgColor } = props.theme;
-    let chipBg;
+  const handleHover = (e) => {
+    let hover = JSON.parse(e.target.dataset.hover);
     if (hover) {
-      chipBg = chipBorder;
+      e.target.style.backgroundColor = chipBgColor;
     } else {
-      chipBg = chipBgColor;
+      e.target.style.backgroundColor = chipBorder;
     }
-
-    return chipBg;
+    e.target.dataset.hover = !hover;
   };
+
 
   const getClass = (active) => {
     let className = 's-box ';
     if (active) className += 'active';
     return className;
   };
-
-  let { theme, chip } = props;
-  let { chipTextColor, chipBorder, chipShape, chipFont } = theme;
+  let { theme, chips, sendMessage } = props;
+  let { chipTextColor, chipBorder, chipShape, chipFont, chipBgColor } = theme;
 
   return (
-    <button
-      onMouseEnter={handleHover}
-      onMouseLeave={handleHover}
-      onClick={() => handleClick()}
-      style={{
-        backgroundColor: backgroundColor(),
-        color: chipTextColor,
-        border: `2px solid ${chipBorder}`,
-        fontFamily: chipFont,
-        borderRadius: `${chipShape}px`,
-      }}
-      className={getClass(chip.active)}
-    >
-      {chip.chipValue}
-    </button>
+    <React.Fragment>
+      {chips.map((chip, index) => (
+        <button
+          onMouseEnter={handleHover}
+          onMouseLeave={handleHover}
+          onClick={sendMessage}
+          data-hover={false}
+          name={chip}
+          style={{
+            backgroundColor: chipBgColor,
+            color: chipTextColor,
+            border: `2px solid ${chipBorder}`,
+            fontFamily: chipFont,
+            borderRadius: `${chipShape}px`,
+          }}
+          className={getClass(chip.active)}
+        > {chip}</button>
+      ))}
+    </React.Fragment>
   );
 };
 

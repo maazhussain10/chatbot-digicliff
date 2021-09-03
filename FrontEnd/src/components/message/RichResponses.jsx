@@ -113,6 +113,7 @@ const RichResponses = (props) => {
 
   const deleteChip = async (chipValue) => {
     try {
+      console.log(intentId)
       await chipService.delete(intentId, chipValue, accessToken, setAccessToken);
       getChips();
     }
@@ -175,7 +176,7 @@ const RichResponses = (props) => {
                         className="card-header"
                         style={{ position: 'relative' }}
                       >
-                        {card.cardValues.split(',')[0]}
+                        {card.cardValues.split('|||')[0]}
                         {/* Edit and Delete Buttons for each card*/}
                         <div
                           className="d-flex justify-content-end"
@@ -239,9 +240,9 @@ const RichResponses = (props) => {
                         </div>
                       </div>
                       <div className="card-body">
-                        <h5 className="card-title">{card.cardValues.split(',')[1]}</h5>
-                        <p className="card-text">{card.cardValues.split(',')[2]}</p>
-                        <a href={card.cardValues.split(',')[3]}>{card.cardValues.split(',')[4]}</a>
+                        <h5 className="card-title">{card.cardValues.split('|||')[1]}</h5>
+                        <p className="card-text">{card.cardValues.split('|||')[2]}</p>
+                        <a href={card.cardValues.split('|||')[3]}>{card.cardValues.split('|||')[4]}</a>
                       </div>
                     </div>
                   </div>

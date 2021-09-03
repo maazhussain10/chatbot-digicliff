@@ -34,7 +34,7 @@ const CreateMessage = (props) => {
     return (
         <form onSubmit={addMessage}>
             <div className="collapse" id="createTraining">
-                <div className="card">
+                <div className="card" style={{ width: "300px" }}>
                     <div className="card-header">
                         {props.header}
                     </div>

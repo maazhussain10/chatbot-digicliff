@@ -4,9 +4,8 @@ const db = require("../../../../models");
 cardRoute.post("/", async (req, res) => {
     let { intentId, cardDetails, useQuery } = req.body;
     let { option, cardValues } = cardDetails;
-    let cardFields = Object.keys(cardValues).slice(0, option).join(",");
-    let cardData = Object.values(cardValues).slice(0, option).join(",");
-    console.log(cardData, cardValues, cardFields)
+    let cardFields = Object.keys(cardValues).slice(0, option).join("|||");
+    let cardData = Object.values(cardValues).slice(0, option).join("|||");
     try {
         let card = await db.Card.create({
             intentId,
@@ -25,7 +24,7 @@ cardRoute.post("/", async (req, res) => {
 
 cardRoute.get("/", async (req, res) => {
     let { intentId } = req.query;
-    console.log("GetExistingCards");
+
     try {
         let existingCards = await db.Card.findAll({
             attributes: [

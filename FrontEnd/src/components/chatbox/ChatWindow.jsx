@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
+import React, { useState, useEffect, useReducer, useContext, useRef } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext.js';
 import chatWindowService from '../../services/chat-window.service.js';
 
 import chatboxLogo from '../../assets/images/chatlogo.png';
+import Messages from './Messages.jsx';
 
-const ChatWindow = () => {
+const ChatWindow = (props) => {
     const { accessToken, setAccessToken } = useContext(AccessTokenContext);
-    const [message, setMessage] = useState();
-
+    const [message, setMessage] = useState("");
     // const [chatbotDetails, setChatbotDetails] = useState([]);
     const [theme, setTheme] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
@@ -33,13 +33,16 @@ const ChatWindow = () => {
             sendMessageColor: '',
         }
     );
-    const [messageStorage, setMessageStorage] = useState([]);
+
     const [chatbotDetails, setChatbotDetails] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
             chatbot: undefined, theme: theme
         }
     )
+
+    const [messageStorage, setMessageStorage] = useState([]);
+
     const [followUp, setFollowUp] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -47,8 +50,18 @@ const ChatWindow = () => {
         }
     )
 
-    useEffect(async () => {
+    useEffect(() => {
+        if (props.theme)
+            setChatbotDetails({ theme: props.theme })
+    }, [props.theme]);
 
+    useEffect(() => {
+        console.log(props.messageStorage);
+        if (props.messageStorage)
+            setMessageStorage(props.messageStorage)
+    }, [props.messageStorage]);
+
+    useEffect(async () => {
         try {
             let chatbotId = sessionStorage.getItem('chatbot');
             const response = await chatWindowService.get(
@@ -62,16 +75,41 @@ const ChatWindow = () => {
         }
     }, []);
 
+
+
     const sendMessage = async (e) => {
+        if (e.target.innerText)
+            setMessage(e.target.innerText);
         e.preventDefault();
         let chatbotId = sessionStorage.getItem('chatbot');
         try {
+            let userReply = {
+                from: 'user',
+                messages: [message],
+                time: new Date().toLocaleString()
+                    .split(",")[1]
+                    .replace(/(.*)\D\d+/, "$1").trim(),
+            }
+            setMessageStorage(prevMessageStorage => [...prevMessageStorage, userReply]);
             let response = await chatWindowService.post(chatbotId, message, followUp.hasFollowUp, followUp.previousIntent, accessToken, setAccessToken);
+            setMessage("");
+            setFollowUp(response.data.nextIntent);
+            let botReply = {
+                from: "bot",
+                messages: response.data.messages,
+                richResponses: response.data.richResponses,
+                time: new Date()
+                    .toLocaleString()
+                    .split(",")[1]
+                    .replace(/(.*)\D\d+/, "$1").trim(),
+            }
+            setMessageStorage(prevMessageStorage => [...prevMessageStorage, botReply]);
         } catch (err) {
             console.log(err);
         }
 
     }
+
     return (<div>
         <div className="chats-box">
             <div className="chatbox-top" style={{ background: chatbotDetails.theme.chatboxColor }}>
@@ -104,13 +142,15 @@ const ChatWindow = () => {
             </div >
             <div className="chatbox-body">
                 <div className="chat-conversion">
-                    {messageStorage.map((message) => (
-                        <Messages
-                            messageObject={message}
-                            key={message.messageId}
-                            sendMessage={sendMessage}
-                            theme={chatbotDetails.theme}
-                        />
+                    {messageStorage.map((message, index) => (
+                        <React.Fragment key={index}>
+                            <Messages
+                                messageObject={message}
+                                followUp={followUp}
+                                sendMessage={sendMessage}
+                                theme={chatbotDetails.theme}
+                            /></React.Fragment>
+
                     ))}
                 </div>
                 <div className="clearfix"></div>
@@ -125,7 +165,7 @@ const ChatWindow = () => {
                         id="sendMessage"
                         placeholder="Type your message"
                     />
-                    <i className="fas fa-paper-plane" style={{ color: chatbotDetails.theme.sendMessageColor }} onClick={() => sendMessage}></i>
+                    <i className="fas fa-paper-plane" style={{ color: chatbotDetails.theme.sendMessageColor }} onClick={sendMessage}></i>
                 </form>
             </div>
         </div>

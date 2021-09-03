@@ -1,18 +1,41 @@
 import React, { useState } from 'react';
-import MessageIcon from './MessageIcon';
 import Card from './richResponses/Card'
 import Chip from './richResponses/Chip'
-function RichResponse(props) {
-  const { cardMessage, chipMessage, sendMessage, theme } = props;
+import chatboxLogo from '../../assets/images/chatbots-logo-white.png';
 
-  if (cardMessage.length >= 1) {
-    return <Card cards={cardMessage} theme={theme} />;
+const MessageIcon = (props) => {
+  const visibility = () => {
+    let className = 'circle';
+    if (props.invisible) {
+      className += 'invisible';
+    }
+    return className;
+  };
+
+  return (
+    <div className="media-left">
+      <div className={visibility()}>
+        <img
+          src={chatboxLogo}
+          alt="Logo"
+          className="img-responsive center-block"
+        />
+      </div>
+    </div>
+  );
+};
+
+function RichResponse(props) {
+  const { richResponses, sendMessage, theme } = props;
+  console.log("AVDV", richResponses.cards);
+  if (richResponses.type === "card") {
+    return <Card cards={richResponses.cards} theme={theme} />;
   }
 
-  if (chipMessage.length >= 1) {
+  if (richResponses.type === "chip") {
     return (
       <div className="m-option">
-        {chipMessage.map((chip, index) => (
+        {richResponses.chips.map((chip, index) => (
           <Chip
             key={index}
             chip={chip}
@@ -45,7 +68,7 @@ const Messages = (props) => {
   };
 
   const { sendMessage, messageObject } = props;
-  const { from, messages, time, cardMessage, chipMessage } = messageObject;
+  const { messages, time, from, richResponses } = messageObject;
   const {
     userTextBgcolor,
     userFont,
@@ -82,66 +105,66 @@ const Messages = (props) => {
         <div className="media-left"></div>
         <div className="media-right">
           {/* Bot's Text Reply */}
-          {(() => {
-            if (messages.length !== 0) {
-              return (
-                <React.Fragment>
-                  {messages.map((message, index) => (
-                    <div key={index} className="chat-conversion">
-                      {load[index] ? (
-                        <div className="reciever-load">
-                          <h1 className="load-dot first">
-                            <span></span>
-                          </h1>
-                          <h1 className="load-dot second">
-                            <span></span>
-                          </h1>
-                          <h1 className="load-dot third">
-                            <span></span>
-                          </h1>
-                          <h1 className="load-dot fourth">
-                            <span></span>
-                          </h1>
-                          {sleepTime(index)}
-                        </div>
-                      ) : (
-                        <React.Fragment>
-                          <div
-                            className="n-content"
-                            style={{
-                              backgroundColor: botTextBgcolor,
-                            }}
-                          >
-                            <span
-                              key={index}
-                              style={{
-                                color: botTextColor,
-                                fontFamily: botFont,
-                              }}
-                              className="text"
-                            >
-                              {message}
-                            </span>
-                          </div>
-                        </React.Fragment>
-                      )}
+          {messages.length !== 0 ?
+            <React.Fragment>
+              {messages.map((message, index) => (
+                <div key={index} className="chat-conversion">
+                  {load[index] ? (
+                    <div className="reciever-load">
+                      <h1 className="load-dot first">
+                        <span></span>
+                      </h1>
+                      <h1 className="load-dot second">
+                        <span></span>
+                      </h1>
+                      <h1 className="load-dot third">
+                        <span></span>
+                      </h1>
+                      <h1 className="load-dot fourth">
+                        <span></span>
+                      </h1>
+                      {sleepTime(index)}
                     </div>
-                  ))}
-                  {load[load.length - 1] ? null : (
-                    <RichResponse
-                      cardMessage={cardMessage}
-                      chipMessage={chipMessage}
-                      sendMessage={sendMessage}
-                      theme={props.theme}
-                    />
+                  ) : (
+                    <React.Fragment>
+                      <div
+                        className="n-content"
+                        style={{
+                          backgroundColor: botTextBgcolor,
+                        }}
+                      >
+                        <span
+                          key={index}
+                          style={{
+                            color: botTextColor,
+                            fontFamily: botFont,
+                          }}
+                          className="text"
+                        >
+                          {message}
+                        </span>
+                      </div>
+                    </React.Fragment>
                   )}
-                  {load[load.length - 1] ? null : (
-                    <span className="time">{time}</span>
-                  )}
-                </React.Fragment>
-              );
-            }
-          })()}
+                </div>
+
+              ))}
+              {richResponses?.type === "cards" ?
+
+                <Card Card cards={richResponses.cards} theme={props.theme} />
+                :
+                richResponses?.type === "chips" ?
+                  <Chip chips={richResponses.chips}
+                    sendMessage={sendMessage}
+                    theme={props.theme} />
+                  : null
+              }
+
+              {load[load.length - 1] ? null : (
+                <span className="time">{time}</span>
+              )}
+            </React.Fragment>
+            : null}
         </div>
       </div>
     );

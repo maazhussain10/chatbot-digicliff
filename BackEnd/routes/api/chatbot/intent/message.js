@@ -12,7 +12,7 @@ messageRoute.get('/', async (req, res) => {
             where: {
                 intentId
             },
-            order: [['updatedAt', 'DESC']]
+            order: ['createdAt']
         })
         res.status(200).json(messages);
     } catch (err) {

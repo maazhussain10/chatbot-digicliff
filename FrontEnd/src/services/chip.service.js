@@ -37,7 +37,7 @@ class ChipService {
 
     async delete(intentId, chipValue, accessToken, setAccessToken) {
         let authInterceptor = createInterceptor(setAccessToken);
-        let response = await authInterceptor.delete(API_URL + "chatbot/intent/chip", { intentId, chipValue }, { headers: authHeader(accessToken) });
+        let response = await authInterceptor.delete(API_URL + "chatbot/intent/chip", { headers: authHeader(accessToken), data: { intentId, chipValue } });
         return response;
     }
 

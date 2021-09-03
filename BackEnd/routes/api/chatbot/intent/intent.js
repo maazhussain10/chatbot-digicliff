@@ -11,7 +11,8 @@ intentRoute.get('/', async (req, res) => {
             attributes: [['id', 'intentId'], 'intentName', 'description', 'multipleReply', 'previousIntent', 'createdAt'],
             where: {
                 chatbotId
-            }
+            },
+            order: ['id']
         })
 
         res.status(200).json(intents);

@@ -29,8 +29,7 @@ const CreateChip = (props) => {
                 accessToken,
                 setAccessToken
             );
-
-            props.setChips([...props.chips, chip])
+            props.setChips([...props.chips, { chipValue: chip, chipOrder: props.chips.length }])
             setChip("");
         } catch (e) {
             console.log(e);

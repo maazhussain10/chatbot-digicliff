@@ -1,6 +1,0 @@
-Password Match - Dynamic - No
-Email Validation - No
-Username Validation - No
-POP up after Creating Account - No
-
- & cd ../BackEnd & rmdir build & mkdir build &   xcopy \"E:/Programming/Chatbot Project/UpdateNew/AppVersion1/FrontEnd/build\" \"E:/Programming/Chatbot Project/UpdateNew/AppVersion1/BackEnd/build\" /e"

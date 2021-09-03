@@ -23,13 +23,15 @@ const Entity = (props) => {
                     <img className="" src="https://img.icons8.com/ios-filled/20/4a90e2/info.png" aria-hidden="true" data-toggle="tooltip" data-placement="right" title={props.info} />
                 </div>
                 <div className="col-md-5">
-                    <div className="custom-control custom-switch">
+                    <div className="custom-control custom-switch" style={{ lineHeight: "22px" }}>
                         <input type="checkbox" onChange={handleChange} className="custom-control-input" name={props.type} id={props.type} checked={props.selected} />
                         <label className="custom-control-label" htmlFor={props.type} >{props.type}</label>
 
                     </div>
                 </div>
+
                 <input onChange={handleChange} defaultValue={props.name} name={props.type} className={"col-md-6 form-control " + (props.selected ? "" : "invisible")} />
+
 
             </div>
             <br />
@@ -71,7 +73,7 @@ const Entities = (props) => {
         type: 'phonenumber',
         info: 'It takes the phone Number from the user message',
         selected: false,
-        name: "phonenumber",
+        name: "",
         order: 2
     },
     {
