@@ -2,7 +2,7 @@ const refrshTokenRoute = require('express').Router();
 const jwt = require("jsonwebtoken");
 const { Token } = require("../../models");
 const createTokens = require("../../helpers/tokens");
-let { tokenConfig } = require('../../configs');
+let { tokenConfig, dbConfig } = require('../../configs');
 
 let { REFRESH_TOKEN_SECRET } = tokenConfig;
 

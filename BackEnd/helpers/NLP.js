@@ -123,10 +123,27 @@ module.exports = {
             })
 
             chips = chips.length !== 0 ? chips.map((chip) => chip.chipValue) : [];
-
-            if (queryResults?.length === 0)
-                return (cards.length !== 0 ? cards : (chips.length !== 0 ? chips : []));
-
+            if (queryResults.length === 0) {
+                if (cards.length !== 0) {
+                    for (let i = 0; i < cards.length; i++) {
+                        for (let j = 0; j < entities.length; j++) {
+                            let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
+                            if (cards)
+                                cards[i] = cards[i].replace(regex, entities[j].entityValue)
+                        }
+                    }
+                }
+                if (chips.length!==0) {
+                    for (let i = 0; i < chips.length; i++) {
+                        for (let j = 0; j < entities.length; j++) {
+                            let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
+                            if (chips)
+                                chips = chips.replace(regex, entities[j].entityValue)
+                        }
+                    }
+                }
+                return (cards.length !== 0 ? { cards, type: "cards" } : (chips.length !== 0 ? { chips, type: "chips" } : []));
+            }
             let queryFields = Object.keys(queryResults[0]);
 
             if (queryCards) {
@@ -166,7 +183,6 @@ module.exports = {
                     chips.push(chip.chipValue)
                 }
             }
-
             return (cards.length !== 0 ? { cards, type: "cards" } : (chips.length !== 0 ? { chips, type: "chips" } : []));
         } catch (err) {
             console.log(err);

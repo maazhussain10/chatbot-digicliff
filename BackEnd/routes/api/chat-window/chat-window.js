@@ -120,7 +120,9 @@ chatWindowRoute.post('/', async (req, res) => {
         }
 
         let result = await db.Query.findByPk(intentId);
-        let query = result?.query;
+        let query = ""
+        console.log(result);
+        if(result!==null) query = result.query;
         // Add entity value to message from visitor deta
         for (let i = 0; i < messages.length; i++) {
             for (let j = 0; j < entities.length; j++) {

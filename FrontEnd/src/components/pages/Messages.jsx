@@ -7,7 +7,6 @@ import DisplayMessage from '../message/DisplayMessage';
 import CreateMessage from '../message/CreateMessage';
 import Entities from '../message/Entities';
 import RunQueries from '../message/RunQueries';
-import RichResponses from '../message/RichResponses';
 import ChatBox from '../chatbox/Chatbox';
 
 const Messages = (props) => {
