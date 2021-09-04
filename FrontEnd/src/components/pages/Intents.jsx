@@ -28,6 +28,7 @@ const Intents = (props) => {
     const [message, setMessage] = useState("");
 
     useEffect(async () => {
+        console.log("Use Effect");
         let chatbotId = sessionStorage.getItem('chatbot');
         setChatbotId(chatbotId);
         try {
@@ -97,6 +98,7 @@ const Intents = (props) => {
         }
     }
 
+    console.log(intents);
     return (
         <React.Fragment>
             <Navbar isAuthenticated={props.isAuthenticated} >

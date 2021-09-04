@@ -49,12 +49,20 @@ chatWindowRoute.post('/', async (req, res) => {
 
         let intentId = identifiedIntent.intent;
         // If theres no matching intent for the given message
+
+        let nextIntent = {}
+        console.log("1", hasFollowUp, previousIntent)
+        // Check if the intent triggered has a follow up.
+        let hasFollowUpResponse = await db.Intent.findAll({ where: { previousIntent: intentId } });
+
+        nextIntent.hasFollowUp = (hasFollowUpResponse.length !== 0);
+        nextIntent.previousIntent = intentId;
         if (intentId === "None") {
             console.log("No Intent");
             let data = {
                 messages: ["Sorry, I couldn't understand ^_^"],
-                cardResponse: [],
-                chipResponse: [],
+                richResponses: [],
+                nextIntent,
             };
             return res.status(200).json(data);
         }
@@ -73,13 +81,7 @@ chatWindowRoute.post('/', async (req, res) => {
             await NLP.storeVisitorInfo(chatbotId, identifiedEntities, definedEntities, message, ipAddress);
         }
 
-        let nextIntent = {}
-        console.log("1", hasFollowUp, previousIntent)
-        // Check if the intent triggered has a follow up.
-        let hasFollowUpResponse = await db.Intent.findAll({ where: { previousIntent: intentId } });
-        console.log("hasFollowUpResponse", hasFollowUpResponse);
-        nextIntent.hasFollowUp = (hasFollowUpResponse.length !== 0);
-        nextIntent.previousIntent = intentId;
+
         //   Get All the Bot Messages for the particular intent triggered.
         let botMessages = await db.Message.findAll({
             attributes: ['message'],
@@ -122,7 +124,7 @@ chatWindowRoute.post('/', async (req, res) => {
         let result = await db.Query.findByPk(intentId);
         let query = ""
         console.log(result);
-        if(result!==null) query = result.query;
+        if (result !== null) query = result.query;
         // Add entity value to message from visitor deta
         for (let i = 0; i < messages.length; i++) {
             for (let j = 0; j < entities.length; j++) {

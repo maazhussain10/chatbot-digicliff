@@ -65,9 +65,11 @@ queryRowsRoute.get("/", async (req, res) => {
                     (result) => result.column
                 );
             }
+        } else {
+            return res.sendStatus(404);
         }
 
-        res.status(200).json({ tableName: tableNameResults.tableName, rows, distinctColumn, selectedColumns, distinctColumn });
+        res.status(200).json({ tableName: tableNameResults?.tableName, rows, distinctColumn, selectedColumns, distinctColumn });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);

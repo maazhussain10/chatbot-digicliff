@@ -18,10 +18,11 @@ const RunQueries = (props) => {
         try {
             let intentId = sessionStorage.getItem('intent');
             const response = await queryService.get(intentId, accessToken, setAccessToken);
-
-            setTableName(response.data.tableName);
-            setRowState({ rows: response.data.rows })
-            await getColumnNames(undefined, response.data.tableName, response.data.selectedColumns, response.data.distinctColumn);
+            if (response.status === 200) {
+                setTableName(response.data.tableName);
+                setRowState({ rows: response.data.rows })
+                await getColumnNames(undefined, response.data.tableName, response.data.selectedColumns, response.data.distinctColumn);
+            }
 
         } catch (err) {
             console.log(err);

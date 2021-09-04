@@ -70,15 +70,15 @@ intentRoute.put('/', async (req, res) => {
     }
 });
 
-intentRoute.delete('/', (req, res) => {
+intentRoute.delete('/', async (req, res) => {
     let { intentId } = req.body;
-    db.Intent.destroy({
+    await db.Intent.destroy({
         where: {
             id: intentId
         }
     })
 
-    res.sendStatus(202);
+    res.sendStatus(204);
 });
 
 

@@ -83,15 +83,19 @@ const Messages = (props) => {
       <div>
         <div className="chatbox-sender">
           <div className="s-content" style={{ backgroundColor: userTextBgcolor }}>
-            <span
+            <pre
               className="text"
               style={{
                 color: userTextColor,
                 fontFamily: userFont,
+                whiteSpace: "pre-wrap",
+                margin: "0px",
+                wordWrap: "break-word"
+
               }}
             >
-              {messages[0]}
-            </span>
+              {messages[0].trim()}
+            </pre>
           </div>
           <span className="time">{time}</span>
         </div>
@@ -133,16 +137,19 @@ const Messages = (props) => {
                           backgroundColor: botTextBgcolor,
                         }}
                       >
-                        <span
+                        <pre
                           key={index}
                           style={{
                             color: botTextColor,
                             fontFamily: botFont,
+                            whiteSpace: "pre-wrap",
+                            margin: "0px",
+                            wordWrap: "break-word"
                           }}
                           className="text"
                         >
-                          {message}
-                        </span>
+                          {message.trim()}
+                        </pre>
                       </div>
                     </React.Fragment>
                   )}

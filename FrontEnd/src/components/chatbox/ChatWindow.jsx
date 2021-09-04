@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, useContext, useRef } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext.js';
 import chatWindowService from '../../services/chat-window.service.js';
-
+import TextareaAutosize from 'react-textarea-autosize';
 import chatboxLogo from '../../assets/images/chatlogo.png';
 import Messages from './Messages.jsx';
 
@@ -110,6 +110,16 @@ const ChatWindow = (props) => {
 
     }
 
+    const handleKeyDown = (e) => {
+        if (e.keyCode === 13) {
+            if (!e.shiftKey) {
+                e.preventDefault();
+                sendMessage(e);
+            }
+        }
+    }
+
+
     return (<div>
         <div className="chats-box">
             <div className="chatbox-top" style={{ background: chatbotDetails.theme.chatboxColor }}>
@@ -157,14 +167,15 @@ const ChatWindow = (props) => {
             </div>
             <div className="chatbox-chat">
                 <form className="form-group" onSubmit={sendMessage}>
-                    <input
+                    <TextareaAutosize
+                        style={{ resize: "none", wordWrap: "break-word" }}
                         onChange={(e) => { setMessage(e.target.value) }}
+                        onKeyDown={handleKeyDown}
                         value={message}
                         type="text"
                         className="form-control"
                         id="sendMessage"
-                        placeholder="Type your message"
-                    />
+                        placeholder="Type your message" />
                     <i className="fas fa-paper-plane" style={{ color: chatbotDetails.theme.sendMessageColor }} onClick={sendMessage}></i>
                 </form>
             </div>

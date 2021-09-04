@@ -286,5 +286,34 @@
       "On scroll the chat window slides up and icon stays down attach both",
       "Give some styling in Navbar looks so dull"
     ]
+  },
+  {
+    "made-by": "Dwabzy",
+    "date": "4/09/21",
+    "changes": [
+      "Fixed bug where the bot replied 'Sorry I couldnt understand' repeatedly, if user phrase doesnt match any of the followup intents",
+      "Both user and bot messages now display newLine characters",
+      "While chatting with the bot- user message input field if one line is full make it go to next line",
+      "Convert all the buttons to pointer:cursor"
+    ],
+    "to-do": [
+      "Integration page backend",
+      "Check if getColumnNamesRoute supports databases other than MySQL",
+      "Alter the visitor database and add a duration time",
+
+      "Intents dont display if you come back from any other page",
+      "Stats Page if only one bot is there display chatbot name in center align",
+      "Stats page, make the size of all cards that display name and description even",
+      "Entity the alignment is still not proper",
+      "Intent Page remove card and make row, and if its follow up leave a tab space to the left of the row",
+      "Change the card input format, once clicked cover the whole block",
+      "When clicked on card edit icon convert the field into editable and stop the carousel from moving",
+      "Bot and User messages block width is reduced, put it back to default",
+      "Settings page block the input type field",
+      "Bring the save changes button and chatwindow to fit screen",
+      "On scroll the chat window slides up and icon stays down attach both",
+      "Give some styling in Navbar looks so dull",
+      "Style the scrollbars in chatwindow (both input tag and the window where messages are displayed)"
+    ]
   }
 ]

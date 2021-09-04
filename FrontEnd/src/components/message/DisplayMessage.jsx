@@ -50,12 +50,12 @@ const DisplayMessage = (props) => {
                 type="text"
                 className="form-control"
                 onKeyDown={handleKeyDown}
-                style={{ textAlign: "left", whiteSpace: "pre-wrap", height: "auto" }}
+                style={{ textAlign: "left", whiteSpace: "pre-wrap", height: "auto", wordWrap: "break-word" }}
                 contentEditable
                 suppressContentEditableWarning={true}
                 aria-label="Username"
                 aria-describedby="basic-addon1">
-                {props.message.text}
+                {props.message.text.trim()}
             </pre>
             <div className="input-group-prepend">
                 <button onClick={() => deleteMessage()} style={{ zIndex: "0" }} className="btn btn-outline-danger" type="button" id="button-addon1"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -69,15 +69,15 @@ chatbotRoute.put('/', async (req, res) => {
     }
 });
 
-chatbotRoute.delete('/', (req, res) => {
+chatbotRoute.delete('/', async (req, res) => {
     let { chatbotId } = req.body;
-    db.Chatbot.destroy({
+    await db.Chatbot.destroy({
         where: {
             id: chatbotId
         }
     })
 
-    res.sendStatus(202);
+    res.sendStatus(204);
 });
 
 
