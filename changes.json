@@ -300,8 +300,8 @@
       "Integration page backend",
       "Check if getColumnNamesRoute supports databases other than MySQL",
       "Alter the visitor database and add a duration time",
-
       "Intents dont display if you come back from any other page",
+
       "Stats Page if only one bot is there display chatbot name in center align",
       "Stats page, make the size of all cards that display name and description even",
       "Entity the alignment is still not proper",
@@ -313,6 +313,33 @@
       "Bring the save changes button and chatwindow to fit screen",
       "On scroll the chat window slides up and icon stays down attach both",
       "Give some styling in Navbar looks so dull",
+      "Style the scrollbars in chatwindow (both input tag and the window where messages are displayed)"
+    ]
+  },
+  {
+    "made-by": "Prajeshwar",
+    "date": "5/09/21",
+    "changes": [
+      "Entity the alignment is still not proper - fixed",
+      "On scroll the chat window slides up and icon stays down attach both - fixed",
+      "Stats Page if only one bot is there display chatbot name in center align - fixed",   
+      "Bring the save changes button and chatwindow to fit screen - fixed",
+      "Stats page, make the size of all cards that display name and description even - fixed",
+      "Give some styling in Navbar looks so dull - fixed",
+      "Proper placeholders for card inputs",
+      "When clicked on card edit icon convert the field into editable - done",
+      "Bot and User messages block width is reduced, put it back to default - fixed"
+    ],
+    "to-do": [
+      "Integration page backend",
+      "Chat history",
+      "Display more data on stats",
+      "Check if getColumnNamesRoute supports databases other than MySQL",
+      "Alter the visitor database and add a duration time",
+      "Intents dont display if you come back from any other page",
+      "Intent Page remove card and make row, and if its follow up leave a tab space to the left of the row",
+      
+      "Settings page block the input type field",
       "Style the scrollbars in chatwindow (both input tag and the window where messages are displayed)"
     ]
   }

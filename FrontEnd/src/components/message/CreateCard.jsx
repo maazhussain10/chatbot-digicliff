@@ -14,7 +14,7 @@ function CardCreation(props) {
     <React.Fragment>
       {inputCard ? (
         <div
-          className={"tab-pane fade " + (props.active ? "show active" : "")}
+          className={'tab-pane fade ' + (props.active ? 'show active' : '')}
           id={card}
           role="tabpanel"
           aria-labelledby="v-pills-card1-tab"
@@ -25,12 +25,13 @@ function CardCreation(props) {
           >
             <div className="card-header">
               <input
-                style={{ color: '#000000' }}
+                style={{ backgroundColor: '#f8f9fa' }}
                 onChange={handleChange}
                 name="header"
                 value={props.cardValues.header}
                 className="input-card"
                 type="text"
+                placeholder="Header"
               />
             </div>
             <div className="card-body">
@@ -42,6 +43,7 @@ function CardCreation(props) {
                   value={props.cardValues.subHeader}
                   className="input-card"
                   type="text"
+                  placeholder="Dark Card Title"
                 />
               </h5>
               <textarea
@@ -50,6 +52,7 @@ function CardCreation(props) {
                 name="details"
                 value={props.cardValues.details}
                 className="card-text input-card cardTextArea"
+                placeholder="Some quick example text to build on the card title and make up the bulk of the card's content."
               />
               {props.option === '5' ? (
                 <div>
@@ -61,6 +64,7 @@ function CardCreation(props) {
                       value={props.cardValues.link}
                       className="input-card"
                       type="text"
+                      placeholder="Link"
                     />
                   </h5>
                   <h5 className="card-title">
@@ -71,6 +75,7 @@ function CardCreation(props) {
                       value={props.cardValues.linkButton}
                       className="input-card"
                       type="text"
+                      placeholder="Ex - go to google"
                     />
                   </h5>
                 </div>
@@ -112,8 +117,7 @@ function CardCreation(props) {
 const CreateCard = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const [inputCard, setInputCard] = useState(false);
-  const [option, setOption] = useState("3");
-
+  const [option, setOption] = useState('3');
 
   const [cardValues, setCardValues] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -134,22 +138,25 @@ const CreateCard = (props) => {
         setAccessToken
       );
       if (response.status === 201) {
-        props.setCards([...props.cards, response.data])
-        setCardValues({ header: '', subHeader: '', details: '', link: '', linkButton: '' })
+        props.setCards([...props.cards, response.data]);
+        setCardValues({
+          header: '',
+          subHeader: '',
+          details: '',
+          link: '',
+          linkButton: '',
+        });
         setInputCard(false);
       }
-
-
     } catch (e) {
       console.log(e);
     }
-
-  }
+  };
   return (
     <React.Fragment>
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-primary mb-2"
         data-toggle="modal"
         data-target="#createCard"
         disabled={props.disableCard}
@@ -188,7 +195,7 @@ const CreateCard = (props) => {
                         role="tab"
                         aria-controls="v-pills-card1"
                         aria-selected="true"
-                        onClick={() => setOption("3")}
+                        onClick={() => setOption('3')}
                       >
                         Basic - 3 Fields
                       </a>
@@ -200,8 +207,7 @@ const CreateCard = (props) => {
                         role="tab"
                         aria-controls="v-pills-card2"
                         aria-selected="false"
-                        onClick={() => setOption("5")}
-
+                        onClick={() => setOption('5')}
                       >
                         {' '}
                         Basic - 4 Fields
@@ -216,7 +222,6 @@ const CreateCard = (props) => {
                       className="tab-content"
                       id="v-pills-tabContent"
                     >
-
                       <CardCreation
                         active={true}
                         inputCard={inputCard}
@@ -258,10 +263,7 @@ const CreateCard = (props) => {
               >
                 Close
               </button>
-              <button
-                type="submit"
-                className="btn btn-primary"
-              >
+              <button type="submit" className="btn btn-primary">
                 Create Card
               </button>
             </div>

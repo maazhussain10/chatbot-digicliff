@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import chatbotService from '../../services/chatbot.service.js';
+import Navbar from '../common/Navbar';
 import LineChart from './charts/LineChart';
 import PieChart from './charts/PieChart';
 
-const Stats = () => {
+const Stats = (props) => {
   const [existingChatbots, setExistingChatbots] = useState([]);
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const [selectedChatbot, setSelectedChatbot] = useState('Select Chatbot');
@@ -43,11 +44,15 @@ const Stats = () => {
   };
   return (
     <div>
-      <div className="container">
-        <div className="row">
+      <Navbar isAuthenticated={props.isAuthenticated}></Navbar>
+      <div className="container text-center" style={{ fontFamily: 'Tinos' }}>
+        <div className="row row-cols-6 d-flex justify-content-center">
           {existingChatbots.map((chatbot, index) => (
-            <div className="col-md-2" onClick={() => setStatus(index)}>
-              <div className="card shadow border border-primary">
+            <div className="col-sm-2 pb-3" onClick={() => setStatus(index)}>
+              <div
+                className="card shadow border border-primary d-flex justify-content-between"
+                style={{ minHeight: '200px' }}
+              >
                 <p
                   style={chatbot.status ? { color: 'green' } : { color: 'red' }}
                   className="text-right mr-1"
@@ -64,7 +69,7 @@ const Stats = () => {
                   </svg>
                 </p>
                 <h2 className="">{chatbot.chatbotName}</h2>
-                <p>{chatbot.description}</p>
+                <p>CreatedAt*</p>
               </div>
             </div>
           ))}
@@ -145,8 +150,8 @@ const Stats = () => {
               .slice(0, existingChatbots.length / 2 + 1)
               .map((chatbot, index) => (
                 <div className="row text-center">
-                  {existingChatbots[2 * index]&&
-                  existingChatbots[2 * index ].status ? (
+                  {existingChatbots[2 * index] &&
+                  existingChatbots[2 * index].status ? (
                     <div className="col-sm-6">
                       <PieChart chatbots={existingChatbots[2 * index]} />
                     </div>
@@ -197,7 +202,7 @@ const Stats = () => {
 
       {selectedChatbot !== 'Select Chatbot' ? (
         <div>
-          <table class="table table-bordered table-responsive-md">
+          <table class="table table-bordered table-responsive-md container">
             <thead>
               <tr>
                 <th scope="col">S No.</th>

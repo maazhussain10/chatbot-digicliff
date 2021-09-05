@@ -28,10 +28,8 @@ const RichResponses = (props) => {
       setDisableCard(false);
       setDisableChip(false);
     }
-    console.log(disableChip)
+    console.log(disableChip);
   }, [cards, chips]);
-
-
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
@@ -43,52 +41,61 @@ const RichResponses = (props) => {
   };
 
   const getActiveClass = (classes, index) => {
-    if (index === 0) return classes + "active"
-    else return classes
-  }
+    if (index === 0) return classes + 'active';
+    else return classes;
+  };
 
   // GET/UPDATE/DELETE CARDS
   const getCards = async () => {
     try {
-      let cardResponse = await cardService.get(intentId, accessToken, setAccessToken);
+      let cardResponse = await cardService.get(
+        intentId,
+        accessToken,
+        setAccessToken
+      );
       console.log(cardResponse.data);
       setCards(cardResponse.data);
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const updateCard = async () => {
     try {
       await cardService.put(intentId, accessToken, setAccessToken);
       getCards();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const deleteCard = async (cardValues) => {
     try {
-      await cardService.delete(intentId, cardValues, accessToken, setAccessToken);
+      await cardService.delete(
+        intentId,
+        cardValues,
+        accessToken,
+        setAccessToken
+      );
       getCards();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   // GET/UPDATE/DELETE CHIPS
   const getChips = async () => {
     try {
-      let chipResponse = await chipService.get(intentId, accessToken, setAccessToken);
+      let chipResponse = await chipService.get(
+        intentId,
+        accessToken,
+        setAccessToken
+      );
       setChips(chipResponse.data);
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const updateChipValueKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -96,35 +103,37 @@ const RichResponses = (props) => {
         updateChip(e.target);
         e.preventDefault();
       }
-
     }
-  }
+  };
 
   const updateChip = async (htmlElement) => {
     try {
-      let chipValue = htmlElement.text
+      let chipValue = htmlElement.text;
       await chipService.put(intentId, chipValue, accessToken, setAccessToken);
       getChips();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const deleteChip = async (chipValue) => {
     try {
-      console.log(intentId)
-      await chipService.delete(intentId, chipValue, accessToken, setAccessToken);
+      console.log(intentId);
+      await chipService.delete(
+        intentId,
+        chipValue,
+        accessToken,
+        setAccessToken
+      );
       getChips();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
   return (
     <React.Fragment>
       <Navbar isAuthenticated={props.isAuthenticated} />
-      <div className="container">
+      <div className="container mt-5">
         <div className="row text-center">
           <div className="col-md-6">
             <CreateCard
@@ -150,7 +159,7 @@ const RichResponses = (props) => {
               className="carousel slide"
               data-ride="carousel"
             >
-              <ol className="carousel-indicators">
+              {/* <ol className="carousel-indicators">
                 {cards.map((card, index) => (
                   <li
                     data-target="#displayCards"
@@ -158,94 +167,170 @@ const RichResponses = (props) => {
                     className={getActiveClass('', index)}
                   ></li>
                 ))}
-              </ol>
+              </ol> */}
               <div className="carousel-inner">
                 {/* Displays all the cards in the list using map function */}
                 {cards.map((card, index) => (
-                  <div
-                    className={getActiveClass('carousel-item ', index)}
-                    id={'card-' + index}
-                    data-interval="2000"
-                    key={index}
-                  >
+                  <React.Fragment>
                     <div
-                      className="card text-center"
-                      style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
+                      className={getActiveClass('carousel-item ', index)}
+                      id={'card-' + index}
+                      data-interval="2000"
+                      key={index}
                     >
                       <div
-                        className="card-header"
-                        style={{ position: 'relative' }}
+                        className="card text-center"
+                        style={{ backgroundColor: '#FFFFFF', color: '#000000' }}
                       >
-                        {card.cardValues.split('|||')[0]}
-                        {/* Edit and Delete Buttons for each card*/}
                         <div
-                          className="d-flex justify-content-end"
-                          style={{
-                            position: 'absolute',
-                            top: '8px',
-                            right: '3px',
-                          }}
+                          className="card-header"
+                          style={{ position: 'relative' }}
                         >
+                          {card.cardValues.split('|||')[0]}
+                          {/* Edit and Delete Buttons for each card*/}
                           <div
-                            className="btn-group"
-                            role="group"
-                            aria-label="Basic example"
+                            className="d-flex justify-content-end"
+                            style={{
+                              position: 'absolute',
+                              top: '8px',
+                              right: '3px',
+                            }}
                           >
-                            {/* Edit */}
-                            <button
-                              style={{ zIndex: "10" }}
-                              type="button"
-                              data-toggle="modal"
-                              data-target="#updateCard"
-                              className="btn btn-sm btn-outline-success"
+                            <div
+                              className="btn-group"
+                              role="group"
+                              aria-label="Basic example"
                             >
-                              <svg
-                                width="1em"
-                                height="1em"
-                                viewBox="0 0 16 16"
-                                className="bi bi-pencil-square"
-                                fill="currentColor"
-                                xmlns="http://www.w3.org/2000/svg"
+                              {/* Edit */}
+                              <button
+                                style={{ zIndex: '10' }}
+                                type="button"
+                                data-toggle="modal"
+                                data-target="#updateCard"
+                                className="btn btn-sm btn-outline-success"
                               >
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path
-                                  fillRule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  width="1em"
+                                  height="1em"
+                                  viewBox="0 0 16 16"
+                                  className="bi bi-pencil-square"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                  />
+                                </svg>
+                              </button>
 
-                            {/* Delete */}
+                              {/* Delete */}
+                              <button
+                                type="button"
+                                style={{ zIndex: '10' }}
+                                onClick={() => deleteCard(card.cardValues)}
+                                className="btn btn-sm btn-outline-danger"
+                              >
+                                <svg
+                                  width="1em"
+                                  height="1em"
+                                  viewBox="0 0 16 16"
+                                  className="bi bi-trash-fill"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            {card.cardValues.split('|||')[1]}
+                          </h5>
+                          <p className="card-text">
+                            {card.cardValues.split('|||')[2]}
+                          </p>
+                          <a href={card.cardValues.split('|||')[3]}>
+                            {card.cardValues.split('|||')[4]}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    {/* edit modal */}
+                    <div
+                      className="modal fade"
+                      id="updateCard"
+                      tabIndex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                      data-backdrop="static"
+                    >
+                      <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">
+                              Edit
+                            </h5>
                             <button
                               type="button"
-                              style={{ zIndex: "10" }}
-                              onClick={() => deleteCard(card.cardValues)}
-                              className="btn btn-sm btn-outline-danger"
+                              className="close"
+                              data-dismiss="modal"
+                              aria-label="Close"
                             >
-                              <svg
-                                width="1em"
-                                height="1em"
-                                viewBox="0 0 16 16"
-                                className="bi bi-trash-fill"
-                                fill="currentColor"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
-                                />
-                              </svg>
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">
+                            <div className="card-body">
+                              <div className="card text-center">
+                                <div className="card-header">
+                                  <input
+                                    className=""
+                                    type="text"
+                                    value={card.cardValues.split('|||')[0]}
+                                  />
+                                </div>
+                                <div className="card-body">
+                                  <h5 className="card-title">
+                                    <input
+                                      className=""
+                                      type="text"
+                                      value={card.cardValues.split('|||')[1]}
+                                    />
+                                  </h5>
+                                  <p className="card-text">
+                                    <input
+                                      type="text"
+                                      className=""
+                                      value={card.cardValues.split('|||')[2]}
+                                    />
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              data-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button type="button" className="btn btn-primary">
+                              Save changes
                             </button>
                           </div>
                         </div>
                       </div>
-                      <div className="card-body">
-                        <h5 className="card-title">{card.cardValues.split('|||')[1]}</h5>
-                        <p className="card-text">{card.cardValues.split('|||')[2]}</p>
-                        <a href={card.cardValues.split('|||')[3]}>{card.cardValues.split('|||')[4]}</a>
-                      </div>
                     </div>
-                  </div>
+                  </React.Fragment>
                 ))}
 
                 {/* buttons shouldnt be removed */}
@@ -254,6 +339,7 @@ const RichResponses = (props) => {
                   href="#displayCards"
                   role="button"
                   data-slide="prev"
+                  style={{ color: '#000' }}
                 >
                   <span
                     className="carousel-control-prev-icon"
@@ -282,7 +368,6 @@ const RichResponses = (props) => {
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="drag-n-drop">
                 {(provided) => (
-
                   <ul
                     className="list-group drag-n-drop"
                     {...provided.droppableProps}
@@ -340,9 +425,7 @@ const RichResponses = (props) => {
                               </pre>
                               <div className="input-group-prepend">
                                 <button
-                                  onClick={() =>
-                                    deleteChip(chip.chipValue)
-                                  }
+                                  onClick={() => deleteChip(chip.chipValue)}
                                   style={{ zIndex: '0' }}
                                   className="btn btn-outline-danger"
                                   type="button"
@@ -379,6 +462,7 @@ const RichResponses = (props) => {
           </div>
         </div>
       </div>
+
       <ChatBox />
     </React.Fragment>
   );

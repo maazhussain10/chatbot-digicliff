@@ -34,49 +34,37 @@
           "useStemDict": true
         },
         "stemDict": {
-          "train": {
-            "intent": "646abafe-962f-4e5a-9d3f-19d9c054a0b3",
+          "hello": {
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746",
             "domain": "default"
           },
-          "test": {
-            "intent": "7d9bb6d4-f918-40a8-b142-fc607b59da77",
+          "hey": {
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746",
             "domain": "default"
           },
-          "email,hello": {
-            "intent": "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d",
-            "domain": "default"
-          },
-          "psss": {
-            "intent": "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d",
+          "hi": {
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746",
             "domain": "default"
           }
         },
         "intentDict": {
-          "646abafe-962f-4e5a-9d3f-19d9c054a0b3": "default",
-          "7d9bb6d4-f918-40a8-b142-fc607b59da77": "default",
-          "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": "default",
-          "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d": "default"
+          "ebc2adc4-5bd3-4800-b04b-7af6893dd746": "default"
         },
         "sentences": [
           {
             "domain": "default",
-            "utterance": "Train",
-            "intent": "646abafe-962f-4e5a-9d3f-19d9c054a0b3"
+            "utterance": "Hello",
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
           },
           {
             "domain": "default",
-            "utterance": "Test",
-            "intent": "7d9bb6d4-f918-40a8-b142-fc607b59da77"
+            "utterance": "hey",
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
           },
           {
             "domain": "default",
-            "utterance": "Hello email",
-            "intent": "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
-          },
-          {
-            "domain": "default",
-            "utterance": "Psss",
-            "intent": "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d"
+            "utterance": "hi",
+            "intent": "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
           }
         ],
         "domains": {
@@ -93,48 +81,29 @@
               "log": true
             },
             "features": {
-              "train": 1,
-              "test": 1,
               "hello": 1,
-              "email": 1,
-              "psss": 1
+              "hey": 1,
+              "hi": 1
             },
             "intents": {
-              "646abafe-962f-4e5a-9d3f-19d9c054a0b3": 1,
-              "7d9bb6d4-f918-40a8-b142-fc607b59da77": 1,
-              "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": 1,
-              "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d": 1
+              "ebc2adc4-5bd3-4800-b04b-7af6893dd746": 1
             },
             "intentFeatures": {
-              "646abafe-962f-4e5a-9d3f-19d9c054a0b3": {
-                "train": 1
-              },
-              "7d9bb6d4-f918-40a8-b142-fc607b59da77": {
-                "test": 1
-              },
-              "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": {
+              "ebc2adc4-5bd3-4800-b04b-7af6893dd746": {
                 "hello": 1,
-                "email": 1
-              },
-              "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d": {
-                "psss": 1
+                "hey": 1,
+                "hi": 1
               }
             },
             "featuresToIntent": {
-              "train": [
-                "646abafe-962f-4e5a-9d3f-19d9c054a0b3"
-              ],
-              "test": [
-                "7d9bb6d4-f918-40a8-b142-fc607b59da77"
-              ],
               "hello": [
-                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
+                "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
               ],
-              "email": [
-                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d"
+              "hey": [
+                "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
               ],
-              "psss": [
-                "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d"
+              "hi": [
+                "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
               ]
             },
             "neuralNetwork": {
@@ -150,50 +119,19 @@
                 "log": true
               },
               "features": [
-                "train",
-                "test",
                 "hello",
-                "email",
-                "psss"
+                "hey",
+                "hi"
               ],
               "intents": [
-                "646abafe-962f-4e5a-9d3f-19d9c054a0b3",
-                "7d9bb6d4-f918-40a8-b142-fc607b59da77",
-                "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d",
-                "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d"
+                "ebc2adc4-5bd3-4800-b04b-7af6893dd746"
               ],
               "perceptrons": [
                 [
-                  11.529183387756348,
-                  -2.530586004257202,
-                  -1.2975943088531494,
-                  -1.2975943088531494,
-                  -2.515395164489746,
-                  2.5933379387149014
-                ],
-                [
-                  -2.5071828365325928,
-                  11.529098510742188,
-                  -1.3005493879318237,
-                  -1.3005493879318237,
-                  -2.527752637863159,
-                  2.596891422699059
-                ],
-                [
-                  -1.297369122505188,
-                  -1.29389226436615,
-                  6.491669654846191,
-                  6.491669654846191,
-                  -1.300650954246521,
-                  1.2995681467842255
-                ],
-                [
-                  -2.52358078956604,
-                  -2.510709524154663,
-                  -1.2939876317977905,
-                  -1.2939876317977905,
-                  11.529047012329102,
-                  2.6001497778386544
+                  5.623373985290527,
+                  5.742938041687012,
+                  5.6846818923950195,
+                  8.53914163021994
                 ]
               ]
             }
@@ -205,19 +143,15 @@
     "extraSentences": [
       [
         "en",
-        "Train"
+        "Hello"
       ],
       [
         "en",
-        "Test"
+        "hey"
       ],
       [
         "en",
-        "Hello email"
-      ],
-      [
-        "en",
-        "Psss"
+        "hi"
       ]
     ]
   },
@@ -235,24 +169,15 @@
     },
     "responses": {
       "en": {
-        "646abafe-962f-4e5a-9d3f-19d9c054a0b3": [
+        "ebc2adc4-5bd3-4800-b04b-7af6893dd746": [
           {
-            "answer": "Train"
-          }
-        ],
-        "7d9bb6d4-f918-40a8-b142-fc607b59da77": [
+            "answer": "Hello"
+          },
           {
-            "answer": "Test"
-          }
-        ],
-        "926ad2b5-422d-4aa2-af4e-2bcf89b9c33d": [
+            "answer": "hey"
+          },
           {
-            "answer": "Hello email"
-          }
-        ],
-        "d0ad2af3-071e-4a67-8a1f-ab3bb7ea530d": [
-          {
-            "answer": "Psss"
+            "answer": "hi"
           }
         ]
       }

@@ -6,25 +6,24 @@ import Messages from './Messages.jsx';
 import ChatWindow from './ChatWindow';
 
 const ChatBox = (props) => {
-
   const sendMessage = async () => {
     let message;
     if (chipMessage) {
       message = chipMessage;
     } else {
-      message = document.getElementById("sendMessage").value;
+      message = document.getElementById('sendMessage').value;
     }
 
     try {
       let userMessage = {
-        from: "user",
-        type: "text",
+        from: 'user',
+        type: 'text',
         messages: [message],
         messageId: messageStorage.length + 1,
         time: new Date()
           .toLocaleString()
-          .split(",")[1]
-          .replace(/(.*)\D\d+/, "$1"),
+          .split(',')[1]
+          .replace(/(.*)\D\d+/, '$1'),
       };
       messageStorage.push(userMessage);
 
@@ -33,8 +32,8 @@ const ChatBox = (props) => {
       // let NLPResponse = await NLPService.post(chatbotId, message, hasFollowUp, followUp.previousIntent, accessToken, setAccessToken);
       // let { messages, cardResponse, chipResponse, hasFollowUp, previousIntent, } = NLPResponse.data;
       let textMessage = {
-        from: "bot",
-        type: "text",
+        from: 'bot',
+        type: 'text',
         messages: messages,
         messageId: messageStorage.length + 1,
         hasRichResponse: false,
@@ -42,8 +41,8 @@ const ChatBox = (props) => {
         chipMessage: chipResponse,
         time: new Date()
           .toLocaleString()
-          .split(",")[1]
-          .replace(/(.*)\D\d+/, "$1"),
+          .split(',')[1]
+          .replace(/(.*)\D\d+/, '$1'),
       };
       // if (cardResponse.length !== 0 || chipResponse.length !== 0) {
       //   textMessage.hasRichResponse = true;

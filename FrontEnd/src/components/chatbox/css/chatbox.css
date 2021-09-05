@@ -81,7 +81,7 @@
   margin-top: 50px;
   width: 400px;
   /* display: none; */
-  position: absolute;
+  position: fixed;
   right: 20px;
   bottom: 70px;
   border-radius: 6px;
@@ -525,7 +525,7 @@
 }
 
 .chats-box .chatbox-body .chat-conversion .reciever-load {
-  background-color: #f5f5f5;
+  background-color: #000;
   padding: 7px 10px;
   margin-bottom: 10px;
   display: inline-block;
@@ -670,7 +670,9 @@
 .chats-box ::-webkit-scrollbar-track {
   background: #fff;
 }
-
+.chatbox{
+  scrollbar-color: #0180fe;
+}
 .chats-box ::-webkit-scrollbar-thumb {
   background: #0180fe;
 }
