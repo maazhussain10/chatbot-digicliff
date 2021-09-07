@@ -338,7 +338,24 @@
       "Alter the visitor database and add a duration time",
       "Intents dont display if you come back from any other page",
       "Intent Page remove card and make row, and if its follow up leave a tab space to the left of the row",
-      
+
+      "Settings page block the input type field",
+      "Style the scrollbars in chatwindow (both input tag and the window where messages are displayed)"
+    ]
+  },
+  {
+    "made-by": "Maaz",
+    "date": "7/09/21",
+    "changes": [
+      "Chat history",
+      "Display more data on stats",
+      "Alter the visitor database and add a duration time",
+      "Intent Page remove card and make row, and if its follow up leave a tab space to the left of the row",
+      "Chat Download Available"
+    ],
+    "to-do": [
+      "Integration page backend",
+      "Intents dont display if you come back from any other page",
       "Settings page block the input type field",
       "Style the scrollbars in chatwindow (both input tag and the window where messages are displayed)"
     ]

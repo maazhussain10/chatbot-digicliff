@@ -33,7 +33,8 @@ let Message = require('./message.model')(sequelize);
 let QueryTable = require('./queryTable.model')(sequelize);
 let Query = require('./query.model')(sequelize);
 let Entity = require('./entity.model')(sequelize);
-let VisitorDetails = require('./visitor-details')(sequelize);
+let VisitorDetails = require('./visitor-details.model')(sequelize);
+let VisitorChat = require('./visitor-chat.model')(sequelize);
 let Chip = require('./chip.model')(sequelize);
 let Card = require('./card.model')(sequelize);
 let Settings = require('./settings.model')(sequelize);
@@ -136,6 +137,14 @@ Chatbot.hasMany(VisitorDetails, {
 });
 VisitorDetails.belongsTo(Chatbot, { foreignKey: "chatbotId" });
 
+// Each Chatbot can have the details of more than one visitor ( May need to add for Intent too )
+Chatbot.hasMany(VisitorChat, {
+    foreignKey: "chatbotId",
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+});
+VisitorChat.belongsTo(Chatbot, { foreignKey: "chatbotId" });
+
 // Each Intent can have more than one chip
 Intent.hasMany(Chip, {
     foreignKey: "intentId",
@@ -168,6 +177,7 @@ module.exports = {
     Query,
     Entity,
     VisitorDetails,
+    VisitorChat,
     Chip,
     Card,
     Settings,

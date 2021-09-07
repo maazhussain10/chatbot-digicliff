@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import chatbotService from '../../services/chatbot.service.js';
+import entityService from '../../services/entity.service.js';
+import './css/stats.css';
 import Navbar from '../common/Navbar';
 import LineChart from './charts/LineChart';
 import PieChart from './charts/PieChart';
@@ -9,7 +11,9 @@ const Stats = (props) => {
   const [existingChatbots, setExistingChatbots] = useState([]);
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const [selectedChatbot, setSelectedChatbot] = useState('Select Chatbot');
-  const [visitorDetails, setVisitorDetails] = useState(undefined);
+  const [selectedChatbotId, setSelectedChatbotId] = useState('');
+  const [visitorDetails, setVisitorDetails] = useState([]);
+  const [chatDetails, setChatDetails] = useState([]);
   const [ipAddresses, setIpAddresses] = useState([]);
   const [val, setval] = useState(true);
 
@@ -17,12 +21,64 @@ const Stats = (props) => {
     getExistingBots();
   }, []);
 
+  useEffect(() => {
+    document.getElementById('btnPrint').onclick = function () {
+      printElement(document.getElementById('printThis'));
+    };
+    document.getElementById('btnPrint2').onclick = function () {
+      printElement(document.getElementById('printThis2'));
+    };
+    function printElement(elem) {
+      var domClone = elem.cloneNode(true);
+      var $printSection = document.getElementById('printSection');
+      if (!$printSection) {
+        var $printSection = document.createElement('div');
+        $printSection.id = 'printSection';
+        document.body.appendChild($printSection);
+      }
+      $printSection.innerHTML = '';
+      $printSection.appendChild(domClone);
+      window.print();
+    }
+    function printElement2(elem) {
+      var domClone = elem.cloneNode(true);
+      var $printSection = document.getElementById('printSection');
+      if (!$printSection) {
+        var $printSection = document.createElement('div');
+        $printSection.id = 'printSection';
+        document.body.appendChild($printSection);
+      }
+      $printSection.innerHTML = '';
+      $printSection.appendChild(domClone);
+      window.print();
+    }
+  });
+
+  const viewEntityDetails = async (ipAddress, type) => {
+    try {
+      let response = await entityService.getEntityDetails(
+        ipAddress,
+        selectedChatbotId,
+        type,
+        accessToken,
+        setAccessToken
+      );
+      if (type === 'entity') setVisitorDetails(response.data);
+      else if (type === 'chat') setChatDetails(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const setChatbot = async (e) => {
-    setSelectedChatbot(e.target.value);
+    let temp = e.target.value.split('|||');
+    console.log(temp);
+    setSelectedChatbot(temp[1]);
+    setSelectedChatbotId(temp[0]);
+    console.log(selectedChatbot, selectedChatbotId);
     for (let i = 0; i < existingChatbots.length; i++) {
-      if (existingChatbots[i].chatbotName === selectedChatbot) {
-        setVisitorDetails(existingChatbots[i].visitorDetails);
-        setIpAddresses(Object.keys(existingChatbots[i].visitorDetails));
+      if (existingChatbots[i].chatbotName === e.target.value.split('|||')[1]) {
+        setIpAddresses(existingChatbots[i].visitors);
       }
     }
   };
@@ -32,7 +88,6 @@ const Stats = (props) => {
     temp[i].status = !temp[i].status;
     setExistingChatbots(temp);
     setval(!val);
-    console.log(val);
   };
 
   const getExistingBots = async () => {
@@ -69,7 +124,7 @@ const Stats = (props) => {
                   </svg>
                 </p>
                 <h2 className="">{chatbot.chatbotName}</h2>
-                <p>CreatedAt*</p>
+                <p>{chatbot.createdAt.slice(0, 10)}</p>
               </div>
             </div>
           ))}
@@ -81,9 +136,9 @@ const Stats = (props) => {
             <div className="card shadow" style={{ minHeight: '640px' }}>
               <h4 className="text-left ml-3 mt-3">Activity</h4>
               <hr style={{ width: '100%' }} />
-              <LineChart existingChatbots={existingChatbots} val={val} />
+              <LineChart chatbots={existingChatbots} />
               <span className="mb-5"></span>
-              <table class="table table-striped table-responsive-sm">
+              <table class="table table-striped table-responsive-md">
                 <thead>
                   <tr>
                     <th scope="col">SNo</th>
@@ -98,7 +153,7 @@ const Stats = (props) => {
                     <tr>
                       <th scope="row">{index + 1}</th>
                       <td>{chatbot.chatbotName}</td>
-                      <td>{Object.keys(chatbot.visitorDetails).length}</td>
+                      <td>{chatbot.visitors.length}</td>
                       <td>{chatbot.createdAt.slice(0, 10)}</td>
                       <td>
                         {chatbot.status ? (
@@ -146,24 +201,11 @@ const Stats = (props) => {
             </div>
           </div>
           <div className="col-md-6">
-            {existingChatbots
-              .slice(0, existingChatbots.length / 2 + 1)
-              .map((chatbot, index) => (
-                <div className="row text-center">
-                  {existingChatbots[2 * index] &&
-                  existingChatbots[2 * index].status ? (
-                    <div className="col-sm-6">
-                      <PieChart chatbots={existingChatbots[2 * index]} />
-                    </div>
-                  ) : null}
-                  {existingChatbots[2 * index + 1] &&
-                  existingChatbots[2 * index + 1].status ? (
-                    <div className="col-sm-6">
-                      <PieChart chatbots={existingChatbots[2 * index + 1]} />
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+            <div className="row text-center">
+              <div className="col-sm-6">
+                <PieChart chatbots={existingChatbots} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -189,7 +231,11 @@ const Stats = (props) => {
               >
                 <option selected>Select Chatbot</option>
                 {existingChatbots.map((chatbot, index) => (
-                  <option value={chatbot.chatbotName} key={index}>
+                  <option
+                    value={chatbot.chatbotId + '|||' + chatbot.chatbotName}
+                    id="selected-bot"
+                    key={chatbot.chatbotId}
+                  >
                     {chatbot.chatbotName}
                   </option>
                 ))}
@@ -202,36 +248,181 @@ const Stats = (props) => {
 
       {selectedChatbot !== 'Select Chatbot' ? (
         <div>
-          <table class="table table-bordered table-responsive-md container">
+          <table className="table table-bordered table-responsive-md container">
             <thead>
               <tr>
                 <th scope="col">S No.</th>
                 <th scope="col">IP Address</th>
-                <th scope="col">Enitity Type</th>
-                <th scope="col">Enitity Name</th>
-                <th scope="col">Visitor Detail</th>
-                <th scope="col">Chat Details</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Location</th>
+                <th scope="col">Enitity Details</th>
                 <th scope="col">Chat Transcription</th>
               </tr>
             </thead>
             <tbody>
-              {ipAddresses.map((ip, index) =>
-                visitorDetails[ip].map((visitorDetail, index3) => (
-                  <tr>
-                    <td scope="row">{index + 1}</td>
-                    <td>{ip}</td>
-                    <td>{visitorDetail.entityType}</td>
-                    <td>{visitorDetail.entityName}</td>
-                    <td>{visitorDetail.entityValue}</td>
-                    <td>12 Mins</td>
-                    <td>Download</td>
-                  </tr>
-                ))
-              )}
+              {ipAddresses.map((ip, index) => (
+                <tr>
+                  <td scope="row">{index + 1}</td>
+                  <td>{ip.ipAddress}</td>
+                  <td>
+                    {ip.duration.length <= 2
+                      ? ip.duration + ' Seconds'
+                      : ip.duration + ' Minutes'}
+                  </td>
+                  <td>{ip.city}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#entityModal"
+                      onClick={() => viewEntityDetails(ip.ipAddress, 'entity')}
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#chatModal"
+                      onClick={() => viewEntityDetails(ip.ipAddress, 'chat')}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       ) : null}
+
+      {/* VISITOR DETAILS MODAL */}
+      <div id="printThis">
+        <div
+          class="modal fade"
+          id="entityModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="entityModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="entityModalLabel">
+                  Entity Details
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">SNo</th>
+                      <th scope="col">Ip Address</th>
+                      <th scope="col">Entity Type</th>
+                      <th scope="col">Entity Name</th>
+                      <th scope="col">Entity Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visitorDetails.map((visitorDetail, index) => (
+                      <tr>
+                        <th scope="row">{index + 1}</th>
+                        <td>{visitorDetail.ipAddress}</td>
+                        <td>{visitorDetail.entityType}</td>
+                        <td>{visitorDetail.entityName}</td>
+                        <td>{visitorDetail.entityValue}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" id="btnPrint" class="btn btn-primary">
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {/* CHAT DETAILS MODAL */}
+      <div id="printThis2">
+        <div
+          class="modal fade"
+          id="chatModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="chatModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="chatModalLabel">
+                  Entity Details
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                {chatDetails.map((chatDetail, index) => (
+                  <div>
+                    {chatDetail.type === 'user' ?
+                      <div style={{ fontFamily: 'Arial'}}
+                      >
+                        {chatDetail.message}
+                      </div> :
+                      <div>
+                        {chatDetail.message}
+                        </div>
+                      }
+                    </div>
+                  ))}
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" id="btnPrint2" class="btn btn-primary">
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 };

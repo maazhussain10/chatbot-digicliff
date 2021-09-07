@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect,useReducer } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import cardService from '../../services/card.service.js';
@@ -15,6 +15,14 @@ const RichResponses = (props) => {
   const [disableChip, setDisableChip] = useState(false);
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const intentId = sessionStorage.getItem('intent');
+  const [cardValues, setCardValues] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    { header: '', subHeader: '', details: '', link: '', linkButton: '' }
+  );
+
+  const handleChange = (e) => {
+    setCardValues({ [e.target.name]: [e.target.value] });
+  };
 
   useEffect(() => {
     getCards();
@@ -60,9 +68,16 @@ const RichResponses = (props) => {
     }
   };
 
-  const updateCard = async () => {
+  const updateCard = async (card) => {
     try {
-      await cardService.put(intentId, accessToken, setAccessToken);
+      console.log(card, cardValues);
+      await cardService.put(
+        intentId,
+        card,
+        cardValues,
+        accessToken,
+        setAccessToken
+      );
       getCards();
     } catch (e) {
       console.log(e);
@@ -159,15 +174,6 @@ const RichResponses = (props) => {
               className="carousel slide"
               data-ride="carousel"
             >
-              {/* <ol className="carousel-indicators">
-                {cards.map((card, index) => (
-                  <li
-                    data-target="#displayCards"
-                    data-slide-to={index}
-                    className={getActiveClass('', index)}
-                  ></li>
-                ))}
-              </ol> */}
               <div className="carousel-inner">
                 {/* Displays all the cards in the list using map function */}
                 {cards.map((card, index) => (
@@ -293,6 +299,8 @@ const RichResponses = (props) => {
                                   <input
                                     className=""
                                     type="text"
+                                    onChange={handleChange}
+                                    name="header"
                                     value={card.cardValues.split('|||')[0]}
                                   />
                                 </div>
@@ -301,6 +309,8 @@ const RichResponses = (props) => {
                                     <input
                                       className=""
                                       type="text"
+                                      onChange={handleChange}
+                                      name="subHeader"
                                       value={card.cardValues.split('|||')[1]}
                                     />
                                   </h5>
@@ -308,9 +318,41 @@ const RichResponses = (props) => {
                                     <input
                                       type="text"
                                       className=""
+                                      onChange={handleChange}
+                                      name="details"
                                       value={card.cardValues.split('|||')[2]}
                                     />
                                   </p>
+                                  {card.cardOrder === 5 ? (
+                                    <div>
+                                      <h5 className="card-title">
+                                        <input
+                                          style={{ color: '#000000' }}
+                                          onChange={handleChange}
+                                          name="link"
+                                          value={
+                                            card.cardValues.split('|||')[3]
+                                          }
+                                          className="input-card"
+                                          type="text"
+                                          placeholder="Link"
+                                        />
+                                      </h5>
+                                      <h5 className="card-title">
+                                        <input
+                                          style={{ color: '#000000' }}
+                                          onChange={handleChange}
+                                          name="linkButton"
+                                          value={
+                                            card.cardValues.split('|||')[4]
+                                          }
+                                          className="input-card"
+                                          type="text"
+                                          placeholder="Ex - go to google"
+                                        />
+                                      </h5>
+                                    </div>
+                                  ) : null}
                                 </div>
                               </div>
                             </div>
@@ -323,7 +365,11 @@ const RichResponses = (props) => {
                             >
                               Close
                             </button>
-                            <button type="button" className="btn btn-primary">
+                            <button
+                              type="button"
+                              onClick={() => updateCard(card)}
+                              className="btn btn-primary"
+                            >
                               Save changes
                             </button>
                           </div>

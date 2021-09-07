@@ -17,10 +17,10 @@ class CardService {
         return response;
     }
 
-    async update(intentId, accessToken, setAccessToken) {
+    async put(intentId,card,cardValues, accessToken, setAccessToken) {
         let authInterceptor = createInterceptor(setAccessToken);
         let response = await authInterceptor.put(API_URL + "chatbot/intent/card", {
-            intentId
+            intentId,card,cardValues
         }, {
             headers: authHeader(accessToken)
         });

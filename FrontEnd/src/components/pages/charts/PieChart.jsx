@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { Chart } from 'react-google-charts';
 
 const PieChart = (props) => {
-    console.log(props.  chatbots);
+
+  const [data, setData] = useState([])
+  useEffect(() => {
+    let { chatbots } = props;
+    let pieChartData = []
+    pieChartData = [["Chatbot", "Duration"]];
+    for (let i = 0; i < chatbots.length; i++) {
+      if (chatbots[i].status) {
+          let temp = [];
+          temp.push(chatbots[i].chatbotName)
+          temp.push(parseInt(chatbots[i].botDuration))
+          pieChartData.push(temp);
+      }
+    }
+    console.log("PPPP",pieChartData)
+    setData(pieChartData)
+  }, [props])
 
   return (
     <Chart
-      width={'250px'}
-      height={'250px'}
+      width={'600px'}
+      height={'600px'}
       chartType="PieChart"
       loader={<div>Loading Chart</div>}
-      data={[
-        ['Task', 'Hours per Day'],
-        ['Work', 11],
-        ['Eat', 2],
-        ['Commute', 2],
-        ['Watch TV', 2],
-        ['Sleep', 7],
-      ]}
+      data={data}
       options={{
-        title: 'My Daily Activities',
+        title: "Time Duration",
         // Just add this option
         is3D: true,
       }}

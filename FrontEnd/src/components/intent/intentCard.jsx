@@ -13,8 +13,9 @@ const IntentCard = (props) => {
                 <a className="intentCard" onClick={() => selectIntent()} href={`/dashboard/intent/messages`}>
                     <div className={"card-body " + (props.intent.previousIntent ? "follow" : "")}>
                         <div className="row">
+                            <div className={"col-md-"+(props.intent.intentId.length-36)/4}></div>
                             <h5 className="card-title col-md-3">{props.intent.intentName}</h5>
-                            <p className="card-text col-md-7">{props.intent.description} </p>
+                            <p className={"card-text col-md-"+(7-((props.intent.intentId.length)-36)/4)}>{props.intent.description} </p>
                             <div className="col-md-2 d-flex justify-content-end">
                                 <div className="button-group" role="group" aria-label="Basic example">
                                     <button onClick={() => props.setPreviousIntent(props.intent.intentId)} type="button" data-toggle="modal" data-target="#createIntent" className="btn btn-sm btn-outline-primary mr-1">
@@ -31,7 +32,6 @@ const IntentCard = (props) => {
                                             <path fillRule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
                                         </svg>
                                     </button>
-
                                 </div>
                             </div>
                         </div>

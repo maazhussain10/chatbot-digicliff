@@ -47,13 +47,17 @@ cardRoute.get("/", async (req, res) => {
 });
 
 cardRoute.put("/", async (req, res) => {
-    let { intentId, cardFields, cardValues } = req.body;
+    let { intentId, card, cardValues } = req.body;
+    cardValues = Object.values(cardValues).slice(0, card.cardOrder).join("|||")
+    console.log(intentId, card, cardValues)
+
     try {
         await db.Card.update(
-            { cardFields, cardValues },
+            { intentId, cardValues },
             {
                 where: {
                     intentId,
+                    cardValues:card.cardValues
                 },
             }
         );
