@@ -31,6 +31,8 @@ const Chip = (props) => {
           name={chip}
           style={{
             backgroundColor: chipBgColor,
+            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            margin: `2px`,
             color: chipTextColor,
             border: `2px solid ${chipBorder}`,
             fontFamily: chipFont,

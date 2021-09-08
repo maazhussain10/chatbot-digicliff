@@ -10,7 +10,7 @@ const chatbotRouter = require('./chatbot');
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/user', verifyJWT, userRouter);
 apiRouter.use('/chatbot', verifyJWT, chatbotRouter);
-apiRouter.use('/chat-window', verifyJWT, chatWindowRouter);
+apiRouter.use('/chat-window', chatWindowRouter);
 apiRouter.use('/refresh-token', refrshTokenRoute);
 
 module.exports = apiRouter;

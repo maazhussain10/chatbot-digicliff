@@ -22,11 +22,29 @@ visitorEntityRoute.get('/', async (req, res) => {
                     chatbotId: selectedChatbotId,
                     ipAddress
                 },
-                order:["createdAt"]
+                order: ["createdAt"]
             })
             res.status(200).json(chatList);
         }
     } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+visitorEntityRoute.delete('/', async (req, res) => {
+    let { ipAddress, selectedChatbotId } = req.query;
+    try {
+        let entitiesList = await db.VisitorChat.destroy({
+            raw: true,
+            where: {
+                chatbotId: selectedChatbotId,
+                ipAddress
+            },
+        })
+        res.status(200).json(entitiesList);
+    }
+    catch (err) {
         console.log(err);
         res.status(500).send(err);
     }

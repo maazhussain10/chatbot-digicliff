@@ -64,11 +64,11 @@ const Navbar = (props) => {
               </li>
             </React.Fragment>
           ) : null}
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a className="nav-link" href="/docs">
               Documentation<span className="sr-only">(current)</span>
             </a>
-          </li>
+          </li> */}
           {props.children}
         </ul>
 

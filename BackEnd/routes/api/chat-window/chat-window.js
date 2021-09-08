@@ -1,5 +1,4 @@
 const chatWindowRoute = require("express").Router();
-const publicIp = require("public-ip");
 const db = require("../../../models");
 const NLP = require("../../../helpers/NLP");
 const { getRichResponses } = require("../../../helpers/NLP");
@@ -19,7 +18,7 @@ chatWindowRoute.get("/", async (req, res) => {
                 chatbotId,
             },
         });
-        if (!results) res.sendStatus(404);
+        if (!results) return res.sendStatus(404);
 
         let [cardBgColor, cardTextColor, cardBorder, cardFont] =
             results.cardTheme.split(",");
@@ -66,7 +65,7 @@ chatWindowRoute.get("/", async (req, res) => {
             ],
         });
 
-        res.status(200).json({ theme: settings, chatbot });
+        return res.status(200).json({ theme: settings, chatbot });
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
@@ -76,9 +75,8 @@ chatWindowRoute.get("/", async (req, res) => {
 chatWindowRoute.post("/", async (req, res) => {
     try {
         let { chatbotId, message, hasFollowUp, previousIntent } = req.body;
-        let ipAddress = await publicIp.v4();
-        let geo = geoip.lookup(ipAddress).city
-        console.log(geoip.lookup(ipAddress));
+        const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress)?.slice(7);
+        console.log("AAA", chatbotId, message, hasFollowUp, previousIntent);
         await db.VisitorChat.upsert({
             chatbotId,
             ipAddress,
@@ -102,7 +100,8 @@ chatWindowRoute.post("/", async (req, res) => {
         });
 
         nextIntent.hasFollowUp = hasFollowUpResponse.length !== 0;
-        nextIntent.previousIntent = intentId;
+        nextIntent.previousIntent = (nextIntent.hasFollowUp) ? intentId : undefined;
+        console.log(nextIntent);
         if (intentId === "None") {
             console.log("No Intent");
             let data = {
@@ -174,7 +173,7 @@ chatWindowRoute.post("/", async (req, res) => {
 
         let result = await db.Query.findByPk(intentId);
         let query = "";
-        console.log(result);
+
         if (result !== null) query = result.query;
         // Add entity value to message from visitor deta
         for (let i = 0; i < messages.length; i++) {

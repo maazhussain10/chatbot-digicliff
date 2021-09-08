@@ -1,8 +1,10 @@
 import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
+import chatboxLogo from '../../assets/images/chatlogo.png'
 import Navbar from '../common/Navbar';
 import settingsService from '../../services/settings.service.js';
 import ChatWindow from '../chatbox/ChatWindow';
+import $ from 'jquery';
 
 const Settings = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
@@ -57,6 +59,15 @@ const Settings = (props) => {
   };
 
   useEffect(async () => {
+    $('.chats-box').toggle(0);
+    $(function () {
+      $('.minimize').on('click', function () {
+        $('.chats-box').toggle(1000);
+      });
+      $('.chatbox-popup').on('click', function () {
+        $('.chats-box').toggle(1000);
+      });
+    });
     try {
       let chatbotId = sessionStorage.getItem('chatbot');
       const settingsResponse = await settingsService.get(
@@ -176,7 +187,7 @@ const Settings = (props) => {
                           Settings
                         </h1>
                         <div className="row">
-                          <div className="col-lg-3">
+                          <div className="col-lg-3 pb-3">
                             <div className="text-center">
                               <div
                                 className="nav flex-column nav-pills"
@@ -643,7 +654,19 @@ const Settings = (props) => {
                         <ChatWindow
                           theme={theme}
                           messageStorage={messageStorage}
+                          disableInput={true}
                         />
+                        <div className="chatbox-popup">
+                          <div className="circle">
+                            <span className="chatbox-click">
+                              <img
+                                src={chatboxLogo}
+                                alt="Logo"
+                                className="img-responsive center-block"
+                              />
+                            </span>
+                          </div>
+                        </div>
 
                         {/* <div className="chats-box" style={{ bottom: '4px' }}>
                   <ChatboxTop
@@ -702,7 +725,7 @@ const Settings = (props) => {
                   </div>
                 </div> */}
                       </div>
-                      <div style={{ paddingLeft: '35%', paddingBottom: '2%' }}>
+                      <div style={{ paddingLeft: '35%', paddingBottom: '2%', paddingTop: '11%' }}>
                         {' '}
                         <button
                           onClick={() => saveChanges()}

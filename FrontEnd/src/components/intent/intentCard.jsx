@@ -13,9 +13,9 @@ const IntentCard = (props) => {
                 <a className="intentCard" onClick={() => selectIntent()} href={`/dashboard/intent/messages`}>
                     <div className={"card-body " + (props.intent.previousIntent ? "follow" : "")}>
                         <div className="row">
-                            <div className={"col-md-"+(props.intent.intentId.length-36)/4}></div>
+                            <div className={"col-md-" + (props.intent.intentId.length - 36) / 4}></div>
                             <h5 className="card-title col-md-3">{props.intent.intentName}</h5>
-                            <p className={"card-text col-md-"+(7-((props.intent.intentId.length)-36)/4)}>{props.intent.description} </p>
+                            <p className={"card-text col-md-" + (7 - ((props.intent.intentId.length) - 36) / 4)}>{props.intent.description} </p>
                             <div className="col-md-2 d-flex justify-content-end">
                                 <div className="button-group" role="group" aria-label="Basic example">
                                     <button onClick={() => props.setPreviousIntent(props.intent.intentId)} type="button" data-toggle="modal" data-target="#createIntent" className="btn btn-sm btn-outline-primary mr-1">

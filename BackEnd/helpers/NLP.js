@@ -9,7 +9,7 @@ const wordpos = new WordPOS();
 module.exports = {
     identifyIntent: async (chatbotId, message, hasFollowUp, previousIntent) => {
         const manager = new NlpManager({ languages: ["en"], forceNER: true, });
-        // console.log(hasFollowUp, previousIntent);
+        console.log(hasFollowUp, previousIntent);
         // Get the intents that doesnt have a follow up.
         let intents;
         if (!hasFollowUp) {
@@ -33,6 +33,7 @@ module.exports = {
                 }
             });
         }
+
         // Loop till all the intents are iterated.
         for (let i = 0; i < intents.length; i++) {
             let intentId = intents[i].intentId;
@@ -64,8 +65,12 @@ module.exports = {
         manager.save()
 
         // Pass the users message as a parameter and process the model to find which intent it classified.
+        console.log("Test", intents.length, previousIntent)
         let identifiedIntent = await manager.process("en", message);
-
+        if (intents.length === 1 && previousIntent) {
+            identifiedIntent.intent = intents[0].intentId;
+            console.log(identifiedIntent.intent);
+        }
         return identifiedIntent;
     },
     storeVisitorInfo: async (chatbotId, identifiedEntities, definedEntities, message, ipAddress) => {
@@ -133,12 +138,12 @@ module.exports = {
                         }
                     }
                 }
-                if (chips.length!==0) {
+                if (chips.length !== 0) {
                     for (let i = 0; i < chips.length; i++) {
                         for (let j = 0; j < entities.length; j++) {
                             let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
                             if (chips)
-                                chips = chips.replace(regex, entities[j].entityValue)
+                                chips[i] = chips[i].replace(regex, entities[j].entityValue)
                         }
                     }
                 }

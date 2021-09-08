@@ -32,12 +32,13 @@ const Intents = (props) => {
         let chatbotId = sessionStorage.getItem('chatbot');
         setChatbotId(chatbotId);
         try {
+            let chatbotId = sessionStorage.getItem('chatbot');
             const response = await intentService.get(chatbotId, accessToken, setAccessToken);
+            console.log(response.data.length);
             setIntents(response.data);
         } catch (err) {
             console.log(err);
         }
-
         // To Prevent button from redirecting
         $(document).on('click', ".button-group", function (e) {
             e.stopPropagation();
@@ -45,17 +46,28 @@ const Intents = (props) => {
         });
     }, []);
 
+    const getIntents = () => {
+        try {
+            let chatbotId = sessionStorage.getItem('chatbot');
+            const response = intentService.get(chatbotId, accessToken, setAccessToken);
+            console.log(response.data.length);
+            setIntents(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const clearState = () => {
         setStatus(undefined);
         setMessage("");
+        setPreviousIntent(undefined);
     }
 
     const onCreate = async (values) => {
         try {
             let response = await intentService.create(values, previousIntent, chatbotId, accessToken, setAccessToken);
-            let newIntent = response.data;
-            setIntents([...intents, newIntent]);
+            setIntents(prevIntents => [...prevIntents, response.data])
+            getIntents();
             clearState();
             $('#createIntent').modal('hide')
         } catch (err) {
@@ -92,21 +104,15 @@ const Intents = (props) => {
         try {
             console.log("Deleting");
             await intentService.delete(intent.intentId, accessToken, setAccessToken);
-            setIntents([...intents].filter(item => item.intentId !== intent.intentId));
+            setIntents(prevIntents => prevIntents.filter(item => item.intentId !== intent.intentId));
+            getIntents();
         } catch (err) {
             console.log(err);
         }
     }
-
-    console.log(intents);
     return (
         <React.Fragment>
             <Navbar isAuthenticated={props.isAuthenticated} >
-                <li className="nav-item">
-                    <a id="creat" type="button" className=" nav-link" data-toggle="modal" data-target="#databaseModal">
-                        Connect DB
-                    </a>
-                </li>
             </Navbar>
 
             <div className="text-center mt-5 ">

@@ -25,12 +25,23 @@ class EntityService {
             return err;
         }
     }
-    
-    async getEntityDetails(ipAddress, selectedChatbotId,type, accessToken, setAccessToken) {
+
+    async getEntityDetails(ipAddress, selectedChatbotId, type, accessToken, setAccessToken) {
         try {
             console.log(ipAddress);
             let authInterceptor = createInterceptor(setAccessToken);
-            let response = await authInterceptor.get(API_URL + "chatbot/intent/visitor-entity", { headers: authHeader(accessToken), params: { ipAddress, selectedChatbotId,type } });
+            let response = await authInterceptor.get(API_URL + "chatbot/intent/visitor-entity", { headers: authHeader(accessToken), params: { ipAddress, selectedChatbotId, type } });
+            return response;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    async deleteVisitor(ipAddress, selectedChatbotId, accessToken, setAccessToken) {
+        try {
+            console.log(ipAddress);
+            let authInterceptor = createInterceptor(setAccessToken);
+            let response = await authInterceptor.delete(API_URL + "chatbot/intent/visitor-entity", { headers: authHeader(accessToken), params: { ipAddress, selectedChatbotId } });
             return response;
         } catch (err) {
             return err;

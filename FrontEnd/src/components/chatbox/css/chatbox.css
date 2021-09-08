@@ -79,7 +79,7 @@
   z-index: 1;
   margin: 20px;
   margin-top: 50px;
-  width: 400px;
+  width: 100%;
   /* display: none; */
   position: fixed;
   right: 20px;
@@ -100,6 +100,9 @@
   border-top-right-radius: 6px;
   background: #0180fe;
   line-height: 1.6;
+
+  height: 100px;
+  box-sizing: border-box;
 }
 
 .chats-box .chatbox-top .chatbox-profile {
@@ -245,7 +248,7 @@
 
 .chats-box .chatbox-body {
   padding: 15px 18px;
-  height: 330px;
+  height: calc(100% - 140px);
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: white;
@@ -440,6 +443,9 @@
   font-weight: 400;
   padding: 5px 8px;
   margin: 0 4px 10px 0;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px !important;
   -webkit-transition: all 0.16s ease-in-out;
   transition: all 0.16s ease-in-out;
 }
@@ -670,7 +676,7 @@
 .chats-box ::-webkit-scrollbar-track {
   background: #fff;
 }
-.chatbox{
+.chatbox {
   scrollbar-color: #0180fe;
 }
 .chats-box ::-webkit-scrollbar-thumb {
@@ -706,7 +712,6 @@
   min-height: 40px;
   height: auto;
   max-height: 115px;
-
   width: calc(100% - 30px);
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -738,13 +743,6 @@
   -moz-box-shadow: -2px 4px 29px 0px rgba(0, 0, 0, 0.07);
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-}
-
-@media (max-width: 767px) and (min-width: 320px) {
-  .chats-box {
-    width: 292px;
-    right: 0;
-  }
 }
 
 /*# sourceMappingURL=chatsbot.css.map */ ;

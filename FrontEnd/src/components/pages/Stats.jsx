@@ -70,12 +70,25 @@ const Stats = (props) => {
     }
   };
 
+  const deleteVisitor = async (ipAddress) => {
+    try {
+      let response = await entityService.deleteVisitor(
+        ipAddress,
+        selectedChatbotId,
+        accessToken,
+        setAccessToken
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const setChatbot = async (e) => {
     let temp = e.target.value.split('|||');
     console.log(temp);
     setSelectedChatbot(temp[1]);
     setSelectedChatbotId(temp[0]);
-    console.log(selectedChatbot, selectedChatbotId);
+
     for (let i = 0; i < existingChatbots.length; i++) {
       if (existingChatbots[i].chatbotName === e.target.value.split('|||')[1]) {
         setIpAddresses(existingChatbots[i].visitors);
@@ -91,19 +104,24 @@ const Stats = (props) => {
   };
 
   const getExistingBots = async () => {
+    console.log("BOTS");
+
     let response = await chatbotService.getExistingBots(
       accessToken,
       setAccessToken
     );
+
     setExistingChatbots(response.data);
+    console.log("BOTS", response.data);
   };
+  console.log(selectedChatbot, selectedChatbotId);
   return (
     <div>
       <Navbar isAuthenticated={props.isAuthenticated}></Navbar>
       <div className="container text-center" style={{ fontFamily: 'Tinos' }}>
-        <div className="row row-cols-6 d-flex justify-content-center">
-          {existingChatbots.map((chatbot, index) => (
-            <div className="col-sm-2 pb-3" onClick={() => setStatus(index)}>
+        <div className="row  d-flex justify-content-center">
+          {existingChatbots?.map((chatbot, index) => (
+            <div className="col-md-2 pb-3" onClick={() => setStatus(index)}>
               <div
                 className="card shadow border border-primary d-flex justify-content-between"
                 style={{ minHeight: '200px' }}
@@ -117,7 +135,7 @@ const Stats = (props) => {
                     width="16"
                     height="16"
                     fill="currentColor"
-                    class="bi bi-circle-fill"
+                    className="bi bi-circle-fill"
                     viewBox="0 0 16 16"
                   >
                     <circle cx="8" cy="8" r="8" />
@@ -132,13 +150,22 @@ const Stats = (props) => {
         <br />
         <br />
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-lg-6">
             <div className="card shadow" style={{ minHeight: '640px' }}>
-              <h4 className="text-left ml-3 mt-3">Activity</h4>
-              <hr style={{ width: '100%' }} />
-              <LineChart chatbots={existingChatbots} />
+              <div className="card-header">
+                <h4 className="text-left ml-3 mt-3">Activity</h4>
+              </div>
+              <br />
+              <br />
+              <div className="row container">
+                <div className="col-12 offset-1">
+                  <LineChart chatbots={existingChatbots} />
+                </div>
+              </div>
+
+
               <span className="mb-5"></span>
-              <table class="table table-striped table-responsive-md">
+              <table className="table table-striped table-responsive-md" style={{ maxHeight: "550px" }}>
                 <thead>
                   <tr>
                     <th scope="col">SNo</th>
@@ -149,7 +176,7 @@ const Stats = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {existingChatbots.map((chatbot, index) => (
+                  {existingChatbots?.map((chatbot, index) => (
                     <tr>
                       <th scope="row">{index + 1}</th>
                       <td>{chatbot.chatbotName}</td>
@@ -167,7 +194,7 @@ const Stats = (props) => {
                               width="16"
                               height="16"
                               fill="currentColor"
-                              class="bi bi-eye-fill"
+                              className="bi bi-eye-fill"
                               viewBox="0 0 16 16"
                             >
                               <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
@@ -185,7 +212,7 @@ const Stats = (props) => {
                               width="16"
                               height="16"
                               fill="currentColor"
-                              class="bi bi-eye-slash-fill"
+                              className="bi bi-eye-slash-fill"
                               viewBox="0 0 16 16"
                             >
                               <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
@@ -200,7 +227,7 @@ const Stats = (props) => {
               </table>
             </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-lg-6 pt-3">
             <div className="row text-center">
               <div className="col-sm-6">
                 <PieChart chatbots={existingChatbots} />
@@ -214,23 +241,23 @@ const Stats = (props) => {
       <br />
       <div className="container">
         <div className="row">
-          <div className="col-6 offset-3">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
+          <div className="col-sm-6 offset-3">
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
                 <label
-                  class="input-group-text primary"
-                  for="inputGroupSelect01"
+                  className="input-group-text primary"
+                  htmlFor="inputGroupSelect01"
                 >
                   Options
                 </label>
               </div>
               <select
-                class="custom-select"
+                className="custom-select"
                 id="inputGroupSelect01"
                 onChange={setChatbot}
               >
                 <option selected>Select Chatbot</option>
-                {existingChatbots.map((chatbot, index) => (
+                {existingChatbots?.map((chatbot, index) => (
                   <option
                     value={chatbot.chatbotId + '|||' + chatbot.chatbotName}
                     id="selected-bot"
@@ -248,7 +275,7 @@ const Stats = (props) => {
 
       {selectedChatbot !== 'Select Chatbot' ? (
         <div>
-          <table className="table table-bordered table-responsive-md container">
+          <table className="table table-bordered table-responsive-sm container">
             <thead>
               <tr>
                 <th scope="col">S No.</th>
@@ -257,6 +284,7 @@ const Stats = (props) => {
                 <th scope="col">Location</th>
                 <th scope="col">Enitity Details</th>
                 <th scope="col">Chat Transcription</th>
+                <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -292,6 +320,17 @@ const Stats = (props) => {
                       View
                     </button>
                   </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => deleteVisitor(ip.ipAddress)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                      </svg>
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -302,31 +341,31 @@ const Stats = (props) => {
       {/* VISITOR DETAILS MODAL */}
       <div id="printThis">
         <div
-          class="modal fade"
+          className="modal fade"
           id="entityModal"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="entityModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="entityModalLabel">
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="entityModalLabel">
                   Entity Details
                 </h5>
                 <button
                   type="button"
-                  class="close"
+                  className="close"
                   data-dismiss="modal"
                   aria-label="Close"
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
-                <table class="table">
-                  <thead class="thead-dark">
+              <div className="modal-body">
+                <table className="table">
+                  <thead className="thead-dark">
                     <tr>
                       <th scope="col">SNo</th>
                       <th scope="col">Ip Address</th>
@@ -348,15 +387,15 @@ const Stats = (props) => {
                   </tbody>
                 </table>
               </div>
-              <div class="modal-footer">
+              <div className="modal-footer">
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  className="btn btn-secondary"
                   data-dismiss="modal"
                 >
                   Close
                 </button>
-                <button type="button" id="btnPrint" class="btn btn-primary">
+                <button type="button" id="btnPrint" className="btn btn-primary">
                   Download
                 </button>
               </div>
@@ -369,52 +408,52 @@ const Stats = (props) => {
       {/* CHAT DETAILS MODAL */}
       <div id="printThis2">
         <div
-          class="modal fade"
+          className="modal fade"
           id="chatModal"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="chatModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="chatModalLabel">
-                  Entity Details
+          <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="chatModalLabel">
+                  Chat Details
                 </h5>
                 <button
                   type="button"
-                  class="close"
+                  className="close"
                   data-dismiss="modal"
                   aria-label="Close"
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div className="modal-body">
                 {chatDetails.map((chatDetail, index) => (
                   <div>
-                    {chatDetail.type === 'user' ?
-                      <div style={{ fontFamily: 'Arial'}}
+                    {chatDetail.messageType === 'user' ?
+                      <div style={{ fontFamily: 'Arial', float: "left", clear: "both" }}
                       >
                         {chatDetail.message}
                       </div> :
-                      <div>
+                      <div style={{ fontFamily: 'Arial', float: "right", clear: "both" }}>
                         {chatDetail.message}
-                        </div>
-                      }
-                    </div>
-                  ))}
+                      </div>
+                    }
+                  </div>
+                ))}
               </div>
-              <div class="modal-footer">
+              <div className="modal-footer">
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  className="btn btn-secondary"
                   data-dismiss="modal"
                 >
                   Close
                 </button>
-                <button type="button" id="btnPrint2" class="btn btn-primary">
+                <button type="button" id="btnPrint2" className="btn btn-primary">
                   Download
                 </button>
               </div>
@@ -422,7 +461,10 @@ const Stats = (props) => {
           </div>
         </div>
       </div>
-
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

@@ -40,7 +40,9 @@ class IntentService {
     async get(chatbotId, accessToken, setAccessToken) {
         try {
             let authInterceptor = createInterceptor(setAccessToken);
+            console.log("psss")
             let response = await authInterceptor.get(API_URL + "chatbot/intent", { headers: authHeader(accessToken), params: { chatbotId } });
+            console.log(response.data);
             return response;
         } catch (err) {
             return err;

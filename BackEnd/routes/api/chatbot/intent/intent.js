@@ -8,13 +8,13 @@ intentRoute.get('/', async (req, res) => {
     try {
 
         let intents = await db.Intent.findAll({
+            raw: true,
             attributes: [['id', 'intentId'], 'intentName', 'description', 'multipleReply', 'previousIntent', 'createdAt'],
             where: {
                 chatbotId
             },
-            order: ['id']
+            order: [['id'], ['createdAt']]
         })
-
         res.status(200).json(intents);
     } catch (err) {
         res.status(500).send(err);

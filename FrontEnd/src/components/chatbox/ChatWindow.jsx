@@ -13,6 +13,7 @@ import Messages from './Messages.jsx';
 
 const ChatWindow = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
+  const chatboxRef = useRef(null);
   const [message, setMessage] = useState('');
   // const [chatbotDetails, setChatbotDetails] = useState([]);
   const [theme, setTheme] = useReducer(
@@ -58,6 +59,7 @@ const ChatWindow = (props) => {
     }
   );
 
+
   useEffect(() => {
     if (props.theme) setChatbotDetails({ theme: props.theme });
   }, [props.theme]);
@@ -68,27 +70,56 @@ const ChatWindow = (props) => {
   }, [props.messageStorage]);
 
   useEffect(async () => {
+
+
+    // document.body.style.overflow = "hidden";
+    document.body.style.background = "transparent";
     try {
-      let chatbotId = sessionStorage.getItem('chatbot');
+      let { chatbot: chatbotId } = props.match?.params ?? { chatbot: undefined }
+      if (!chatbotId)
+        chatbotId = sessionStorage.getItem('chatbot');
+      console.log(chatbotId);
       const response = await chatWindowService.get(
         chatbotId,
         accessToken,
         setAccessToken
       );
       setChatbotDetails(response.data);
+      let botReply = {
+        from: 'bot',
+        messages: [response.data.chatbot.description],
+        richResponses: [],
+        time: new Date()
+          .toLocaleString()
+          .split(',')[1]
+          .replace(/(.*)\D\d+/, '$1')
+          .trim(),
+      };
+      setMessageStorage((prevMessageStorage) => [
+        ...prevMessageStorage,
+        botReply,
+      ]);
+
     } catch (err) {
       console.log(err);
     }
   }, []);
 
   const sendMessage = async (e) => {
-    if (e.target.innerText) setMessage(e.target.innerText);
+    let messageToBeSent = message;
+    if (e.target.innerText)
+      messageToBeSent = e.target.innerText;
+
     e.preventDefault();
-    let chatbotId = sessionStorage.getItem('chatbot');
+    console.log("sending", followUp)
+    let { chatbot: chatbotId } = props.match?.params ?? { chatbot: undefined }
+    if (!chatbotId)
+      chatbotId = sessionStorage.getItem('chatbot');
+
     try {
       let userReply = {
         from: 'user',
-        messages: [message],
+        messages: [messageToBeSent],
         time: new Date()
           .toLocaleString()
           .split(',')[1]
@@ -101,14 +132,16 @@ const ChatWindow = (props) => {
       ]);
       let response = await chatWindowService.post(
         chatbotId,
-        message,
+        messageToBeSent,
         followUp.hasFollowUp,
         followUp.previousIntent,
         accessToken,
         setAccessToken
       );
       setMessage('');
-      setFollowUp(response.data.nextIntent);
+      console.log("receiving", { hasFollowUp: response.data.nextIntent.hasFollowUp, previousIntent: response.data.nextIntent.previousIntent })
+
+      setFollowUp({ hasFollowUp: response.data.nextIntent.hasFollowUp, previousIntent: response.data.nextIntent.previousIntent });
       let botReply = {
         from: 'bot',
         messages: response.data.messages,
@@ -123,7 +156,14 @@ const ChatWindow = (props) => {
         ...prevMessageStorage,
         botReply,
       ]);
+
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight - chatboxRef.current.clientHeight;
+
     } catch (err) {
+      setFollowUp({
+        hasFollowUp: false,
+        previousIntent: undefined,
+      });
       console.log(err);
     }
   };
@@ -137,9 +177,12 @@ const ChatWindow = (props) => {
     }
   };
 
+  const changeChatWindowHeight = (height) => {
+    window.parent.postMessage({ height: "530px - 40", width: undefined }, "http://127.0.0.1:5500")
+  }
   return (
     <div>
-      <div className="chats-box">
+      <div className="chats-box" ref={props.chatboxRef} style={{ height: "500px", width: "400px" }}>
         <div
           className="chatbox-top"
           style={{ background: chatbotDetails.theme.chatboxColor }}
@@ -178,7 +221,7 @@ const ChatWindow = (props) => {
                     fontSize: '0.8rem',
                   }}
                 >
-                  {chatbotDetails.chatbot?.description}
+                  Online
                 </h6>
               </div>
             </div>
@@ -190,7 +233,7 @@ const ChatWindow = (props) => {
             <div className="clearfix"></div>
           </div>
         </div>
-        <div className="chatbox-body">
+        <div className="chatbox-body" ref={chatboxRef}>
           <div className="chat-conversion">
             {messageStorage.map((message, index) => (
               <React.Fragment key={index}>
@@ -208,10 +251,13 @@ const ChatWindow = (props) => {
         <div className="chatbox-chat">
           <form className="form-group" onSubmit={sendMessage}>
             <TextareaAutosize
-              style={{ resize: 'none', wordWrap: 'break-word' }}
+              style={{ resize: 'none', wordWrap: 'break-word', height: "31px", pointerEvents: props.disableInput ? "none" : "all" }}
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
+              minRows={2}
+              maxRows={2}
+              onHeightChange={changeChatWindowHeight}
               onKeyDown={handleKeyDown}
               value={message}
               type="text"

@@ -21,23 +21,23 @@ visitorRoute.get("/", async (req, res) => {
         for (let i = 0; i < chatbots.length; i++) {
             let chatbotId = chatbots[i].chatbotId;
             let response = await db.VisitorChat.findAll({
-                attributes:["ipAddress"],
+                attributes: ["ipAddress"],
                 raw: true,
                 where: {
                     chatbotId,
                 },
-                group:["ipAddress"]
+                group: ["ipAddress"]
             });
             chatbotDuration = 0;
-            for (let i = 0; i < response.length; i++){
-                response[i].city = geoip.lookup(response[i].ipAddress).city;
+            for (let i = 0; i < response.length; i++) {
+                response[i].city = await geoip.lookup(response[i].ipAddress)?.city;
                 let durationResponse = await db.VisitorChat.findAll({
                     raw: true,
                     where: {
                         chatbotId,
-                        ipAddress:response[i].ipAddress
+                        ipAddress: response[i].ipAddress
                     },
-                    order:["createdAt"]
+                    order: ["createdAt"]
 
                 });
                 let seconds = Math.abs(durationResponse[0].createdAt - durationResponse[durationResponse.length - 1].createdAt) / 1000;
@@ -51,7 +51,7 @@ visitorRoute.get("/", async (req, res) => {
                 if (hrs > 0) {
                     duration += "" + hrs + ":" + (mins < 10 ? "0" : "");
                 }
-                if(mins>0)
+                if (mins > 0)
                     duration += "" + mins + ":" + (secs < 10 ? "0" : "");
                 duration += "" + secs;
                 response[i].duration = duration;

@@ -35,6 +35,7 @@ export default {
     /* ... */
   },
   env: {
+    // API_URL: 'http://49.206.201.140:3000/api/'
     API_URL: '/api/'
   }
 };

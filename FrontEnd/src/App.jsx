@@ -13,6 +13,7 @@ import PrivateRoute from './components/common/PrivateRoute';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
+import ChatBox from './components/chatbox/Chatbox';
 
 const App = () => {
   const [accessToken, setAccessToken] = useState(undefined);
@@ -42,6 +43,7 @@ const App = () => {
             path="/dashboard/intent/rich-responses"
             component={RichResponses}
           />
+          <Route exact path="/:chatbot/" component={ChatBox} />
         </Switch>
       </AccessTokenContext.Provider>
     </Router>
