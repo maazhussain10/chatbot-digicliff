@@ -28,13 +28,11 @@ const Intents = (props) => {
     const [message, setMessage] = useState("");
 
     useEffect(async () => {
-        console.log("Use Effect");
         let chatbotId = sessionStorage.getItem('chatbot');
         setChatbotId(chatbotId);
         try {
             let chatbotId = sessionStorage.getItem('chatbot');
             const response = await intentService.get(chatbotId, accessToken, setAccessToken);
-            console.log(response.data.length);
             setIntents(response.data);
         } catch (err) {
             console.log(err);
@@ -46,11 +44,10 @@ const Intents = (props) => {
         });
     }, []);
 
-    const getIntents = () => {
+    const getIntents = async () => {
         try {
             let chatbotId = sessionStorage.getItem('chatbot');
-            const response = intentService.get(chatbotId, accessToken, setAccessToken);
-            console.log(response.data.length);
+            const response = await intentService.get(chatbotId, accessToken, setAccessToken);
             setIntents(response.data);
         } catch (err) {
             console.log(err);
@@ -114,7 +111,6 @@ const Intents = (props) => {
         <React.Fragment>
             <Navbar isAuthenticated={props.isAuthenticated} >
             </Navbar>
-
             <div className="text-center mt-5 ">
                 <button id="createI" type="button" className="btn btn-primary button1" data-toggle="modal" data-target="#createIntent">
                     Create an intent
@@ -157,7 +153,7 @@ const Intents = (props) => {
                     )}
                 </Formik>
             </div>
-            {intents.length === 0 ?
+            {intents?.length === 0 ?
                 <div className="container">
                     <div className="row">
                         <div className="col-6 offset-3">
@@ -170,7 +166,7 @@ const Intents = (props) => {
                 :
                 <React.Fragment>
                     <div className="container">
-                        {intents.map((intent, index) => (
+                        {intents?.map((intent, index) => (
                             <IntentCard
                                 key={Math.random()}
                                 previousIntent={previousIntent}

@@ -1,10 +1,15 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import messageService from '../../services/message.service.js';
 
 const CreateMessage = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const messagePre = useRef(null);
+  const intentNameRef = useRef(undefined);
+
+  useEffect(() => {
+    intentNameRef.current = sessionStorage.getItem('intent-name');
+  }, []);
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) {
@@ -63,14 +68,14 @@ const CreateMessage = (props) => {
               </div>
               <pre
                 ref={messagePre}
-                contentEditable={true}
+                contentEditable={(intentNameRef.current === "Default Intent" && props.messageType === "user") ? false : true}
                 style={{
                   textAlign: 'left',
                   whiteSpace: 'pre-wrap',
                   height: 'auto',
                   fontSize: '1rem',
                 }}
-                className="form-control  shadow-none"
+                className={"form-control shadow-none "}
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-lg"
                 onKeyDown={handleKeyDown}

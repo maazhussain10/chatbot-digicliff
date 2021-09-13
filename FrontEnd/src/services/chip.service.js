@@ -18,12 +18,13 @@ class ChipService {
         return response;
     }
 
-    async update(intentId, chipValue, accessToken, setAccessToken, chips) {
+    async update(intentId, chipValue, prevChipValue, accessToken, setAccessToken, chips) {
         let authInterceptor = createInterceptor(setAccessToken);
         try {
             let response = await authInterceptor.put(API_URL + "chatbot/intent/chip", {
                 intentId,
                 chipValue,
+                prevChipValue,
                 chips
             }, {
                 headers: authHeader(accessToken)

@@ -39,9 +39,8 @@ chipRoute.get("/", async (req, res) => {
 });
 
 chipRoute.put("/", async (req, res) => {
-    let { intentId, chipValue, chips } = req.body;
+    let { intentId, chipValue, prevChipValue, chips } = req.body;
     try {
-        console.log(chips)
         if (chips) {
             for (let i = 0; i < chips.length; i++) {
                 console.log(chips[i], i)
@@ -55,7 +54,7 @@ chipRoute.put("/", async (req, res) => {
                     }
                 )
             }
-            res.sendStatus(202);
+            return res.sendStatus(202);
         } else {
 
             await db.Chip.update(
@@ -63,6 +62,7 @@ chipRoute.put("/", async (req, res) => {
                 {
                     where: {
                         intentId,
+                        chipValue: prevChipValue
                     },
                 }
             );

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect,useReducer } from 'react';
+import React, { useContext, useState, useEffect, useReducer } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import cardService from '../../services/card.service.js';
@@ -36,7 +36,6 @@ const RichResponses = (props) => {
       setDisableCard(false);
       setDisableChip(false);
     }
-    console.log(disableChip);
   }, [cards, chips]);
 
   const handleOnDragEnd = (result) => {
@@ -61,7 +60,6 @@ const RichResponses = (props) => {
         accessToken,
         setAccessToken
       );
-      console.log(cardResponse.data);
       setCards(cardResponse.data);
     } catch (e) {
       console.log(e);
@@ -70,7 +68,6 @@ const RichResponses = (props) => {
 
   const updateCard = async (card) => {
     try {
-      console.log(card, cardValues);
       await cardService.put(
         intentId,
         card,
@@ -123,8 +120,9 @@ const RichResponses = (props) => {
 
   const updateChip = async (htmlElement) => {
     try {
-      let chipValue = htmlElement.text;
-      await chipService.put(intentId, chipValue, accessToken, setAccessToken);
+      let chipValue = htmlElement.innerText;
+      let prevChipValue = htmlElement.id;
+      await chipService.update(intentId, chipValue, prevChipValue, accessToken, setAccessToken);
       getChips();
     } catch (e) {
       console.log(e);
@@ -133,7 +131,6 @@ const RichResponses = (props) => {
 
   const deleteChip = async (chipValue) => {
     try {
-      console.log(intentId);
       await chipService.delete(
         intentId,
         chipValue,
@@ -466,7 +463,6 @@ const RichResponses = (props) => {
                                 aria-label="Chip"
                                 aria-describedby="basic-addon1"
                               >
-                                {' '}
                                 {chip.chipValue}
                               </pre>
                               <div className="input-group-prepend">

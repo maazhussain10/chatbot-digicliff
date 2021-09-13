@@ -5,13 +5,14 @@ import createInterceptor from './auth-interceptor.js';
 
 
 class ChatWindowService {
-    async post(chatbotId, message, hasFollowUp, previousIntent, accessToken, setAccessToken) {
+    async post(chatbotId, message, hasFollowUp, previousIntent, firstIntent, accessToken, setAccessToken) {
         let authInterceptor = createInterceptor(setAccessToken);
         let response = await authInterceptor.post(API_URL + "chat-window", {
             chatbotId,
             message,
             hasFollowUp,
-            previousIntent
+            previousIntent,
+            firstIntent
         }, { headers: authHeader(accessToken) })
 
         return response;

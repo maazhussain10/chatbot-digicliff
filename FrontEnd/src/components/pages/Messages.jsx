@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useReducer } from 'react';
+import React, { useState, useEffect, useContext, useReducer, useRef } from 'react';
 import { AccessTokenContext } from '../../accessTokenContext';
 import messageService from '../../services/message.service.js';
 import mutlipleReplyService from '../../services/mutliple-reply.service.js';
@@ -13,6 +13,8 @@ const Messages = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const [intentId, setIntentId] = useState(undefined);
   const [multipleReply, setMultipleReply] = useState(false);
+
+  const intentNameRef = useRef(undefined);
 
   const [messageGroup, setMessageGroup] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -36,8 +38,12 @@ const Messages = (props) => {
   };
 
   useEffect(async () => {
+    intentNameRef.current = sessionStorage.getItem('intent-name');
+
     let intentId = sessionStorage.getItem('intent');
     setIntentId(intentId);
+
+
 
     try {
       const multipleReply = await mutlipleReplyService.get(
@@ -71,7 +77,7 @@ const Messages = (props) => {
     <React.Fragment>
       <Navbar isAuthenticated={props.isAuthenticated}>
         <li className="nav-item">
-          <a className="nav-link" data-toggle="modal" data-target="#entity">
+          <a className={"nav-link " + (intentNameRef.current === "Default Intent" ? "disabled" : "")} data-toggle="modal" data-target="#entity">
             Entity
           </a>
           <Entities />

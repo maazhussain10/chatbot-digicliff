@@ -48,7 +48,7 @@ const Login = (props) => {
     }
     return (
         <React.Fragment>
-            <button className="login-btn" data-toggle="modal" data-target="#login">Login</button>
+            <button className="btn btn-outline-secondary mb-1 mb-xl-0" data-toggle="modal" data-target="#login">Login</button>
             <Formik
                 initialValues={{
                     username: '',

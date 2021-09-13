@@ -39,7 +39,7 @@ const Signup = () => {
 
     return (
         <React.Fragment>
-            <button className="signup-button" data-toggle="modal" data-target="#signup">Sign up</button>
+            <button className="btn btn-primary ml-xl-1 mb-1 mb-xl-0" data-toggle="modal" data-target="#signup">Sign up</button>
             <Formik
                 initialValues={{
                     firstName: 'Pragadeesh',

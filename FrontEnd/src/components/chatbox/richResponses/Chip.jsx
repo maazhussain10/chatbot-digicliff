@@ -24,6 +24,7 @@ const Chip = (props) => {
     <React.Fragment>
       {chips.map((chip, index) => (
         <button
+          key={chip}
           onMouseEnter={handleHover}
           onMouseLeave={handleHover}
           onClick={sendMessage}

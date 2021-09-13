@@ -10,12 +10,12 @@ module.exports = (sequelize) => {
         },
         cardTheme: {
             type: DataTypes.STRING,
-            defaultValue: "#770205,#ffffff,#ff2025,Cursive",
+            defaultValue: "#000000,#ffffff,#32CD32,Cursive",
             allowNull: false
         },
         chipTheme: {
             type: DataTypes.STRING,
-            defaultValue: "#072b2c,#064a04,#ffffff,6,verdana",
+            defaultValue: "#000000,#FFFFFF,#000000,6,verdana",
             allowNull: false
         },
         messageTheme: {

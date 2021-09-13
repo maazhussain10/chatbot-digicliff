@@ -8,7 +8,7 @@ chatbotRoute.get('/', async (req, res) => {
 
     try {
         let chatbots = await db.Chatbot.findAll({
-            attributes: [['id', 'chatbotId'], 'chatbotName', 'description', 'createdAt'],
+            attributes: [['id', 'chatbotId'], 'chatbotName', 'description', 'createdAt', 'hostName'],
             where: {
                 userId: userId
             },
@@ -28,14 +28,20 @@ chatbotRoute.post('/', async (req, res) => {
         let chatbot = await db.Chatbot.create({
             userId, chatbotName, description
         })
+
+        let chatbotId = chatbot.id;
+        await db.Settings.create({ chatbotId });
+        await db.Intent.create({
+            id: undefined,
+            chatbotId, intentName: "Default Intent", description: "Bot initiates conversation with this message", previousIntent: null
+        })
+
         res.status(201).json({
             chatbotId: chatbot.id,
             chatbotName: chatbot.chatbotName,
             description: chatbot.description,
             createdAt: chatbot.createdAt
         });
-        let chatbotId = chatbot.id;
-        await db.Settings.create({ chatbotId });
     } catch (err) {
         console.log(err.message);
         if (err instanceof UniqueConstraintError) {

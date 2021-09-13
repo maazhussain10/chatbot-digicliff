@@ -85,10 +85,10 @@ module.exports = {
                 value = message;
 
             } else {
-                let hasEntity = identifiedEntities.find((entity) => entity.entity === entityType);
-                value = hasEntity.sourceText;
-                message = message.replace(value, '');
-                identifiedEntities = identifiedEntities.filter(entity => hasEntity.sourceText !== entity.sourceText);
+                let hasEntity = identifiedEntities?.find((entity) => entity?.entity === entityType);
+                value = hasEntity?.sourceText;
+                message = message?.replace(value, '');
+                identifiedEntities = identifiedEntities?.filter(entity => hasEntity?.sourceText !== entity?.sourceText);
             }
             await db.VisitorDetails.upsert({
                 chatbotId, entityType, entityName, entityValue: value, ipAddress

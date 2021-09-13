@@ -21,6 +21,11 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        hostName: {
+            type: DataTypes.STRING,
+            defaultValue: '',
+            allowNull: false
+        },
     })
 
     return Chatbot;

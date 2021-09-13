@@ -43,12 +43,27 @@ class ChatbotService {
         } catch (err) {
             return err;
         }
-    
+
     }
     async getExistingBots(accessToken, setAccessToken) {
         try {
             let authInterceptor = createInterceptor(setAccessToken);
             let response = await authInterceptor.get(API_URL + "chatbot/visitor", { headers: authHeader(accessToken) });
+            return response;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    async setHostName(hostName, chatbotId, accessToken, setAccessToken) {
+        try {
+            let authInterceptor = createInterceptor(setAccessToken);
+            let response = await authInterceptor.put(API_URL + "chatbot/hostname", {
+                chatbotId,
+                hostName,
+            }, {
+                headers: authHeader(accessToken)
+            });
             return response;
         } catch (err) {
             return err;

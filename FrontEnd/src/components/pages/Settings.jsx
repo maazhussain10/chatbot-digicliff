@@ -94,7 +94,7 @@ const Settings = (props) => {
     },
     {
       from: 'bot',
-      messages: ['Sample Bot Reply', 'Another sample bot reply1 \n ffgf'],
+      messages: ['Sample Bot Reply', 'Another sample bot reply'],
       richResponses: [],
       time: new Date()
         .toLocaleString()

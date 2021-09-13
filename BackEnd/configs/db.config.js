@@ -1,7 +1,7 @@
-const DB_HOST = "localhost";
-const DB_USERNAME = "newuser";
-const DB_PASSWORD = "newuser";
-const DB_NAME = "hospital";
+const DB_HOST = "HOSTNAME";
+const DB_USERNAME = "USERNAME";
+const DB_PASSWORD = "PASSWORD";
+const DB_NAME = "DATABASENAME";
 
 module.exports = {
     DB_HOST,

@@ -25,7 +25,7 @@ const Card = (props) => {
                 border: `2px solid ${cardBorder}`,
                 backgroundColor: cardBgColor,
                 color: cardTextColor,
-                width: '18rem',
+                width: '15rem',
               }}
             >
               <div className="card-header">{card.split('|||')[0]}</div>

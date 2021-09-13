@@ -15,6 +15,7 @@ intentRoute.get('/', async (req, res) => {
             },
             order: [['id'], ['createdAt']]
         })
+        console.log(intents);
         res.status(200).json(intents);
     } catch (err) {
         res.status(500).send(err);

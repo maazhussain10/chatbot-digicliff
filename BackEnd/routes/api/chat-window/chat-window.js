@@ -62,6 +62,7 @@ chatWindowRoute.get("/", async (req, res) => {
                 "chatbotName",
                 "description",
                 "createdAt",
+                'hostName'
             ],
         });
 
@@ -74,24 +75,74 @@ chatWindowRoute.get("/", async (req, res) => {
 
 chatWindowRoute.post("/", async (req, res) => {
     try {
-        let { chatbotId, message, hasFollowUp, previousIntent } = req.body;
+        let { chatbotId, message, hasFollowUp, previousIntent, firstIntent } = req.body;
+        console.log("ID:", chatbotId);
         const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress)?.slice(7);
-        console.log("AAA", chatbotId, message, hasFollowUp, previousIntent);
-        await db.VisitorChat.upsert({
-            chatbotId,
-            ipAddress,
-            messageType: "user",
-            message,
-        });
-        let identifiedIntent = await NLP.identifyIntent(
-            chatbotId,
-            message,
-            hasFollowUp,
-            previousIntent
-        );
 
-        let intentId = identifiedIntent.intent;
-        // If theres no matching intent for the given message
+        let intentId, entities = [];
+        if (!firstIntent) {
+            await db.VisitorChat.upsert({
+                chatbotId,
+                ipAddress,
+                messageType: "user",
+                message,
+            });
+            let identifiedIntent = await NLP.identifyIntent(
+                chatbotId,
+                message,
+                hasFollowUp,
+                previousIntent
+            );
+
+            intentId = identifiedIntent.intent;
+            // If theres no matching intent for the given message
+
+
+
+
+
+            let identifiedEntities = identifiedIntent.entities;
+
+            // Check if there are any entities for the selected intent.
+            let definedEntities = await db.Entity.findAll({
+                raw: true,
+                where: {
+                    intentId,
+                },
+                order: ["order"],
+            });
+            if (definedEntities.length !== 0) {
+                // Call the entityStorage method to check the entities user has selected and add the values to it from the existingEntities.
+                await NLP.storeVisitorInfo(
+                    chatbotId,
+                    identifiedEntities,
+                    definedEntities,
+                    message,
+                    ipAddress
+                );
+            }
+
+
+
+            // Get all values available related to the user.
+            entities = await db.VisitorDetails.findAll({
+                attributes: ["entityName", "entityValue"],
+                raw: true,
+                where: {
+                    chatbotId,
+                    ipAddress,
+                },
+            });
+            console.log("ENTITIES", entities);
+        } else {
+            let firstIntent = await db.Intent.findOne({
+                where: {
+                    intentName: "Default Intent",
+                    chatbotId
+                }
+            })
+            intentId = firstIntent.id;
+        }
 
         let nextIntent = {};
         // Check if the intent triggered has a follow up.
@@ -101,35 +152,15 @@ chatWindowRoute.post("/", async (req, res) => {
 
         nextIntent.hasFollowUp = hasFollowUpResponse.length !== 0;
         nextIntent.previousIntent = (nextIntent.hasFollowUp) ? intentId : undefined;
-        console.log(nextIntent);
+
         if (intentId === "None") {
             console.log("No Intent");
             let data = {
-                messages: ["Sorry, I couldn't understand ^_^"],
+                messages: ["Sorry, I couldn't understand ^_^", "Please contact the hospital desk for further queries"],
                 richResponses: [],
                 nextIntent,
             };
             return res.status(200).json(data);
-        }
-
-        let identifiedEntities = identifiedIntent.entities;
-        // Check if there are any entities for the selected intent.
-        let definedEntities = await db.Entity.findAll({
-            raw: true,
-            where: {
-                intentId,
-            },
-            order: ["order"],
-        });
-        if (definedEntities.length !== 0) {
-            // Call the entityStorage method to check the entities user has selected and add the values to it from the existingEntities.
-            await NLP.storeVisitorInfo(
-                chatbotId,
-                identifiedEntities,
-                definedEntities,
-                message,
-                ipAddress
-            );
         }
 
         //   Get All the Bot Messages for the particular intent triggered.
@@ -142,18 +173,9 @@ chatWindowRoute.post("/", async (req, res) => {
             },
             order: ["createdAt"],
         });
+        console.log(chatbotId, botMessages);
 
-        // Get all values available related to the user.
-        let entities = await db.VisitorDetails.findAll({
-            attributes: ["entityName", "entityValue"],
-            raw: true,
-            where: {
-                chatbotId,
-                ipAddress,
-            },
-        });
-
-        //   Check if the multiple replies option is enabled for the intent.
+        // Check if the multiple replies option is enabled for the intent.
         let { multipleReply: hasMultipleReply } = await db.Intent.findOne({
             raw: true,
             where: {
@@ -176,19 +198,21 @@ chatWindowRoute.post("/", async (req, res) => {
 
         if (result !== null) query = result.query;
         // Add entity value to message from visitor deta
+
         for (let i = 0; i < messages.length; i++) {
             for (let j = 0; j < entities.length; j++) {
+                console.log(`\\$${entities[j].entityName}`)
                 let regex = new RegExp(`\\$${entities[j].entityName}`, "gi");
                 messages[i] = messages[i].replace(
                     regex,
                     entities[j].entityValue
                 );
-
+                console.log(messages[i]);
                 if (query && i == 0)
                     query = query.replace(regex, entities[j].entityValue);
             }
         }
-
+        console.log(query);
         let queryCards = [],
             queryChips = [];
         if (query) {

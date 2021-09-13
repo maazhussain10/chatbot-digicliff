@@ -15,7 +15,7 @@ const ChatWindow = (props) => {
   const { accessToken, setAccessToken } = useContext(AccessTokenContext);
   const chatboxRef = useRef(null);
   const [message, setMessage] = useState('');
-  // const [chatbotDetails, setChatbotDetails] = useState([]);
+
   const [theme, setTheme] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -65,40 +65,54 @@ const ChatWindow = (props) => {
   }, [props.theme]);
 
   useEffect(() => {
-    console.log(props.messageStorage);
     if (props.messageStorage) setMessageStorage(props.messageStorage);
   }, [props.messageStorage]);
 
   useEffect(async () => {
-
-
     // document.body.style.overflow = "hidden";
     document.body.style.background = "transparent";
     try {
       let { chatbot: chatbotId } = props.match?.params ?? { chatbot: undefined }
       if (!chatbotId)
         chatbotId = sessionStorage.getItem('chatbot');
-      console.log(chatbotId);
       const response = await chatWindowService.get(
         chatbotId,
         accessToken,
         setAccessToken
       );
+
       setChatbotDetails(response.data);
-      let botReply = {
-        from: 'bot',
-        messages: [response.data.chatbot.description],
-        richResponses: [],
-        time: new Date()
-          .toLocaleString()
-          .split(',')[1]
-          .replace(/(.*)\D\d+/, '$1')
-          .trim(),
-      };
-      setMessageStorage((prevMessageStorage) => [
-        ...prevMessageStorage,
-        botReply,
-      ]);
+
+      let firstMessageResponse = await chatWindowService.post(
+        chatbotId,
+        "",
+        followUp.hasFollowUp,
+        followUp.previousIntent,
+        true,
+        accessToken,
+        setAccessToken
+      );
+
+      setFollowUp({ hasFollowUp: firstMessageResponse.data.nextIntent.hasFollowUp, previousIntent: firstMessageResponse.data.nextIntent.previousIntent });
+
+
+      if (firstMessageResponse.data.messages.length !== 0) {
+        let botReply = {
+          from: 'bot',
+          messages: firstMessageResponse.data.messages,
+          richResponses: firstMessageResponse.data.richResponses,
+          time: new Date()
+            .toLocaleString()
+            .split(',')[1]
+            .replace(/(.*)\D\d+/, '$1')
+            .trim(),
+        };
+        setMessageStorage((prevMessageStorage) => [
+          ...prevMessageStorage,
+          botReply,
+        ]);
+      }
+
 
     } catch (err) {
       console.log(err);
@@ -111,12 +125,13 @@ const ChatWindow = (props) => {
       messageToBeSent = e.target.innerText;
 
     e.preventDefault();
-    console.log("sending", followUp)
     let { chatbot: chatbotId } = props.match?.params ?? { chatbot: undefined }
     if (!chatbotId)
       chatbotId = sessionStorage.getItem('chatbot');
 
     try {
+
+      // Add message sent by user to messageStorage
       let userReply = {
         from: 'user',
         messages: [messageToBeSent],
@@ -130,17 +145,18 @@ const ChatWindow = (props) => {
         ...prevMessageStorage,
         userReply,
       ]);
+
       let response = await chatWindowService.post(
         chatbotId,
         messageToBeSent,
         followUp.hasFollowUp,
         followUp.previousIntent,
+        false,
         accessToken,
         setAccessToken
       );
-      setMessage('');
-      console.log("receiving", { hasFollowUp: response.data.nextIntent.hasFollowUp, previousIntent: response.data.nextIntent.previousIntent })
 
+      setMessage('');
       setFollowUp({ hasFollowUp: response.data.nextIntent.hasFollowUp, previousIntent: response.data.nextIntent.previousIntent });
       let botReply = {
         from: 'bot',
